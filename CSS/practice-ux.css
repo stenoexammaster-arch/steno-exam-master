@@ -1,0 +1,224 @@
+/* Practice UX Theme + Light boxes + Bigger Hindi + simple highlight */
+
+.practice-page{
+  background: radial-gradient(900px 600px at 15% 10%, rgba(79,140,255,.10), transparent 60%),
+              radial-gradient(900px 600px at 85% 20%, rgba(52,211,153,.08), transparent 60%),
+              #0b1220;
+  color: #eaf0ff;
+}
+
+.px-bg{ position: fixed; inset:0; z-index:-1; pointer-events:none; }
+.px-grid{ position:absolute; inset:0; background: repeating-linear-gradient(135deg, rgba(255,255,255,.035) 0 1px, transparent 1px 10px); opacity:.18; }
+.px-bubble{ position:absolute; border-radius:999px; opacity:.14; }
+.px-bubble.b1{ width: 280px; height:280px; left:6%; top:10%; background: rgba(79,140,255,.55); }
+.px-bubble.b2{ width: 220px; height:220px; right:10%; top:18%; background: rgba(52,211,153,.45); }
+.px-bubble.b3{ width: 320px; height:320px; right:14%; bottom:10%; background: rgba(99,102,241,.38); }
+
+/* Back button under navbar/left */
+.practice-back-floating{
+  position: fixed;
+  left: 14px;
+  top: 74px;
+  z-index: 9999;
+}
+@media (max-width: 520px){
+  .practice-back-floating{ top: 70px; left: 10px; }
+}
+
+.practice-container{ max-width: 1200px; padding-top: 18px; }
+
+.practice-card{
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.04);
+  box-shadow: 0 18px 55px rgba(0,0,0,.35);
+  overflow: hidden;
+}
+
+.practice-header-top{
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  background: rgba(10, 16, 32, 0.50);
+  backdrop-filter: blur(10px);
+}
+.practice-title{ font-weight: 900; }
+.practice-sub{ color: rgba(255,255,255,.70); margin-top:6px; }
+
+.typing-panel{
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(10,16,32,.35);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.22);
+}
+
+.typing-stats-top{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  color: rgba(255,255,255,.86);
+}
+
+.px-badges{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.px-pill{
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.05);
+  color: rgba(255,255,255,.85);
+}
+
+.typing-container{ padding: 14px; }
+
+/* ✅ BOTH boxes same light style (force with !important) */
+#typing-text,
+#typing-input{
+  border-radius: 16px !important;
+  border: 1px solid rgba(0,0,0,.12) !important;
+  background: rgba(255,255,255,.97) !important;
+  color: #0f172a !important;
+}
+
+/* Passage box smaller height */
+#typing-text{
+  padding: 14px 14px;
+  height: 210px;
+  max-height: 210px;
+  overflow: auto;
+  line-height: 1.95;
+  font-size: 16px;
+}
+
+/* Input box same height as passage */
+#typing-input{
+  margin-top: 12px;
+  padding: 14px 14px;
+  height: 210px;
+  min-height: 210px;
+  outline: none;
+}
+
+#typing-input:focus{
+  border-color: rgba(79,140,255,.55) !important;
+  box-shadow: 0 0 0 4px rgba(79,140,255,.12);
+}
+
+.typing-stats-bottom{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.px-stats{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(110px, 1fr));
+  gap: 10px;
+}
+@media (max-width: 980px){
+  .px-stats{ grid-template-columns: repeat(2, minmax(140px, 1fr)); }
+}
+.px-stat{
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  padding: 10px 10px;
+}
+.px-stat-label{ font-size: 12px; color: rgba(255,255,255,.72); }
+.px-stat-value{ font-weight: 900; font-size: 20px; margin-top: 4px; }
+
+.practice-restart-btn{
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  color: #eaf0ff;
+  font-weight: 800;
+}
+
+/* ✅ Highlight rules requested:
+   Correct blue text, Wrong red text. No active word highlight. */
+.tt-word{ white-space: pre; }
+.tt-ok{ color: #1d4ed8; font-weight: 800; }
+.tt-bad{ color: #b91c1c; font-weight: 800; }
+.tt-missing{ color:#b91c1c; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 3px; }
+
+/* On-screen fonts bigger for Hindi/Kruti */
+.font-english{ font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+.font-hindi{ font-family: "Noto Sans Devanagari", Inter, system-ui, sans-serif; font-size: 22px; line-height: 2.05; }
+.font-kruti{ font-family: "Kruti Dev 010","Kruti Dev 10","Noto Sans Devanagari", Inter, sans-serif; font-size: 24px; line-height: 2.05; }
+
+/* Right panel cards */
+.practice-right .practice-timer-panel,
+.practice-right .practice-controls-top,
+.practice-right .practice-tips{
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(10,16,32,.35);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.22);
+}
+
+.practice-timer-panel{ padding: 14px; }
+.practice-timer-value{ font-size: 30px; font-weight: 900; }
+
+.px-mini{ margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.08); }
+.px-mini-row{ display:flex; align-items:center; justify-content: space-between; gap: 10px; }
+.px-mini-label{ font-size: 12px; color: rgba(255,255,255,.75); }
+
+/* Keyboard */
+.practice-keyboard{
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(10,16,32,.30);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+}
+.practice-keyboard span{
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.85);
+}
+.practice-keyboard span.kbd-next{
+  border-color: rgba(79,140,255,.70);
+  box-shadow: 0 0 0 4px rgba(79,140,255,.12);
+}
+.practice-keyboard span.kbd-correct{
+  border-color: rgba(52,211,153,.75);
+  background: rgba(52,211,153,.12);
+}
+.practice-keyboard span.kbd-error{
+  border-color: rgba(255,77,77,.65);
+  background: rgba(255,77,77,.10);
+}
+
+/* Subscribe overlay */
+.px-overlay{
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.98);
+  color: #111827;
+  padding: 14px;
+}
+.px-overlay h3{ margin:0 0 6px; font-size: 16px; }
+.px-overlay p{ margin:0 0 10px; color: rgba(17,24,39,.80); font-size: 13px; line-height: 1.45; }
+.px-overlay .px-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+.px-overlay .px-btn{
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(79,140,255,.45);
+  background: rgba(79,140,255,.12);
+  color: #1d4ed8;
+  font-weight: 900;
+  cursor: pointer;
+}
+.px-overlay .px-btn.secondary{
+  border-color: rgba(0,0,0,.12);
+  background: rgba(0,0,0,.05);
+  color: #111827;
+}
