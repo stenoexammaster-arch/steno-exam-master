@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FastType - Books & Projects</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-left">
+      <img src="assets/logo.png" alt="Logo" class="logo" />
+      <span class="brand-name">FastType</span>
+    </div>
+    <nav class="nav-right">
+      <a href="index.html">Home</a>
+      <a href="practice.html">Practice &amp; Books</a>
+      <a href="admin.html">Admin</a>
+      <span id="nav-user-info" class="nav-user-info hidden"></span>
+      <a href="login.html" id="nav-login-link" class="nav-cta">Log in</a>
+      <button id="nav-logout-btn" class="nav-cta secondary hidden">Logout</button>
+    </nav>
+  </header>
+
+  <main class="page-container">
+    <h1>Project Books</h1>
+    <p>Step 1: Choose a book. Step 2: Choose a chapter. Step 3: Start typing.</p>
+
+    <div id="login-warning" class="warning hidden"></div>
+
+    <!-- Trial / subscription info -->
+    <div id="trial-banner" class="warning hidden"></div>
+    <div id="paywall" class="warning hidden">
+      <h3>Your free trial has ended</h3>
+      <p>
+        Your 6-day free trial is over. Paid books will now run only in
+        2-minute preview mode. Upgrade later to unlock full access.
+      </p>
+    </div>
+
+    <div id="books-area" class="hidden" style="margin-top:12px;">
+      <h2>Books</h2>
+      <div id="books-list" class="books-list"></div>
+
+      <div id="chapters-area" class="hidden" style="margin-top:24px;">
+        <h2 id="chapters-title">Chapters</h2>
+        <p
+          id="chapters-subtitle"
+          style="font-size:0.9rem;color:#9ca3af;margin-bottom:8px;"
+        ></p>
+        <div id="chapters-list" class="books-list"></div>
+      </div>
+
+      <div id="chapter-typing-section" class="book-typing-panel hidden">
+        <h2 id="chapter-title"></h2>
+        <p
+          id="chapter-meta"
+          style="font-size:0.9rem;color:#9ca3af;margin-bottom:8px;"
+        ></p>
+
+        <div class="typing-text font-english" id="chapter-typing-text"></div>
+
+        <textarea
+          id="chapter-typing-input"
+          class="font-english"
+          placeholder="Start typing this chapter content here..."
+        ></textarea>
+
+        <div class="stats">
+          <span>Time: <strong id="chapter-time">0s</strong></span>
+          <span>Net WPM: <strong id="chapter-wpm">0</strong></span>
+          <span>Accuracy: <strong id="chapter-accuracy">100%</strong></span>
+          <span>Char Errors: <strong id="chapter-errors">0</strong></span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Result modal for chapter typing -->
+  <div id="chapter-result-modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Chapter Practice Complete</h3>
+      <p id="chapter-result-reason"></p>
+      <p>Time: <strong id="chapter-result-time"></strong></p>
+      <p>Gross WPM: <strong id="chapter-result-gross-wpm"></strong></p>
+      <p>Net WPM: <strong id="chapter-result-net-wpm"></strong></p>
+      <p>Accuracy: <strong id="chapter-result-accuracy"></strong></p>
+      <p>
+        Words typed:
+        <strong id="chapter-result-words-typed"></strong> /
+        <strong id="chapter-result-words-total"></strong>
+      </p>
+      <p>Word errors: <strong id="chapter-result-errors-words"></strong></p>
+      <p>Character errors: <strong id="chapter-result-errors-chars"></strong></p>
+      <button id="chapter-result-close" class="btn primary" style="margin-top:12px;">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script src="js/firebase-config.js"></script>
+  <script src="js/nav-auth.js"></script>
+  <script src="js/testEngine.js"></script>
+  <script src="js/book.js"></script>
+</body>
+</html>

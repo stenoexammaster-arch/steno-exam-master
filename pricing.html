@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Steno Master - Pricing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body{ background:#0b1220; color:#eaf0ff; }
+    .wrap{ max-width: 980px; margin: 24px auto; padding: 0 14px; }
+    .card{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      box-shadow: 0 18px 55px rgba(0,0,0,.35);
+      padding: 16px;
+    }
+    .grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
+    @media (max-width: 900px){ .grid{ grid-template-columns: 1fr; } }
+    .plan{
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.20);
+      padding: 14px;
+    }
+    .plan h3{ margin:0 0 6px; font-weight: 900; }
+    .price{ font-size: 28px; font-weight: 900; margin: 8px 0; }
+    .muted{ color: rgba(255,255,255,.70); font-size: 13px; }
+    ul{ margin: 10px 0 0 18px; }
+    .btnx{
+      display:inline-block;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(79,140,255,.45);
+      background: rgba(79,140,255,.12);
+      color:#9ec5ff;
+      font-weight: 900;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-left">
+      <img src="assets/logo.png" alt="Logo" class="logo" />
+      <span class="brand-name">Steno Master</span>
+    </div>
+    <nav class="nav-right">
+      <a href="index.html">Home</a>
+      <a href="typing-test.html">Typing test</a>
+      <a href="practice.html">Practice</a>
+      <a href="login.html" class="nav-cta">Log in</a>
+    </nav>
+  </header>
+
+  <div class="wrap">
+    <div class="card">
+      <h1 style="margin:0;">Pricing & Subscription</h1>
+      <p class="muted" style="margin-top:6px;">
+        Payments will be integrated soon (Razorpay/UPI/Stripe). For now, these plans show the feature structure.
+      </p>
+
+      <div class="grid">
+        <div class="plan">
+          <h3>Free</h3>
+          <div class="price">₹0</div>
+          <div class="muted">Basic practice access</div>
+          <ul class="muted">
+            <li>Free chapters only</li>
+            <li>Random texts (free)</li>
+            <li>Feedback support</li>
+          </ul>
+          <a class="btnx" href="practice.html">Continue Free</a>
+        </div>
+
+        <div class="plan" style="border-color: rgba(79,140,255,.35);">
+          <h3>Premium</h3>
+          <div class="price">₹—</div>
+          <div class="muted">Unlock locked chapters & extra content</div>
+          <ul class="muted">
+            <li>All chapters (free + locked)</li>
+            <li>Premium random texts</li>
+            <li>Copy features (where allowed)</li>
+          </ul>
+          <a class="btnx" href="contact.html">Request Premium</a>
+        </div>
+
+        <div class="plan">
+          <h3>Institution</h3>
+          <div class="price">₹—</div>
+          <div class="muted">For coaching centers</div>
+          <ul class="muted">
+            <li>Bulk users</li>
+            <li>Admin controls</li>
+            <li>Priority support</li>
+          </ul>
+          <a class="btnx" href="contact.html">Contact Sales</a>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;" class="muted">
+        Next: Payments integration + automatic unlock after purchase.
+      </div>
+    </div>
+  </div>
+</body>
+</html>

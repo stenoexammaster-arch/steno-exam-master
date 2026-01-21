@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FastType - Test Result</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body.result-page {
+      background: radial-gradient(circle at top, #020617 0, #020617 50%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .result-main {
+      flex: 1;
+      max-width: 900px;
+      margin: 32px auto 40px;
+      padding: 0 16px;
+    }
+    .result-card {
+      background: radial-gradient(circle at top left, #020617 0, #020617 40%, #020617 100%);
+      border-radius: 18px;
+      border: 1px solid #1f2937;
+      padding: 20px 20px 18px;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.95);
+    }
+    .result-heading {
+      font-size: 1.8rem;
+      margin-bottom: 4px;
+    }
+    .result-sub {
+      font-size: 0.9rem;
+      color: #9ca3af;
+      margin-bottom: 16px;
+    }
+    .result-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .result-summary-item {
+      background: #020617;
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      padding: 10px 12px;
+      text-align: center;
+    }
+    .result-summary-label {
+      font-size: 0.9rem;
+      color: #9ca3af;
+      margin-bottom: 4px;
+    }
+    .result-summary-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fbbf24;
+    }
+    .result-detail-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 0.9rem;
+    }
+    .result-detail-table th,
+    .result-detail-table td {
+      border: 1px solid #1f2937;
+      padding: 6px 8px;
+    }
+    .result-detail-table th {
+      background: #020617;
+      text-align: left;
+      color: #9ca3af;
+    }
+    .result-actions-main {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body class="result-page">
+  <header class="navbar">
+    <div class="nav-left">
+      <img src="assets/logo.png" alt="Logo" class="logo" />
+      <span class="brand-name">FastType</span>
+    </div>
+    <nav class="nav-right">
+      <a href="index.html">Home</a>
+      <a href="practice.html">Practice</a>
+      <a href="login.html" class="nav-cta">Log in</a>
+    </nav>
+  </header>
+
+  <main class="result-main">
+    <section class="result-card" id="result-content">
+      <h1 class="result-heading">Test result</h1>
+      <p class="result-sub" id="result-subtitle">
+        Loading your last typing session...
+      </p>
+
+      <div id="result-empty" class="hidden">
+        <p style="color:#9ca3af;">
+          No result found. Please take a typing test first.
+        </p>
+        <div class="result-actions-main">
+          <button class="btn primary small" onclick="location.href='typing-test.html'">
+            Go to typing test
+          </button>
+          <button class="btn secondary small" onclick="location.href='index.html'">
+            Back to home
+          </button>
+        </div>
+      </div>
+
+      <div id="result-main-block" class="hidden">
+        <div class="result-summary-grid">
+          <div class="result-summary-item">
+            <div class="result-summary-label">Net WPM</div>
+            <div class="result-summary-value" id="res-net-wpm">0</div>
+          </div>
+          <div class="result-summary-item">
+            <div class="result-summary-label">Accuracy</div>
+            <div class="result-summary-value" id="res-accuracy">0%</div>
+          </div>
+          <div class="result-summary-item">
+            <div class="result-summary-label">Time</div>
+            <div class="result-summary-value" id="res-time">0s</div>
+          </div>
+          <div class="result-summary-item">
+            <div class="result-summary-label">Errors (chars)</div>
+            <div class="result-summary-value" id="res-errors">0</div>
+          </div>
+        </div>
+
+        <table class="result-detail-table">
+          <tbody>
+            <tr>
+              <th>Language</th>
+              <td id="res-lang"></td>
+            </tr>
+            <tr>
+  <th>Full mistakes</th>
+  <td id="res-full"></td>
+</tr>
+<tr>
+  <th>Half mistakes</th>
+  <td id="res-half"></td>
+</tr>
+<tr>
+  <th>Ignored</th>
+  <td id="res-ignored"></td>
+</tr>
+<tr>
+  <th>Weighted mistakes (Full + Half/2)</th>
+  <td id="res-weighted"></td>
+</tr>
+            <tr>
+              <th>Reason</th>
+              <td id="res-reason"></td>
+            </tr>
+            <tr>
+              <th>Gross WPM</th>
+              <td id="res-gross-wpm"></td>
+            </tr>
+            <tr>
+              <th>Words</th>
+              <td id="res-words"></td>
+            </tr>
+            <tr>
+              <th>Characters</th>
+              <td id="res-chars"></td>
+            </tr>
+            <tr>
+              <th>Time limit</th>
+              <td id="res-time-limit"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="result-actions-main">
+          <button class="btn primary small" id="res-retest-btn">
+            Retake same test
+          </button>
+          <button class="btn secondary small" onclick="location.href='typing-test.html'">
+            Start new test
+          </button>
+          <button class="btn small" onclick="location.href='index.html'">
+            Back to home
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const emptyEl = document.getElementById("result-empty");
+      const mainBlock = document.getElementById("result-main-block");
+      const subTitle = document.getElementById("result-subtitle");
+
+      function formatTime(seconds) {
+        seconds = Math.max(seconds || 0, 0);
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        if (seconds >= 60) {
+          return m.toString().padStart(2, "0") + ":" + s.toString().padStart(2, "0");
+        }
+        return seconds + "s";
+      }
+
+      let summary = null;
+      try {
+        const raw = localStorage.getItem("ft-last-result");
+        if (raw) summary = JSON.parse(raw);
+      } catch (e) {
+        console.error("Result parse error", e);
+      }
+
+      if (!summary || !summary.stats) {
+        subTitle.textContent = "No recent typing session was found.";
+        emptyEl.classList.remove("hidden");
+        return;
+      }
+
+      emptyEl.classList.add("hidden");
+      mainBlock.classList.remove("hidden");
+
+      const { stats, lang, reason, timeLimit, elapsed, totalWords } = summary;
+
+      subTitle.textContent =
+        (summary.config && summary.config.userName
+          ? summary.config.userName + " • "
+          : "") +
+        (lang === "english"
+          ? "English"
+          : lang === "hindi-kruti"
+          ? "Hindi (Kruti Dev)"
+          : "Hindi (Mangal)") +
+        " • " +
+        (reason === "Time up" ? "Time finished" : "Passage completed");
+
+      document.getElementById("res-net-wpm").textContent =
+        stats.netWpm.toFixed(1);
+      document.getElementById("res-accuracy").textContent =
+        stats.accuracy.toFixed(1) + "%";
+      document.getElementById("res-time").textContent = formatTime(elapsed);
+      document.getElementById("res-errors").textContent = stats.errorChars;
+
+      document.getElementById("res-lang").textContent =
+        lang === "english"
+          ? "English (QWERTY)"
+          : lang === "hindi-kruti"
+          ? "Hindi (Kruti Dev)"
+          : "Hindi (Mangal / Unicode)";
+
+      document.getElementById("res-reason").textContent =
+        reason === "Time up" ? "Time over" : "Passage completed";
+      document.getElementById("res-gross-wpm").textContent =
+        stats.grossWpm.toFixed(1);
+      document.getElementById("res-words").textContent =
+        stats.wordsTyped + " / " + (totalWords || 0);
+      document.getElementById("res-chars").textContent =
+        stats.charsTyped + " (correct " + stats.correctChars + ")";
+      document.getElementById("res-time-limit").textContent = timeLimit
+        ? formatTime(timeLimit)
+        : "Unlimited";
+
+      const retestBtn = document.getElementById("res-retest-btn");
+      retestBtn.addEventListener("click", () => {
+        if (summary.config) {
+          try {
+            localStorage.setItem(
+              "ft-active-test",
+              JSON.stringify(summary.config)
+            );
+          } catch (e) {}
+        }
+        window.location.href = "typing-test.html";
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Steno Master - Test Setup</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    .feedback-fab{ position: fixed; right: 16px; bottom: 16px; z-index: 99999; display: inline-flex; gap: 10px;
+      align-items: center; padding: 12px 14px; border-radius: 14px; border: 1px solid rgba(255,255,255,.18);
+      background: rgba(10, 16, 32, .75); color: #fff; font-weight: 800; cursor: pointer; backdrop-filter: blur(10px);
+    }
+    .feedback-fab .feedback-fab-label{ font-weight: 800; }
+    .feedback-panel{ position: fixed; right: 16px; bottom: 72px; z-index: 99999; width: 340px; border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14); background: rgba(10, 16, 32, .92); color: #fff; box-shadow: 0 16px 45px rgba(0,0,0,.45);
+      overflow: hidden; backdrop-filter: blur(12px);
+    }
+    .feedback-hidden{ display: none; }
+    .feedback-header{ display:flex; justify-content: space-between; align-items:center; padding: 12px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.10); font-weight: 900;
+    }
+    .feedback-close-btn{ width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06); color:#fff; cursor:pointer; font-size: 18px; line-height: 1;
+    }
+    .feedback-body{ padding: 12px; display:flex; flex-direction:column; gap:10px; }
+    .feedback-body label{ display:flex; flex-direction:column; gap:6px; font-size: 12px; color: rgba(255,255,255,.80); }
+    .feedback-body input, .feedback-body textarea{ width: 100%; padding: 10px 10px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.14); background: rgba(0,0,0,.25); color: #fff; outline: none;
+    }
+    .feedback-status{ margin: 4px 0 0; font-size: 12px; color: #fca5a5; }
+    .btn.primary.full{ width: 100%; padding: 11px 12px; border-radius: 12px; border: 1px solid rgba(79,140,255,.50);
+      background: linear-gradient(135deg, rgba(79,140,255,.95), rgba(42,101,255,.95)); color:#fff; font-weight: 900; cursor:pointer;
+    }
+    .ts-hint{ font-size: 12px; color: #9ca3af; margin-top: 6px; }
+    .ts-inline-row{ display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
+    .ts-inline-row .control-group{ flex:1; min-width: 180px; }
+  </style>
+</head>
+
+<body class="test-setup">
+  <header class="navbar">
+    <div class="nav-left">
+      <img src="assets/logo.png" alt="Logo" class="logo" />
+      <span class="brand-name">Steno Master</span>
+    </div>
+    <nav class="nav-right">
+      <a href="index.html">Home</a>
+      <a href="practice.html">Practice</a>
+      <a href="book.html">Books</a>
+      <a href="admin.html">Admin</a>
+      <a href="login.html" class="nav-cta">Log in</a>
+    </nav>
+  </header>
+
+  <div class="ts-bg">
+    <div class="ts-bubble b1"></div>
+    <div class="ts-bubble b2"></div>
+    <div class="ts-bubble b3"></div>
+    <div class="ts-diag d1"></div>
+    <div class="ts-diag d2"></div>
+  </div>
+
+  <main class="test-main">
+    <div class="test-topbar">
+      <button type="button" class="test-back-btn" id="ts-back-btn">← Back</button>
+      <button type="button" class="test-link-btn" onclick="location.href='book.html'">Practice with books</button>
+    </div>
+
+    <div class="test-card">
+      <h1 class="practice-title test-title">Set up your typing test</h1>
+      <p class="test-subtitle">Choose language, time and text type, then start your test.</p>
+
+      <form id="test-setup-form">
+        <div class="test-row">
+          <div class="control-group" style="flex:1;">
+            <span>Your name <b style="color:#fca5a5;">*</b></span>
+            <input type="text" id="ts-name" placeholder="Enter your name" class="test-input" required autocomplete="name" />
+          </div>
+        </div>
+
+        <div class="test-row">
+          <div class="control-group" style="flex:1;">
+            <span>Choose language / layout</span>
+            <div id="ts-lang-buttons" class="lang-buttons">
+              <button type="button" class="lang-btn active" data-lang="english">English (QWERTY)</button>
+              <button type="button" class="lang-btn" data-lang="hindi-mangal">Hindi (Mangal)</button>
+              <button type="button" class="lang-btn" data-lang="hindi-kruti">Hindi (Kruti Dev)</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="test-row">
+          <span class="test-label">Select test time</span>
+          <div class="time-buttons" id="ts-time-buttons">
+            <button type="button" class="time-btn" data-seconds="60">1 min</button>
+            <button type="button" class="time-btn active" data-seconds="180">3 min</button>
+            <button type="button" class="time-btn" data-seconds="300">5 min</button>
+            <button type="button" class="time-btn" data-seconds="600">10 min</button>
+            <button type="button" class="time-btn" data-seconds="900">15 min</button>
+            <button type="button" class="time-btn" data-seconds="1800">30 min</button>
+            <button type="button" class="time-btn" data-seconds="0">∞ Unlimited</button>
+          </div>
+        </div>
+
+        <div class="test-row test-row-double">
+          <div class="control-group">
+            <span>Text type</span>
+            <select id="ts-source" class="test-select">
+              <!-- JS will rebuild based on language:
+                   English => Random English only
+                   Hindi   => Random Hindi only
+                   Then Books
+                   Then Hard Words
+                   Then Custom -->
+              <option value="random-en">Random passage</option>
+              <option value="custom">Custom text (paste your own)</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <span>Mode</span>
+            <select id="ts-mode" class="test-select">
+              <option value="practice">Practice mode (Backspace allowed)</option>
+              <option value="exam">Exam mode (Backspace disabled)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Hard words options -->
+        <div class="test-row hidden" id="ts-hardwords-row">
+          <div class="ts-inline-row">
+            <div class="control-group">
+              <span>Hard words difficulty</span>
+              <select id="ts-hw-difficulty" class="test-select">
+                <option value="all" selected>All</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <span>How many words</span>
+              <select id="ts-hw-count" class="test-select">
+                <option value="20">20</option>
+                <option value="30" selected>30</option>
+                <option value="50">50</option>
+                <option value="80">80</option>
+              </select>
+            </div>
+          </div>
+          <div class="ts-hint">Words will be loaded automatically and shown as typing text.</div>
+        </div>
+
+        <!-- Volume row -->
+        <div class="test-row hidden" id="ts-book-volume-row">
+          <div class="control-group" style="flex:1;">
+            <span>Volume</span>
+            <select id="ts-book-volume" class="test-select">
+              <option value="">Select volume</option>
+            </select>
+            <div class="ts-hint">If the book has volumes, choose a volume to see its chapters.</div>
+          </div>
+        </div>
+
+        <!-- Chapter row -->
+        <div class="test-row hidden" id="ts-book-lesson-row">
+          <div class="control-group" style="flex:1;">
+            <span>Chapter / Lesson</span>
+            <select id="ts-book-lesson" class="test-select">
+              <option value="">Random chapter</option>
+            </select>
+            <div class="ts-hint" id="ts-chapter-hint"></div>
+          </div>
+        </div>
+
+        <div id="ts-custom-wrap" class="test-row hidden">
+          <div class="control-group" style="flex:1;">
+            <span>Custom text</span>
+            <textarea id="ts-custom-text" class="test-textarea" placeholder="Paste your own paragraph here..."></textarea>
+          </div>
+        </div>
+
+        <div class="test-row">
+          <div class="toggle-row" style="margin-left:0;">
+            <span class="toggle-label">Backspace</span>
+            <label class="toggle-label">
+              <input type="checkbox" id="ts-backspace-allowed" checked /> Allowed
+            </label>
+          </div>
+        </div>
+
+        <div class="test-row" style="margin-top:16px;">
+          <button type="submit" class="test-start-btn">Start Test</button>
+        </div>
+
+        <p id="ts-message" class="test-message"></p>
+      </form>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="js/firebase-config.js"></script>
+
+  <script src="js/test-setup.js"></script>
+  <script src="js/feedback.js"></script>
+</body>
+</html>

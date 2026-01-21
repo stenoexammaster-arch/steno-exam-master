@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Steno Exam Master - Exam Typing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Global CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Exam CSS -->
+  <link rel="stylesheet" href="css/steno-exam.css" />
+
+  <!-- Better UI font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Hindi Unicode fallback (Kruti Dev is local-installed) -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<body class="steno-page steno-exam-page">
+  <header class="navbar">
+    <div class="nav-left">
+      <img src="assets/logo.png" alt="Logo" class="logo" />
+      <span class="brand-name">Steno Exam Master</span>
+    </div>
+    <nav class="nav-right">
+      <a href="index.html">Home</a>
+      <a href="typing-test.html">Typing test</a>
+      <a href="book.html">Books</a>
+      <a href="admin.html">Admin</a>
+      <a href="login.html" class="nav-cta">Log in</a>
+    </nav>
+  </header>
+
+  <main class="steno-main">
+    <section class="steno-card">
+      <div class="steno-layout" id="exam-layout">
+        <!-- LEFT -->
+        <div class="steno-editor-col" id="left-col">
+          <!-- BOX 1: Top strip -->
+          <div class="steno-editor-header exam-topstrip" id="topstrip">
+            <div class="editor-meta">
+              <div id="exam-font-display">Select settings to enable Start Test…</div>
+              <div class="meta-row" id="meta-selected">Test: — | Lang: — | Book: — | Lesson: —</div>
+            </div>
+
+            <div class="timer-wrap">
+              <div class="timer-label">Time</div>
+              <div class="timer-value" id="timer-display">--:--</div>
+              <div class="timer-status" id="timer-status">INACTIVE</div>
+            </div>
+          </div>
+
+          <div class="notepad-wrap" id="notepad-wrap">
+            <div class="editor-lock" id="editor-lock">
+              <div class="lock-card">
+                <div class="lock-title">Typing Locked</div>
+                <div class="lock-subtitle">
+                  Select Test • Language • Time • Book • Lesson, then click <b>Start Test</b>.<br/>
+                  Timer starts automatically on your <b>first typed character</b>.
+                </div>
+              </div>
+            </div>
+
+            <textarea
+              id="steno-text"
+              class="steno-textarea notepad"
+              spellcheck="false"
+              autocomplete="off"
+              autocapitalize="off"
+              autocorrect="off"
+              placeholder="Type here… (Paste is blocked)"
+              disabled
+            ></textarea>
+          </div>
+
+          <div class="exam-actions" id="left-actions">
+            <button id="btn-check" class="btn-exam" disabled>Check Dictation / Show Result</button>
+            <button id="btn-reset" class="btn-exam ghost">Reset</button>
+          </div>
+          <section id="result-section" class="result-section" hidden>
+  <div class="result-head">
+    <h3 class="result-title" id="result-title">Result & Analysis</h3>
+    <button id="btn-again" class="btn-exam ghost" type="button">Test Again</button>
+  </div>
+
+  <div class="result-sheet" id="result-sheet"></div>
+
+  <div class="diff-title" id="diff-title">Error Highlighting</div>
+  <div class="diff-output" id="diff-output"></div>
+</section>
+        </div>
+        
+
+        <!-- RIGHT -->
+        <aside class="steno-panel exam-panel" id="exam-panel">
+          <!-- BOX 2: Right panel -->
+          <div class="panel-body">
+            <h2 class="steno-panel-title">Control Panel</h2>
+            <p class="steno-panel-sub">
+              Paste always blocked. Copy allowed only for Premium users.
+            </p>
+
+            <div class="control-group">
+              <label for="exam-type">Test Selection</label>
+              <select id="exam-type" class="test-select">
+                <option value="" selected disabled>Select test</option>
+                <option value="HSSC_C">HSSC Steno Group C</option>
+                <option value="SSC_C">SSC Steno Group C</option>
+                <option value="SSC_D">SSC Steno Group D</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="exam-language">Language</label>
+              <select id="exam-language" class="test-select">
+                <option value="" selected disabled>Select language</option>
+                <option value="english">English</option>
+                <option value="hindi">Hindi</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="candidate-name">Candidate Name</label>
+              <input id="candidate-name" class="test-input" type="text" placeholder="Enter your name" maxlength="40" />
+            </div>
+
+            <div class="control-group">
+              <label for="exam-time">Time</label>
+              <select id="exam-time" class="test-select" disabled>
+                <option value="" selected disabled>Select time</option>
+              </select>
+              <div class="hint" id="time-hint">Select test first.</div>
+            </div>
+
+            <div class="control-group">
+              <label for="book-select">Book (from Admin)</label>
+              <select id="book-select" class="test-select" disabled>
+                <option value="" selected disabled>Loading…</option>
+              </select>
+              <div class="hint" id="book-hint">Books load from Admin (Firestore).</div>
+            </div>
+
+            <div class="control-group">
+              <label for="lesson-select">Lesson / Chapter</label>
+              <select id="lesson-select" class="test-select" disabled>
+                <option value="" selected disabled>Select lesson</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label>Rules (Auto)</label>
+              <div class="rules-box" id="rules-box">Select test to load rules…</div>
+            </div>
+          </div>
+
+          <!-- Start button bottom -->
+          <div class="panel-footer">
+            <button id="btn-start" class="btn-exam primary" disabled>Start Test</button>
+            <div class="panel-footnote">Timer starts on first key after Start Test.</div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- BOX 3: Result (full width) -->
+      <section id="result-section" class="result-section" hidden>
+  <div class="result-head">
+    <h3 class="result-title" id="result-title">Result & Analysis</h3>
+    <button id="btn-again" class="btn-exam ghost" type="button">Test Again</button>
+  </div>
+
+  <div class="result-sheet" id="result-sheet"></div>
+
+  <div class="diff-title" id="diff-title">Error Highlighting</div>
+  <div class="diff-output" id="diff-output"></div>
+</section>
+    </section>
+  </main>
+
+  <button id="feedback-fab" class="feedback-fab" type="button">Feedback</button>
+
+  <!-- Engine first -->
+  <script src="js/testEngine.js"></script>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="js/firebase-config.js"></script>
+
+  <!-- Exam logic -->
+  <script src="js/steno-exam.js"></script>
+
+  <!-- Feedback -->
+  <script src="js/feedback.js"></script>
+</body>
+</html>
