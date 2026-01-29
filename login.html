@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FastType - Login / Create Account</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body class="auth-page" data-page="login">
+  <!-- Background video -->
+  <video
+    class="auth-bg-video"
+    src="assets/videos/login-bg.mp4"
+    autoplay
+    muted
+    loop
+    playsinline
+  ></video>
+
+  <!-- Dark overlay so text readable -->
+  <div class="auth-bg-overlay"></div>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="nav-left">
+      <img src="assets/logo.png" alt="Logo" class="logo" />
+      <span class="brand-name">FastType</span>
+    </div>
+    <nav class="nav-right">
+      <a href="index.html">Home</a>
+      <a href="practice.html">Practice</a>
+      <a href="book.html">Books</a>
+      <a href="admin.html">Admin</a>
+
+      <!-- ✅ Navbar auth controls -->
+      <span id="nav-user-info" class="nav-user-info hidden"></span>
+      <a href="login.html" id="nav-login-link" class="nav-cta">Log in</a>
+      <button id="nav-logout-btn" class="nav-cta secondary hidden" type="button">
+        Logout
+      </button>
+    </nav>
+  </header>
+
+  <!-- MAIN AUTH SHELL -->
+  <main class="auth-shell">
+    <!-- LEFT SIDE: hero + demo video -->
+    <section class="auth-left">
+      <div class="auth-left-card">
+        <div class="auth-left-badge">⚡ Free typing trial</div>
+        <h1 class="auth-left-title">
+          Start typing <span class="accent">faster</span>
+          <br />and more <span class="accent">accurately</span>.
+        </h1>
+        <p class="auth-left-subtitle">
+          Join learners preparing for typing exams and office work. Structured practice,
+          live stats and book‑based exercises with English and Hindi (Kruti/Mangal).
+        </p>
+
+        <ul class="auth-left-list">
+          <li>Exam‑style tests with flexible time</li>
+          <li>Random passages &amp; book lessons from admin panel</li>
+          <li>Progress tracking and accuracy reports</li>
+        </ul>
+
+        <div class="auth-media">
+          <video
+            src="assets/videos/typing-demo.mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+          ></video>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT SIDE: login / signup card -->
+    <section class="auth-right">
+      <div class="auth-card">
+        <div class="auth-icon">⌨</div>
+        <h1 class="auth-title" id="auth-title-text">Welcome back</h1>
+        <p class="auth-subtitle" id="auth-subtitle-text">
+          Sign in to continue your typing journey.
+        </p>
+
+        <!-- Tabs -->
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-target="signin-panel">
+            Sign In
+          </button>
+          <button class="auth-tab" data-target="signup-panel">
+            Create Account
+          </button>
+        </div>
+
+        <!-- Sign in panel -->
+        <div id="signin-panel">
+          <!-- ✅ EMAIL LOGIN BLOCK -->
+          <div id="email-login-block">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" placeholder="you@example.com" />
+
+            <div class="auth-field-row">
+              <label for="login-password">Password</label>
+              <button
+                type="button"
+                class="auth-link-inline"
+                id="forgot-password-btn"
+              >
+                Forgot password?
+              </button>
+            </div>
+
+            <div class="password-row">
+              <input
+                type="password"
+                id="login-password"
+                placeholder="Your password"
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                data-target="login-password"
+              >
+                👁
+              </button>
+            </div>
+
+            <label class="auth-remember">
+              <input type="checkbox" />
+              Remember me for 30 days
+            </label>
+
+            <button
+              id="email-login-btn"
+              class="btn primary full auth-main-btn"
+            >
+              Sign In
+            </button>
+
+            <div id="auth-message-login" class="auth-error"></div>
+
+            <!-- Unverified email actions -->
+            <div id="login-unverified-actions" class="hidden" style="margin-top:8px;">
+              <p style="font-size:0.85rem;color:#f97316;">
+                Your email is not verified. Please check your inbox (and spam) for a verification email.
+              </p>
+              <button id="resend-verification-btn" class="btn small secondary" type="button">
+                Resend verification email
+              </button>
+              <button id="check-verification-btn" class="btn small" type="button">
+                I have verified, check again
+              </button>
+            </div>
+
+            <!-- Link to switch to phone OTP mode -->
+            <p class="auth-footer-text-small" style="margin-top:10px;text-align:center;">
+              — OR —
+              <button
+                id="show-phone-login-btn"
+                type="button"
+                class="auth-link-inline"
+                style="display:inline;border:none;background:none;padding:0;"
+              >
+                Login with phone OTP
+              </button>
+            </p>
+          </div>
+
+          <!-- ✅ PHONE LOGIN BLOCK (hidden by default) -->
+          <div id="phone-login-block" class="hidden" style="margin-top:8px;">
+            <p class="auth-footer-text-small">
+              Login with phone OTP
+            </p>
+
+            <label for="phone-login-number">Mobile Number</label>
+            <input
+              type="text"
+              id="phone-login-number"
+              placeholder="+91XXXXXXXXXX"
+            />
+
+            <!-- reCAPTCHA container for phone auth -->
+            <div id="phone-recaptcha-container" style="margin:6px 0;"></div>
+
+            <button id="phone-send-otp-btn" class="btn small secondary" type="button">
+              Send OTP
+            </button>
+
+            <label for="phone-otp-code" style="margin-top:8px;display:block;">
+              Enter OTP
+            </label>
+            <input
+              type="text"
+              id="phone-otp-code"
+              placeholder="6-digit code"
+            />
+
+            <button id="phone-verify-otp-btn" class="btn small primary" type="button" style="margin-top:6px;">
+              Verify &amp; Login
+            </button>
+
+            <div id="auth-message-phone" class="auth-error" style="margin-top:4px;"></div>
+
+            <p class="auth-footer-text-small" style="margin-top:8px;">
+              <button
+                id="back-to-email-login-btn"
+                type="button"
+                class="auth-link-inline"
+                style="border:none;background:none;padding:0;"
+              >
+                ← Back to email login
+              </button>
+            </p>
+          </div>
+        </div>
+
+        <!-- Create account panel -->
+        <div id="signup-panel" class="hidden">
+          <label for="signup-name">Full Name</label>
+          <input type="text" id="signup-name" placeholder="Your name" />
+
+          <label for="signup-phone">Mobile Number</label>
+          <input type="text" id="signup-phone" placeholder="+91XXXXXXXXXX" />
+
+          <label for="signup-address">Address</label>
+          <input
+            type="text"
+            id="signup-address"
+            placeholder="City / State (optional)"
+          />
+
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" placeholder="you@example.com" />
+
+          <label for="signup-password">Create Password</label>
+          <div class="password-row">
+            <input
+              type="password"
+              id="signup-password"
+              placeholder="Choose a strong password"
+            />
+            <button
+              type="button"
+              class="password-toggle"
+              data-target="signup-password"
+            >
+              👁
+            </button>
+          </div>
+
+          <!-- Optional reCAPTCHA: if you DON'T have a real site key yet, comment out this div. -->
+          <div
+            class="g-recaptcha"
+            id="signup-recaptcha"
+            data-sitekey="YOUR_RECAPTCHA_SITE_KEY"
+            style="margin:8px 0;"
+          ></div>
+
+          <label class="auth-remember">
+            <input type="checkbox" checked />
+            I agree to the basic terms of using this typing app.
+          </label>
+
+          <button
+            id="email-signup-btn"
+            class="btn primary full auth-main-btn"
+          >
+            Create Account
+          </button>
+
+          <div id="auth-message-signup" class="auth-error"></div>
+
+          <p class="auth-footer-text-small">
+            A verification email will be sent. Please verify from your inbox.
+            After verification, you can login and access Books &amp; Practice.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Firebase scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script src="js/firebase-config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+
+  <!-- Google reCAPTCHA v2 script (for signup & phone) -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  <script src="js/feedback.js"></script>
+
+  <script>
+    // Tab change par heading text change
+    document.addEventListener("DOMContentLoaded", () => {
+      const tabs = document.querySelectorAll(".auth-tab");
+      const title = document.getElementById("auth-title-text");
+      const sub = document.getElementById("auth-subtitle-text");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          if (tab.dataset.target === "signin-panel") {
+            title.textContent = "Welcome back";
+            sub.textContent = "Sign in to continue your typing journey.";
+          } else {
+            title.textContent = "Create your account";
+            sub.textContent = "Get started with your free typing trial.";
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
