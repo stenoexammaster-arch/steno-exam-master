@@ -2,205 +2,614 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>FastType - Test Result</title>
-  <link rel="stylesheet" href="CSS/style.css" />
+  <title>Steno Master - Test Result</title>
+  <link rel="stylesheet" href="css/style.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Hindi font for Unicode Hindi -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
   <style>
+    :root {
+      --res-bg: #020617;
+      --res-card-bg: #020617;
+      --res-border: #1f2937;
+      --res-accent: #fbbf24;
+      --res-accent-soft: rgba(251, 191, 36, 0.1);
+      --res-text-main: #e5e7eb;
+      --res-text-muted: #9ca3af;
+      --res-danger: #f97373;
+      --res-warn: #fdba74;
+      --res-ok: #6ee7b7;
+      --res-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
+    }
+
     body.result-page {
-      background: radial-gradient(circle at top, #020617 0, #020617 50%, #020617 100%);
-      color: #e5e7eb;
+      margin: 0;
+      /* Dark but with mixed gradient, not flat black */
+      background:
+        radial-gradient(circle at top, #0b1120 0, #020617 45%, #020617 100%),
+        linear-gradient(135deg, #020617 0, #111827 35%, #020617 100%);
+      background-blend-mode: screen;
+      color: var(--res-text-main);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
+
     .result-main {
       flex: 1;
-      max-width: 900px;
-      margin: 32px auto 40px;
+      max-width: 1120px;
+      margin: 72px auto 40px;
       padding: 0 16px;
     }
+
     .result-card {
       background: radial-gradient(circle at top left, #020617 0, #020617 40%, #020617 100%);
       border-radius: 18px;
-      border: 1px solid #1f2937;
+      border: 1px solid var(--res-border);
       padding: 20px 20px 18px;
-      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.95);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9);
     }
+
     .result-heading {
-      font-size: 1.8rem;
+      font-size: 1.9rem;
       margin-bottom: 4px;
+      font-weight: 600;
+      color: #f9fafb;
     }
+
     .result-sub {
-      font-size: 0.9rem;
-      color: #9ca3af;
+      font-size: 0.95rem;
+      color: var(--res-text-muted);
       margin-bottom: 16px;
     }
+
+    .result-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--res-border);
+      background: #020617;
+      font-size: 0.8rem;
+      color: var(--res-text-muted);
+      margin-left: 6px;
+    }
+
+    .result-badge strong {
+      color: var(--res-accent);
+      font-weight: 600;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* META GRID */
+    .result-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+      font-size: 0.92rem;
+    }
+
+    .result-meta-label {
+      font-size: 0.8rem;
+      color: var(--res-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .result-meta-value {
+      font-weight: 500;
+      color: var(--res-text-main);
+    }
+
+    /* SUMMARY GRID */
     .result-summary-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 12px;
       margin-bottom: 16px;
     }
+
     .result-summary-item {
       background: #020617;
       border-radius: 12px;
-      border: 1px solid #1f2937;
+      border: 1px solid var(--res-border);
       padding: 10px 12px;
-      text-align: center;
     }
+
     .result-summary-label {
-      font-size: 0.9rem;
-      color: #9ca3af;
+      font-size: 0.83rem;
+      color: var(--res-text-muted);
       margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
+
     .result-summary-value {
       font-size: 1.4rem;
       font-weight: 700;
-      color: #fbbf24;
+      color: var(--res-accent);
     }
+
+    .result-summary-value small {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--res-text-muted);
+      margin-left: 4px;
+    }
+
+    /* DETAIL TABLE */
     .result-detail-table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 8px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
+
     .result-detail-table th,
     .result-detail-table td {
-      border: 1px solid #1f2937;
+      border: 1px solid var(--res-border);
       padding: 6px 8px;
+      vertical-align: top;
     }
+
     .result-detail-table th {
       background: #020617;
       text-align: left;
-      color: #9ca3af;
+      color: var(--res-text-muted);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
+
+    /* ACTIONS */
     .result-actions-main {
       margin-top: 16px;
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
     }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      padding: 7px 14px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      background: #020617;
+      color: #e5e7eb;
+      transition: background 0.12s ease, box-shadow 0.12s ease, transform 0.05s ease;
+    }
+
+    .btn.primary {
+      background: var(--res-accent);
+      color: #111827;
+      border-color: var(--res-accent);
+      font-weight: 600;
+    }
+
+    .btn.secondary {
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    .btn.small {
+      padding: 5px 11px;
+      font-size: 0.8rem;
+    }
+
+    .btn .icon {
+      font-size: 0.9em;
+    }
+
+    .btn:hover {
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.35);
+      transform: translateY(-0.5px);
+    }
+
+    .btn:active {
+      box-shadow: none;
+      transform: translateY(0);
+    }
+
+    /* ANALYSIS LAYOUT */
+    .res-two-cols {
+      display: grid;
+      grid-template-columns: 1.6fr 1.4fr;
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .res-subcard {
+      background: #020617;
+      border-radius: 12px;
+      border: 1px solid var(--res-border);
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+
+    .res-subcard h3 {
+      margin: 0 0 6px;
+      font-size: 1.0rem;
+      font-weight: 600;
+      color: #f9fafb;
+    }
+
+    .res-subcard p {
+      margin: 0 0 8px;
+      font-size: 0.8rem;
+      color: var(--res-text-muted);
+    }
+
+    /* Word table */
+    table.res-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }
+
+    table.res-table thead {
+      background: #020617;
+    }
+
+    table.res-table th,
+    table.res-table td {
+      padding: 4px 6px;
+      border: 1px solid var(--res-border);
+      vertical-align: top;
+    }
+
+    table.res-table th {
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-align: left;
+      color: var(--res-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    table.res-table td.word-mono {
+      font-family: var(--res-font-mono);
+      white-space: nowrap;
+      color: #e5e7eb;
+    }
+
+    tr.status-correct td {
+      background: rgba(16, 185, 129, 0.09);
+    }
+
+    tr.status-wrong td {
+      background: rgba(248, 113, 113, 0.1);
+    }
+
+    tr.status-miss td {
+      background: rgba(148, 163, 184, 0.12);
+    }
+
+    tr.status-extra td {
+      background: rgba(249, 115, 22, 0.12);
+    }
+
+    /* Heatmap */
+    .res-heatmap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.78rem;
+    }
+
+    .res-heatmap-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+    }
+
+    .heat-cell {
+      width: 10px;
+      height: 14px;
+      border-radius: 3px;
+      background: #1f2937;
+    }
+
+    .heat-l0 { background: #14532d; }   /* 0 errors - greenish */
+    .heat-l1 { background: #78350f; }
+    .heat-l2 { background: #9a3412; }
+    .heat-l3 { background: #7f1d1d; }   /* many errors */
+
+    .res-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .res-legend-item {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--res-text-muted);
+    }
+
+    .res-legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      border: 1px solid rgba(0,0,0,0.3);
+    }
+
+    /* Slow zones */
+    .res-zones-table td,
+    .res-zones-table th {
+      font-size: 0.75rem;
+    }
+
+    .zone-slow {
+      background: rgba(249, 115, 22, 0.18);
+      font-weight: 600;
+    }
+
+    .zone-ok {
+      background: rgba(16, 185, 129, 0.12);
+    }
+
+    /* Char-level diff */
+    .res-char-diff {
+      font-family: var(--res-font-mono);
+      font-size: 0.9rem;
+      background: #020617;
+      color: #e5e7eb;
+      border-radius: 12px;
+      border: 1px solid var(--res-border);
+      padding: 10px 12px 12px;
+      margin-top: 14px;
+      /* NO horizontal scroll: let text wrap fully */
+      overflow: visible;
+    }
+
+    .res-char-diff h3 {
+      margin: 0 0 4px;
+      font-size: 1rem;
+      color: #e5e7eb;
+    }
+
+    .res-char-diff p {
+      margin: 0 0 8px;
+      font-size: 0.78rem;
+      color: #9ca3af;
+    }
+
+    .char-row {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 4px;
+    }
+
+    .char-label {
+      flex: 0 0 70px;
+      font-size: 0.78rem;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding-top: 2px;
+    }
+
+    .char-stream {
+      flex: 1 1 auto;
+      /* Wrap text in multiple lines */
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    .ch {
+      white-space: inherit;
+    }
+
+    /* Color rules: correct = blue/green, wrong = red, extra = orange, missing = grey */
+    .ch-ok {
+      color: #a5b4fc; /* soft blue */
+    }
+
+    .ch-wrong {
+      color: #fecaca;
+      background: rgba(248, 113, 113, 0.2);
+    }
+
+    .ch-extra {
+      color: #fed7aa;
+      background: rgba(249, 115, 22, 0.3);
+    }
+
+    .ch-miss {
+      color: #cbd5f5;
+      background: rgba(148, 163, 184, 0.35);
+      border-bottom: 1px dotted rgba(148, 163, 184, 0.9);
+    }
+
+    .ch-placeholder {
+      color: #4b5563;
+      opacity: 0.4;
+    }
+
+    /* Hindi / Kruti fonts override for analysis areas */
+    .lang-hindi-uni .res-table td.word-mono,
+    .lang-hindi-uni .res-char-diff .char-stream {
+      font-family: "Noto Sans Devanagari", system-ui, sans-serif;
+      font-size: 1.1rem;
+      line-height: 2.0;
+      white-space: normal;
+    }
+
+    .lang-hindi-kruti .res-table td.word-mono,
+    .lang-hindi-kruti .res-char-diff .char-stream {
+      font-family: "Kruti Dev 010", "Noto Sans Devanagari", system-ui, sans-serif;
+      font-size: 1.1rem;
+      line-height: 2.0;
+      white-space: normal;
+    }
+
+    /* Empty state */
+    #result-empty {
+      color: var(--res-text-muted);
+      font-size: 0.95rem;
+    }
+
+    #result-empty p {
+      margin-bottom: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .result-meta-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .res-two-cols {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .result-meta-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .char-label {
+        flex-basis: 60px;
+      }
+      .result-main {
+        margin-top: 64px;
+      }
+    }
+
+    /* Print styles */
+    @media print {
+      body.result-page {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      header.navbar,
+      .practice-back-floating,
+      .result-actions-main {
+        display: none !important;
+      }
+      .result-main {
+        margin: 0;
+        padding: 0;
+        max-width: none;
+      }
+      .result-card {
+        box-shadow: none;
+        border-radius: 0;
+        background: #ffffff;
+        color: #000000;
+        border: 1px solid #aaa;
+        page-break-inside: avoid;
+      }
+      .result-summary-item,
+      .res-subcard,
+      .res-char-diff {
+        background: #ffffff;
+        border-color: #aaa;
+      }
+      .res-table th,
+      .res-table td,
+      .result-detail-table th,
+      .result-detail-table td {
+        border-color: #999;
+      }
+    }
   </style>
 </head>
 <body class="result-page">
+  <!-- Navbar -->
   <header class="navbar">
     <div class="nav-left">
       <img src="assets/logo.png" alt="Logo" class="logo" />
-      <span class="brand-name">FastType</span>
+      <span class="brand-name">Steno Master</span>
     </div>
     <nav class="nav-right">
       <a href="index.html">Home</a>
-      <a href="practice.html">Practice</a>
+      <a href="practice.html">Practice &amp; Books</a>
+      <a href="admin.html">Admin</a>
       <a href="login.html" class="nav-cta">Log in</a>
     </nav>
   </header>
 
+  <!-- Back to practice -->
+  <div class="practice-back-floating">
+    <button type="button" class="test-back-btn" onclick="location.href='practice.html'">
+      ← Back
+    </button>
+  </div>
+
   <main class="result-main">
     <section class="result-card" id="result-content">
-      <h1 class="result-heading">Test result</h1>
+      <h1 class="result-heading">
+        Test result
+        <span id="result-reason-badge" class="result-badge hidden">
+          <span>Reason:</span> <strong id="result-reason-text"></strong>
+        </span>
+      </h1>
       <p class="result-sub" id="result-subtitle">
         Loading your last typing session...
       </p>
 
       <div id="result-empty" class="hidden">
-        <p style="color:#9ca3af;">
-          No result found. Please take a typing test first.
+        <p>
+          No result found in this browser. Please take a typing test first.
         </p>
         <div class="result-actions-main">
           <button class="btn primary small" onclick="location.href='typing-test.html'">
-            Go to typing test
+            <span class="icon">⏱</span> Go to typing test
           </button>
           <button class="btn secondary small" onclick="location.href='index.html'">
-            Back to home
+            <span class="icon">🏠</span> Back to home
           </button>
         </div>
       </div>
 
       <div id="result-main-block" class="hidden">
-        <div class="result-summary-grid">
-          <div class="result-summary-item">
-            <div class="result-summary-label">Net WPM</div>
-            <div class="result-summary-value" id="res-net-wpm">0</div>
-          </div>
-          <div class="result-summary-item">
-            <div class="result-summary-label">Accuracy</div>
-            <div class="result-summary-value" id="res-accuracy">0%</div>
-          </div>
-          <div class="result-summary-item">
-            <div class="result-summary-label">Time</div>
-            <div class="result-summary-value" id="res-time">0s</div>
-          </div>
-          <div class="result-summary-item">
-            <div class="result-summary-label">Errors (chars)</div>
-            <div class="result-summary-value" id="res-errors">0</div>
-          </div>
-        </div>
-
-        <table class="result-detail-table">
-          <tbody>
-            <tr>
-              <th>Language</th>
-              <td id="res-lang"></td>
-            </tr>
-            <tr>
-  <th>Full mistakes</th>
-  <td id="res-full"></td>
-</tr>
-<tr>
-  <th>Half mistakes</th>
-  <td id="res-half"></td>
-</tr>
-<tr>
-  <th>Ignored</th>
-  <td id="res-ignored"></td>
-</tr>
-<tr>
-  <th>Weighted mistakes (Full + Half/2)</th>
-  <td id="res-weighted"></td>
-</tr>
-            <tr>
-              <th>Reason</th>
-              <td id="res-reason"></td>
-            </tr>
-            <tr>
-              <th>Gross WPM</th>
-              <td id="res-gross-wpm"></td>
-            </tr>
-            <tr>
-              <th>Words</th>
-              <td id="res-words"></td>
-            </tr>
-            <tr>
-              <th>Characters</th>
-              <td id="res-chars"></td>
-            </tr>
-            <tr>
-              <th>Time limit</th>
-              <td id="res-time-limit"></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="result-actions-main">
-          <button class="btn primary small" id="res-retest-btn">
-            Retake same test
-          </button>
-          <button class="btn secondary small" onclick="location.href='typing-test.html'">
-            Start new test
-          </button>
-          <button class="btn small" onclick="location.href='index.html'">
-            Back to home
-          </button>
-        </div>
+        <!-- Filled by JS -->
       </div>
     </section>
   </main>
 
   <script>
     (function () {
+      "use strict";
+
       const emptyEl = document.getElementById("result-empty");
       const mainBlock = document.getElementById("result-main-block");
       const subTitle = document.getElementById("result-subtitle");
+      const reasonBadge = document.getElementById("result-reason-badge");
+      const reasonTextEl = document.getElementById("result-reason-text");
+      const resultCard = document.getElementById("result-content");
+
+      function escapeHtml(str) {
+        return String(str || "").replace(/[&<>"']/g, (ch) => {
+          switch (ch) {
+            case "&": return "&amp;";
+            case "<": return "&lt;";
+            case ">": return "&gt;";
+            case '"': return "&quot;";
+            case "'": return "&#39;";
+            default: return ch;
+          }
+        });
+      }
 
       function formatTime(seconds) {
         seconds = Math.max(seconds || 0, 0);
@@ -212,77 +621,706 @@
         return seconds + "s";
       }
 
-      let summary = null;
-      try {
+      function safeParse(json) {
+        try { return JSON.parse(json); } catch { return null; }
+      }
+
+      function loadLastResult() {
         const raw = localStorage.getItem("ft-last-result");
-        if (raw) summary = JSON.parse(raw);
-      } catch (e) {
-        console.error("Result parse error", e);
+        if (!raw) return null;
+        const obj = safeParse(raw);
+        if (!obj || !obj.stats) return null;
+        return obj;
       }
 
-      if (!summary || !summary.stats) {
-        subTitle.textContent = "No recent typing session was found.";
-        emptyEl.classList.remove("hidden");
-        return;
+      function getUserNameFromStorage() {
+        const raw = localStorage.getItem("sm_user");
+        if (!raw) return null;
+        const u = safeParse(raw) || {};
+        return u.name || u.fullName || u.displayName || null;
       }
 
-      emptyEl.classList.add("hidden");
-      mainBlock.classList.remove("hidden");
-
-      const { stats, lang, reason, timeLimit, elapsed, totalWords } = summary;
-
-      subTitle.textContent =
-        (summary.config && summary.config.userName
-          ? summary.config.userName + " • "
-          : "") +
-        (lang === "english"
-          ? "English"
-          : lang === "hindi-kruti"
-          ? "Hindi (Kruti Dev)"
-          : "Hindi (Mangal)") +
-        " • " +
-        (reason === "Time up" ? "Time finished" : "Passage completed");
-
-      document.getElementById("res-net-wpm").textContent =
-        stats.netWpm.toFixed(1);
-      document.getElementById("res-accuracy").textContent =
-        stats.accuracy.toFixed(1) + "%";
-      document.getElementById("res-time").textContent = formatTime(elapsed);
-      document.getElementById("res-errors").textContent = stats.errorChars;
-
-      document.getElementById("res-lang").textContent =
-        lang === "english"
-          ? "English (QWERTY)"
-          : lang === "hindi-kruti"
-          ? "Hindi (Kruti Dev)"
-          : "Hindi (Mangal / Unicode)";
-
-      document.getElementById("res-reason").textContent =
-        reason === "Time up" ? "Time over" : "Passage completed";
-      document.getElementById("res-gross-wpm").textContent =
-        stats.grossWpm.toFixed(1);
-      document.getElementById("res-words").textContent =
-        stats.wordsTyped + " / " + (totalWords || 0);
-      document.getElementById("res-chars").textContent =
-        stats.charsTyped + " (correct " + stats.correctChars + ")";
-      document.getElementById("res-time-limit").textContent = timeLimit
-        ? formatTime(timeLimit)
-        : "Unlimited";
-
-      const retestBtn = document.getElementById("res-retest-btn");
-      retestBtn.addEventListener("click", () => {
-        if (summary.config) {
-          try {
-            localStorage.setItem(
-              "ft-active-test",
-              JSON.stringify(summary.config)
-            );
-          } catch (e) {}
+      function getCandidateName(summary) {
+        if (summary.config && summary.config.userName) {
+          return summary.config.userName;
         }
-        window.location.href = "typing-test.html";
-      });
+        const fromUser = getUserNameFromStorage();
+        if (fromUser) return fromUser;
+        return "Guest";
+      }
+
+      function formatLanguage(lang, cfg) {
+        if (!lang && cfg && cfg.lang) lang = cfg.lang;
+        switch ((lang || "").toLowerCase()) {
+          case "english": return "English (QWERTY)";
+          case "hindi-kruti": return "Hindi (Kruti Dev 010)";
+          case "hindi-mangal": return "Hindi (Mangal / Unicode)";
+          case "hindi": return "Hindi";
+          default: return lang || "Unknown";
+        }
+      }
+
+      function clamp(x, min, max) {
+        return x < min ? min : x > max ? max : x;
+      }
+
+      function tokenizeWords(str) {
+        str = (str || "").trim();
+        if (!str) return [];
+        return str.split(/\s+/).filter(Boolean);
+      }
+
+      // Small edit distance for words
+      function editDistance(a, b) {
+        const A = Array.from(a || "");
+        const B = Array.from(b || "");
+        const n = A.length, m = B.length;
+        if (!n) return m;
+        if (!m) return n;
+        const dp = new Array(n + 1);
+        for (let i = 0; i <= n; i++) {
+          dp[i] = new Array(m + 1).fill(0);
+          dp[i][0] = i;
+        }
+        for (let j = 0; j <= m; j++) dp[0][j] = j;
+
+        for (let i = 1; i <= n; i++) {
+          for (let j = 1; j <= m; j++) {
+            const cost = A[i - 1] === B[j - 1] ? 0 : 1;
+            dp[i][j] = Math.min(
+              dp[i - 1][j] + 1,
+              dp[i][j - 1] + 1,
+              dp[i - 1][j - 1] + cost
+            );
+          }
+        }
+        return dp[n][m];
+      }
+
+      // Char-level diff between entire texts
+      function computeCharDiff(orig, typed) {
+        const A = Array.from(orig || "");
+        const B = Array.from(typed || "");
+        const n = A.length, m = B.length;
+        const dp = new Array(n + 1);
+        for (let i = 0; i <= n; i++) {
+          dp[i] = new Array(m + 1).fill(0);
+          dp[i][0] = i;
+        }
+        for (let j = 0; j <= m; j++) dp[0][j] = j;
+
+        for (let i = 1; i <= n; i++) {
+          for (let j = 1; j <= m; j++) {
+            const cost = A[i - 1] === B[j - 1] ? 0 : 1;
+            dp[i][j] = Math.min(
+              dp[i - 1][j] + 1,
+              dp[i][j - 1] + 1,
+              dp[i - 1][j - 1] + cost
+            );
+          }
+        }
+
+        const ops = [];
+        let i = n, j = m;
+        while (i > 0 || j > 0) {
+          if (i > 0 && dp[i][j] === dp[i - 1][j] + 1) {
+            ops.push({ type: "del", orig: A[i - 1], typed: null });
+            i--;
+          } else if (j > 0 && dp[i][j] === dp[i][j - 1] + 1) {
+            ops.push({ type: "ins", orig: null, typed: B[j - 1] });
+            j--;
+          } else {
+            const same = A[i - 1] === B[j - 1];
+            ops.push({
+              type: same ? "eq" : "sub",
+              orig: A[i - 1],
+              typed: B[j - 1]
+            });
+            i--;
+            j--;
+          }
+        }
+        ops.reverse();
+        return ops;
+      }
+
+      function buildCharStreams(orig, typed) {
+        const ops = computeCharDiff(orig, typed);
+
+        const origParts = [];
+        const typedParts = [];
+
+        for (const op of ops) {
+          if (op.type === "eq") {
+            const ch = escapeHtml(op.orig);
+            origParts.push('<span class="ch ch-ok">' + ch + "</span>");
+            typedParts.push('<span class="ch ch-ok">' + ch + "</span>");
+          } else if (op.type === "sub") {
+            const o = escapeHtml(op.orig);
+            const t = escapeHtml(op.typed);
+            origParts.push('<span class="ch ch-wrong">' + o + "</span>");
+            typedParts.push('<span class="ch ch-wrong">' + t + "</span>");
+          } else if (op.type === "del") {
+            const o = escapeHtml(op.orig);
+            origParts.push('<span class="ch ch-miss">' + o + "</span>");
+            typedParts.push('<span class="ch ch-placeholder">·</span>');
+          } else if (op.type === "ins") {
+            const t = escapeHtml(op.typed);
+            origParts.push('<span class="ch ch-placeholder">·</span>');
+            typedParts.push('<span class="ch ch-extra">' + t + "</span>");
+          }
+        }
+
+        return {
+          origHtml: origParts.join(""),
+          typedHtml: typedParts.join("")
+        };
+      }
+
+      // Build per-word summary
+      function computeWordSummary(origText, typedText) {
+        const origWords = tokenizeWords(origText);
+        const typedWords = tokenizeWords(typedText);
+
+        const maxLen = Math.max(origWords.length, typedWords.length);
+        const rows = [];
+        const errorsPerWord = [];
+        let totalChars = 0;
+        let totalErrors = 0;
+
+        for (let i = 0; i < maxLen; i++) {
+          const exp = origWords[i] || "";
+          const got = typedWords[i] || "";
+          let status = "correct";
+          let err = 0;
+
+          if (exp && got) {
+            if (exp === got) {
+              status = "correct";
+              err = 0;
+            } else {
+              status = "wrong";
+              err = editDistance(exp, got);
+            }
+          } else if (exp && !got) {
+            status = "miss";
+            err = exp.length;
+          } else if (!exp && got) {
+            status = "extra";
+            err = got.length;
+          }
+
+          const chCount = Math.max(exp.length, got.length);
+          totalChars += chCount;
+          totalErrors += err;
+          errorsPerWord.push(err);
+
+          rows.push({
+            index: i + 1,
+            expected: exp,
+            typed: got,
+            status,
+            errors: err
+          });
+        }
+
+        return {
+          rows,
+          errorsPerWord,
+          totalChars,
+          totalErrors
+        };
+      }
+
+      // Build "slow zone" segments by error density
+      function computeSegments(errorsPerWord, wordSummary) {
+        const totalWords = errorsPerWord.length;
+        if (!totalWords) return [];
+
+        const segCount = Math.min(3, totalWords);
+        const segSize = Math.ceil(totalWords / segCount);
+
+        let totalErrors = 0;
+        let totalChars = 0;
+        for (let i = 0; i < totalWords; i++) {
+          totalErrors += errorsPerWord[i];
+          const row = wordSummary[i];
+          totalChars += Math.max(
+            (row.expected || "").length,
+            (row.typed || "").length
+          );
+        }
+        const globalDensity = totalChars > 0 ? totalErrors / totalChars : 0;
+
+        const segments = [];
+        for (let s = 0; s < segCount; s++) {
+          const startIndex = s * segSize;
+          if (startIndex >= totalWords) break;
+          const endIndex = Math.min(startIndex + segSize, totalWords);
+
+          let segErr = 0;
+          let segChars = 0;
+          for (let i = startIndex; i < endIndex; i++) {
+            segErr += errorsPerWord[i];
+            const row = wordSummary[i];
+            segChars += Math.max(
+              (row.expected || "").length,
+              (row.typed || "").length
+            );
+          }
+          const density = segChars > 0 ? segErr / segChars : 0;
+          const isSlow = density > globalDensity * 1.2 && density > 0;
+
+          let label = "Middle";
+          if (segCount === 1) label = "Whole passage";
+          else if (segCount === 2) {
+            label = s === 0 ? "First half" : "Second half";
+          } else {
+            if (s === 0) label = "Start";
+            else if (s === segCount - 1) label = "End";
+          }
+
+          segments.push({
+            label,
+            from: startIndex + 1,
+            to: endIndex,
+            errors: segErr,
+            density,
+            isSlow
+          });
+        }
+
+        return segments;
+      }
+
+      function computeConfidence(stats) {
+        const acc = Number.isFinite(stats.accuracy) ? stats.accuracy : 0;
+        const gross = Number.isFinite(stats.grossWpm) ? stats.grossWpm : 0;
+        const net = Number.isFinite(stats.netWpm) ? stats.netWpm : 0;
+        const ratio = gross > 0 ? net / gross : 0;
+        const wmist = Number.isFinite(stats.weightedMistakes)
+          ? stats.weightedMistakes
+          : 0;
+
+        // 70% accuracy, 20% net/gross ratio, 10% penalty for mistakes
+        const base = acc * 0.7 + clamp(ratio, 0, 1) * 20 - wmist * 1.0;
+        const score = clamp(base, 0, 100);
+        return score;
+      }
+
+      function render() {
+        const summary = loadLastResult();
+
+        if (!summary || !summary.stats) {
+          subTitle.textContent = "No recent typing session was found.";
+          emptyEl.classList.remove("hidden");
+          return;
+        }
+
+        emptyEl.classList.add("hidden");
+        mainBlock.classList.remove("hidden");
+
+        const stats = summary.stats || {};
+        const lang = summary.lang;
+        const reason = summary.reason || "Completed";
+        const candidateName = getCandidateName(summary);
+        const langLabel = formatLanguage(lang, summary.config);
+        const typedText = summary.typedText || "";
+        const targetText = summary.targetText || "";
+
+        // Apply language class for Hindi fonts
+        if (resultCard) {
+          resultCard.classList.remove("lang-hindi-uni", "lang-hindi-kruti");
+          const l = (lang || "").toLowerCase();
+          if (l === "hindi-kruti") {
+            resultCard.classList.add("lang-hindi-kruti");
+          } else if (l === "hindi-mangal" || l === "hindi") {
+            resultCard.classList.add("lang-hindi-uni");
+          }
+        }
+
+        const timeSec =
+          Number.isFinite(stats.timeSeconds) && stats.timeSeconds > 0
+            ? stats.timeSeconds
+            : (summary.elapsed || 0);
+        const timeTakenLabel = formatTime(timeSec);
+        const timeLimitLabel = summary.timeLimit
+          ? formatTime(summary.timeLimit)
+          : "Unlimited";
+
+        const charsTyped =
+          Number.isFinite(stats.charsTyped) && stats.charsTyped >= 0
+            ? stats.charsTyped
+            : typedText.length;
+
+        const wordsTyped =
+          Number.isFinite(stats.wordsTyped) && stats.wordsTyped >= 0
+            ? stats.wordsTyped
+            : tokenizeWords(typedText).length;
+
+        const totalWords = tokenizeWords(targetText).length;
+
+        const gross = Number.isFinite(stats.grossWpm) ? stats.grossWpm : 0;
+        const net = Number.isFinite(stats.netWpm) ? stats.netWpm : 0;
+        const acc = Number.isFinite(stats.accuracy) ? stats.accuracy : 0;
+
+        const fullMistakes = Number.isFinite(stats.fullMistakes)
+          ? stats.fullMistakes
+          : 0;
+        const halfMistakes = Number.isFinite(stats.halfMistakes)
+          ? stats.halfMistakes
+          : 0;
+        const ignoredMistakes = Number.isFinite(stats.ignoredMistakes)
+          ? stats.ignoredMistakes
+          : 0;
+        const weightedMistakes = Number.isFinite(stats.weightedMistakes)
+          ? stats.weightedMistakes
+          : fullMistakes + halfMistakes * 0.5;
+
+        const totalKeystrokes =
+          stats.totalKeystrokes ||
+          stats.keystrokes ||
+          charsTyped;
+
+        const backspaceCount =
+          stats.backspaceCount ||
+          (stats.meta && stats.meta.backspaceCount) ||
+          null;
+
+        const confidence = computeConfidence(stats);
+
+        const sessionLabel =
+          (summary.config && (summary.config.sessionLabel ||
+           summary.config.chapterName || summary.config.testName)) ||
+          "Typing test";
+
+        const wordInfo = computeWordSummary(targetText, typedText);
+        const segments = computeSegments(wordInfo.errorsPerWord, wordInfo.rows);
+        const charStreams = buildCharStreams(targetText, typedText);
+
+        // Subtitle and reason badge
+        const reasonText =
+          reason === "Time up"
+            ? "Time finished"
+            : reason === "Lesson completed"
+            ? "Passage completed"
+            : "Test completed";
+
+        subTitle.textContent =
+          candidateName +
+          " • " +
+          langLabel +
+          " • " +
+          reasonText;
+
+        reasonTextEl.textContent = reasonText;
+        reasonBadge.classList.remove("hidden");
+
+        // Build word rows
+        const wordRowsHtml = wordInfo.rows
+          .map((row) => {
+            const statusClass =
+              row.status === "correct"
+                ? "status-correct"
+                : row.status === "wrong"
+                ? "status-wrong"
+                : row.status === "miss"
+                ? "status-miss"
+                : "status-extra";
+
+            const statusLabel =
+              row.status === "correct"
+                ? "Correct"
+                : row.status === "wrong"
+                ? "Incorrect"
+                : row.status === "miss"
+                ? "Missed"
+                : "Extra";
+
+            return `
+              <tr class="${statusClass}">
+                <td>${row.index}</td>
+                <td class="word-mono">${escapeHtml(row.expected)}</td>
+                <td class="word-mono">${escapeHtml(row.typed)}</td>
+                <td>${statusLabel}</td>
+                <td>${row.errors}</td>
+              </tr>
+            `;
+          })
+          .join("");
+
+        // Heatmap
+        const heatCellsHtml = wordInfo.errorsPerWord
+          .map((err, i) => {
+            let lvl = 0;
+            if (err === 0) lvl = 0;
+            else if (err === 1) lvl = 1;
+            else if (err <= 3) lvl = 2;
+            else lvl = 3;
+
+            const row = wordInfo.rows[i];
+            const title = `Word ${i + 1}: "${row.expected}" / "${row.typed}" - mistakes: ${err}`;
+            return `<div class="heat-cell heat-l${lvl}" title="${escapeHtml(
+              title
+            )}"></div>`;
+          })
+          .join("");
+
+        // Slow zones
+        const zonesHtml = segments
+          .map((seg) => {
+            const cls = seg.isSlow ? "zone-slow" : "zone-ok";
+            const tag = seg.isSlow ? "Slow zone" : "Normal";
+            const dens = seg.density.toFixed(3);
+            return `
+              <tr class="${cls}">
+                <td>${seg.label}</td>
+                <td>${seg.from}–${seg.to}</td>
+                <td>${seg.errors}</td>
+                <td>${dens}</td>
+                <td>${tag}</td>
+              </tr>
+            `;
+          })
+          .join("");
+
+        mainBlock.innerHTML = `
+          <div class="result-meta-grid">
+            <div>
+              <div class="result-meta-label">Candidate name</div>
+              <div class="result-meta-value">${escapeHtml(candidateName)}</div>
+            </div>
+            <div>
+              <div class="result-meta-label">Language / Layout</div>
+              <div class="result-meta-value">${escapeHtml(langLabel)}</div>
+            </div>
+            <div>
+              <div class="result-meta-label">Session</div>
+              <div class="result-meta-value">${escapeHtml(sessionLabel)}</div>
+            </div>
+          </div>
+
+          <div class="result-summary-grid">
+            <div class="result-summary-item">
+              <div class="result-summary-label">Net speed (WPM)</div>
+              <div class="result-summary-value">${net.toFixed(2)}</div>
+            </div>
+            <div class="result-summary-item">
+              <div class="result-summary-label">Gross speed (WPM)</div>
+              <div class="result-summary-value">${gross.toFixed(2)}</div>
+            </div>
+            <div class="result-summary-item">
+              <div class="result-summary-label">Accuracy</div>
+              <div class="result-summary-value">${acc.toFixed(2)}<small>%</small></div>
+            </div>
+            <div class="result-summary-item">
+              <div class="result-summary-label">Confidence score</div>
+              <div class="result-summary-value">${confidence.toFixed(1)}<small>%</small></div>
+            </div>
+            <div class="result-summary-item">
+              <div class="result-summary-label">Time taken / limit</div>
+              <div class="result-summary-value">
+                ${timeTakenLabel}<small> / ${timeLimitLabel}</small>
+              </div>
+            </div>
+            <div class="result-summary-item">
+              <div class="result-summary-label">Characters (typed / correct)</div>
+              <div class="result-summary-value">
+                ${charsTyped}<small> / ${stats.correctChars || 0}</small>
+              </div>
+            </div>
+            <div class="result-summary-item">
+              <div class="result-summary-label">Words (typed / target)</div>
+              <div class="result-summary-value">
+                ${wordsTyped}<small> / ${totalWords}</small>
+              </div>
+            </div>
+            <div class="result-summary-item">
+              <div class="result-summary-label">Total keystrokes</div>
+              <div class="result-summary-value">
+                ${totalKeystrokes}<small>${
+                  backspaceCount != null ? ` (backspace: ${backspaceCount})` : ""
+                }</small>
+              </div>
+            </div>
+          </div>
+
+          <table class="result-detail-table">
+            <tbody>
+              <tr>
+                <th>Full mistakes</th>
+                <td>${fullMistakes}</td>
+              </tr>
+              <tr>
+                <th>Half mistakes</th>
+                <td>${halfMistakes}</td>
+              </tr>
+              <tr>
+                <th>Ignored</th>
+                <td>${ignoredMistakes}</td>
+              </tr>
+              <tr>
+                <th>Weighted mistakes (Full + Half/2)</th>
+                <td>${weightedMistakes.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <th>Character errors</th>
+                <td>${stats.errorChars || 0}</td>
+              </tr>
+              <tr>
+                <th>Reason</th>
+                <td>${escapeHtml(reasonText)}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="result-actions-main">
+            <button class="btn primary small" id="res-print-btn">
+              <span class="icon">🖨</span> Print / Save as PDF
+            </button>
+            <button class="btn secondary small" id="res-retest-btn">
+              <span class="icon">🔁</span> Retake same lesson
+            </button>
+            <button class="btn small" onclick="location.href='typing-test.html'">
+              <span class="icon">⏱</span> Start new test
+            </button>
+            <button class="btn small" onclick="location.href='index.html'">
+              <span class="icon">🏠</span> Back to home
+            </button>
+          </div>
+
+          <div class="res-two-cols">
+            <div>
+              <div class="res-subcard">
+                <h3>Word-level comparison</h3>
+                <p>
+                  Each expected word vs. what you actually typed, with mistake count.
+                </p>
+                <div style="max-height:360px;overflow:auto;border-radius:8px;">
+                  <table class="res-table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Expected</th>
+                        <th>Typed</th>
+                        <th>Status</th>
+                        <th>Mistakes</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${
+                        wordRowsHtml ||
+                        `<tr><td colspan="5">No words available.</td></tr>`
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="res-subcard">
+                <h3>Mistake heatmap</h3>
+                <p>
+                  Darker cells indicate words with more mistakes.
+                </p>
+                <div class="res-heatmap">
+                  <div class="res-heatmap-row">
+                    ${
+                      heatCellsHtml ||
+                      `<span style="font-size:0.82rem;color:#9ca3af;">No words to display.</span>`
+                    }
+                  </div>
+                  <div class="res-legend">
+                    <span class="res-legend-item">
+                      <span class="res-legend-swatch" style="background:#14532d;"></span> 0 mistakes
+                    </span>
+                    <span class="res-legend-item">
+                      <span class="res-legend-swatch" style="background:#78350f;"></span> 1 mistake
+                    </span>
+                    <span class="res-legend-item">
+                      <span class="res-legend-swatch" style="background:#9a3412;"></span> few mistakes
+                    </span>
+                    <span class="res-legend-item">
+                      <span class="res-legend-swatch" style="background:#7f1d1d;"></span> many mistakes
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="res-subcard">
+                <h3>Slow / focus zones</h3>
+                <p>
+                  Segments with higher error density are likely where your speed and confidence dropped.
+                </p>
+                <div style="max-height:180px;overflow:auto;border-radius:8px;margin-top:4px;">
+                  <table class="res-table res-zones-table">
+                    <thead>
+                      <tr>
+                        <th>Segment</th>
+                        <th>Word range</th>
+                        <th>Mistakes</th>
+                        <th>Error density</th>
+                        <th>Tag</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${
+                        zonesHtml ||
+                        `<tr><td colspan="5">Not enough data to compute zones.</td></tr>`
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="res-subcard res-char-diff">
+            <h3>Character-level comparison</h3>
+            <p>
+              Correct characters are blue/green, wrong characters red, extra characters orange, and missing characters greyed.
+              The full passage is shown below for examiner-style checking.
+            </p>
+            <div class="char-row">
+              <div class="char-label">Original</div>
+              <div class="char-stream">${charStreams.origHtml}</div>
+            </div>
+            <div class="char-row">
+              <div class="char-label">Typed</div>
+              <div class="char-stream">${charStreams.typedHtml}</div>
+            </div>
+          </div>
+        `;
+
+        // Attach actions
+        const retestBtn = document.getElementById("res-retest-btn");
+        if (retestBtn) {
+          retestBtn.addEventListener("click", () => {
+            if (summary.config) {
+              try {
+                localStorage.setItem("ft-active-test", JSON.stringify(summary.config));
+              } catch (e) {}
+            }
+            // Directly start same lesson again on practice.html
+            window.location.href = "practice.html";
+          });
+        }
+
+        const printBtn = document.getElementById("res-print-btn");
+        if (printBtn) {
+          printBtn.addEventListener("click", () => {
+            window.print();
+          });
+        }
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", render);
+      } else {
+        render();
+      }
     })();
   </script>
 </body>
-
 </html>
