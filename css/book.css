@@ -1,0 +1,533 @@
+/* css/book.css */
+
+/* ========================= */
+/* BOOK PAGE – BACKGROUND    */
+/* ========================= */
+
+body[data-page="book"] {
+  position: relative;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #020617 0, #020617 45%, #020617 100%);
+  color: #e5e7eb;
+  overflow-x: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Soft colored glows – no stripes/lining */
+body[data-page="book"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    radial-gradient(circle at -10% 0%, rgba(59, 130, 246, 0.38), transparent 60%),
+    radial-gradient(circle at 110% 100%, rgba(45, 212, 191, 0.34), transparent 60%);
+  opacity: 0.9;
+}
+
+/* Main card */
+body[data-page="book"] .page-container {
+  max-width: 1080px;
+  margin: 26px auto 40px;
+  padding: 20px 20px 22px;
+  border-radius: 22px;
+  border: 1px solid rgba(15, 23, 42, 0.9);
+  background: radial-gradient(circle at top left, #020617 0, #020617 40%, #020617 100%);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.98);
+}
+
+/* Title / intro text */
+body[data-page="book"] h1 {
+  font-size: 2.1rem;
+  margin-bottom: 4px;
+}
+
+body[data-page="book"] .page-container > p:first-of-type {
+  font-size: 0.95rem;
+  color: #9ca3af;
+  margin-bottom: 10px;
+}
+
+/* Warnings (trial + paywall) */
+body[data-page="book"] .warning {
+  margin-top: 10px;
+  border-radius: 10px;
+  background: rgba(127, 29, 29, 0.96);
+  border: 1px solid rgba(248, 113, 113, 0.5);
+  color: #fee2e2;
+  font-size: 0.9rem;
+}
+
+/* ========================= */
+/* BOOKS GRID                */
+/* ========================= */
+
+body[data-page="book"] #books-area {
+  margin-top: 18px;
+}
+
+body[data-page="book"] #books-area > h2 {
+  font-size: 1.35rem;
+  margin-bottom: 4px;
+}
+
+body[data-page="book"] .books-list {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+body[data-page="book"] .book-card {
+  position: relative;
+  background: rgba(15, 23, 42, 0.97);
+  border-radius: 16px;
+  border: 1px solid #1f2937;
+  padding: 14px 14px 12px;
+  box-shadow: 0 20px 46px rgba(0, 0, 0, 0.9);
+  font-size: 0.92rem;
+  overflow: hidden;
+}
+
+/* slight top highlight */
+body[data-page="book"] .book-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(56, 189, 248, 0.15), transparent 55%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+body[data-page="book"] .book-card-header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 6px;
+  z-index: 1;
+}
+
+body[data-page="book"] .book-card-header h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+/* Free / Paid pill */
+body[data-page="book"] .book-pill {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+body[data-page="book"] .book-pill-free {
+  border-color: rgba(34, 197, 94, 0.5);
+  background: rgba(21, 128, 61, 0.22);
+  color: #bbf7d0;
+}
+
+body[data-page="book"] .book-pill-paid {
+  border-color: rgba(129, 140, 248, 0.7);
+  background: rgba(79, 70, 229, 0.22);
+  color: #e0e7ff;
+}
+
+body[data-page="book"] .book-description {
+  position: relative;
+  color: #9ca3af;
+  margin-bottom: 6px;
+  z-index: 1;
+}
+
+body[data-page="book"] .book-meta {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-bottom: 8px;
+  z-index: 1;
+}
+
+body[data-page="book"] .book-meta span strong {
+  font-weight: 600;
+}
+
+/* footer row: only counts (no open link) */
+body[data-page="book"] .book-card-footer {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  border-top: 1px dashed #1f2937;
+  padding-top: 6px;
+  z-index: 1;
+}
+
+body[data-page="book"] .book-counts {
+  color: #a5b4fc;
+  font-size: 0.82rem;
+}
+
+/* ========================= */
+/* CHAPTERS / TYPING AREA    */
+/* (original section, optional) */
+/* ========================= */
+
+body[data-page="book"] #chapters-area {
+  margin-top: 26px;
+  padding-top: 14px;
+  border-top: 1px solid #1f2937;
+}
+
+body[data-page="book"] #chapters-title {
+  font-size: 1.3rem;
+  margin-bottom: 2px;
+}
+
+body[data-page="book"] #chapters-subtitle {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+body[data-page="book"] #chapters-list {
+  margin-top: 12px;
+}
+
+/* reuse .book-card style for chapter cards */
+body[data-page="book"] #chapters-list .book-card {
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85);
+}
+
+body[data-page="book"] #chapters-list p.label {
+  font-size: 0.82rem;
+  color: #9ca3af;
+}
+
+/* Typing panel */
+body[data-page="book"] .book-typing-panel {
+  margin-top: 18px;
+  background: radial-gradient(circle at top left, #020617 0, #020617 45%, #0b1220 100%);
+  border-radius: 18px;
+  border: 1px solid #1f2937;
+  padding: 14px 16px 12px;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.96);
+}
+
+body[data-page="book"] #chapter-title {
+  font-size: 1.25rem;
+  margin-bottom: 2px;
+}
+
+body[data-page="book"] #chapter-meta {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin-bottom: 10px;
+}
+
+/* original text */
+body[data-page="book"] #chapter-typing-text {
+  min-height: 170px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  margin-bottom: 10px;
+}
+
+/* input */
+body[data-page="book"] #chapter-typing-input {
+  width: 100%;
+  min-height: 170px;
+  max-height: 260px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+  resize: vertical;
+}
+
+/* stats row */
+body[data-page="book"] .book-typing-panel .stats {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+/* ========================= */
+/* GENERIC MODAL (results)   */
+/* ========================= */
+
+body[data-page="book"] .modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.88);
+  z-index: 60;
+}
+
+body[data-page="book"] .modal.hidden {
+  display: none;
+}
+
+body[data-page="book"] .modal-content {
+  width: calc(100% - 32px);
+  max-width: 460px;
+  border-radius: 18px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  padding: 14px 16px 14px;
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.96);
+}
+
+body[data-page="book"] #chapter-result-modal h3 {
+  font-size: 1.2rem;
+  margin-bottom: 6px;
+}
+
+body[data-page="book"] #chapter-result-modal p {
+  font-size: 0.88rem;
+  color: #e5e7eb;
+  margin-bottom: 2px;
+}
+
+/* ============================== */
+/* SUBSCRIPTION / PLANS SECTION   */
+/* ============================== */
+
+body[data-page="book"] .subscription-section {
+  margin-top: 28px;
+  padding-top: 14px;
+  border-top: 1px solid #1f2937;
+}
+
+body[data-page="book"] .subscription-section h2 {
+  font-size: 1.35rem;
+  margin-bottom: 4px;
+}
+
+body[data-page="book"] .sub-status {
+  font-size: 0.88rem;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+body[data-page="book"] #pending-request-status {
+  font-size: 0.8rem;
+  color: #fbbf24;
+  margin-bottom: 8px;
+}
+
+/* Plan cards grid */
+body[data-page="book"] .plans-grid {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+body[data-page="book"] .plan-card {
+  border-radius: 16px;
+  border: 1px solid #1f2937;
+  background: radial-gradient(circle at top, #020617 0, #020617 55%, #020617 100%);
+  padding: 12px 14px;
+  box-shadow: 0 22px 46px rgba(0, 0, 0, 0.9);
+  font-size: 0.9rem;
+}
+
+body[data-page="book"] .plan-card.highlight {
+  border-color: #6366f1;
+  box-shadow:
+    0 0 0 1px rgba(129, 140, 248, 0.7),
+    0 22px 46px rgba(0, 0, 0, 0.9);
+}
+
+body[data-page="book"] .plan-title {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+body[data-page="book"] .plan-price {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+
+body[data-page="book"] .plan-tagline {
+  font-size: 0.84rem;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+body[data-page="book"] .plan-card ul {
+  margin: 4px 0 0 18px;
+  font-size: 0.82rem;
+  color: #9ca3af;
+}
+
+/* Subscribe button (plan-btn) */
+body[data-page="book"] .plan-btn {
+  margin-top: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid #6366f1;
+  background: #1d1b3f;
+  color: #e5e7eb;
+  font-size: 0.84rem;
+  cursor: pointer;
+}
+
+body[data-page="book"] .plan-btn:hover {
+  filter: brightness(1.08);
+}
+
+body[data-page="book"] .plan-btn.secondary {
+  border-color: #374151;
+  background: transparent;
+}
+
+/* Small note */
+body[data-page="book"] .sub-note {
+  font-size: 0.78rem;
+  color: #9ca3af;
+}
+
+/* ============================== */
+/* /* ============================== */
+/* UPI PAYMENT MODAL (CLEAN, SMALL) */
+/* ============================== */
+
+body[data-page="book"] #plan-modal .modal-content.plan-modal-content {
+  max-width: 440px;                     /* छोटा, centered */
+  max-height: calc(100vh - 40px);       /* स्क्रीन से बाहर नहीं जाएगा */
+  overflow-y: auto;                     /* content jyada hua to scroll आएगा */
+  background: radial-gradient(circle at top, #020617 0, #020617 60%, #020617 100%);
+  border-radius: 18px;
+  border: 1px solid #1f2937;
+}
+
+/* title / amount */
+body[data-page="book"] #plan-modal-title {
+  font-size: 1.2rem;
+  margin-bottom: 2px;
+  color: #e5e7eb;
+}
+
+body[data-page="book"] #plan-modal-amount {
+  margin-bottom: 6px;
+  color: #a5b4fc;
+}
+
+/* Info box + QR */
+body[data-page="book"] .upi-box {
+  font-size: 0.84rem;
+  color: #9ca3af;
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid #1f2937;
+  background: radial-gradient(circle at top, #020617 0, #020617 60%, #020617 100%);
+}
+
+body[data-page="book"] .upi-qr {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  display: block;
+  margin: 6px auto 8px;
+}
+
+/* UPI ID ko thoda highlight */
+body[data-page="book"] #upi-id-text {
+  color: #facc15;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* Form fields */
+body[data-page="book"] .pr-field {
+  margin-top: 6px;
+}
+
+body[data-page="book"] .pr-field label {
+  display: block;
+  font-size: 0.82rem;
+  color: #9ca3af;
+  margin-bottom: 2px;
+}
+
+body[data-page="book"] .pr-field input,
+body[data-page="book"] .pr-field textarea {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 0.88rem;
+}
+
+/* Actions row at bottom */
+body[data-page="book"] .plan-modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+body[data-page="book"] #plan-modal-status {
+  font-size: 0.8rem;
+  margin-top: 6px;
+  min-height: 1em;
+}
+
+/* loading state for submit */
+body[data-page="book"] #plan-modal-submit.is-loading {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+/* ========================= */
+/* RESPONSIVE                */
+/* ========================= */
+
+@media (max-width: 960px) {
+  body[data-page="book"] .page-container {
+    margin: 18px auto 26px;
+    padding: 18px 14px 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  body[data-page="book"] .books-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body[data-page="book"] .book-card {
+    padding: 12px 12px 10px;
+  }
+
+  body[data-page="book"] #chapter-typing-text,
+  body[data-page="book"] #chapter-typing-input {
+    min-height: 150px;
+  }
+}
