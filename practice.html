@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <title>Steno Master - Practice</title>
 
-  <link rel="stylesheet" href="CSS/style.css" />
-  <link rel="stylesheet" href="CSS/practice-ux.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/practice-ux.css" />
 
   <link
     href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500&display=swap"
@@ -29,7 +29,7 @@
     </nav>
   </header>
 
-  <!-- ✅ Back button fixed under logo -->
+  <!-- Back button -->
   <div class="practice-back-floating">
     <button type="button" class="test-back-btn" onclick="location.href='typing-test.html'">
       ← Back
@@ -48,7 +48,7 @@
     <div class="practice-card">
       <div class="practice-header practice-header-top">
         <div>
-          <h1 class="practice-title">Typing practice</h1>
+          <!-- "Typing practice" heading hata diya -->
           <p class="practice-sub">
             Read the passage above, type in the box below, and check your speed &amp; accuracy.
             Layout, lesson and time are taken from your test setup.
@@ -60,14 +60,24 @@
         <!-- LEFT -->
         <div class="practice-left">
           <div class="typing-panel">
-            <div class="typing-stats-top">
-              <span>
-                Current session:
-                <strong id="session-label">—</strong>
-              </span>
-              <div class="px-badges">
-                <span class="px-pill" id="px-mode-pill">—</span>
-                <span class="px-pill" id="px-layout-pill">—</span>
+
+            <!-- Top stats bar: GWPM / NWPM / ACCU / TIME -->
+            <div class="px-metrics-bar">
+              <div class="px-metric-cell">
+                <span class="px-metric-label">GWPM</span>
+                <span class="px-metric-value" id="gwpm-top">0.00</span>
+              </div>
+              <div class="px-metric-cell">
+                <span class="px-metric-label">NWPM</span>
+                <span class="px-metric-value" id="nwpm-top">0.00</span>
+              </div>
+              <div class="px-metric-cell">
+                <span class="px-metric-label">ACCU</span>
+                <span class="px-metric-value" id="accu-top">100 %</span>
+              </div>
+              <div class="px-metric-cell">
+                <span class="px-metric-label">TIME</span>
+                <span class="px-metric-value" id="time-top">00:00</span>
               </div>
             </div>
 
@@ -82,52 +92,14 @@
               ></textarea>
             </div>
 
-            <div class="typing-stats-bottom">
-              <div class="px-stats">
-                <div class="px-stat">
-                  <div class="px-stat-label">Net WPM</div>
-                  <div class="px-stat-value" id="wpm">0</div>
-                </div>
-                <div class="px-stat">
-                  <div class="px-stat-label">Accuracy</div>
-                  <div class="px-stat-value" id="accuracy">100%</div>
-                </div>
-                <div class="px-stat">
-                  <div class="px-stat-label">Char Errors</div>
-                  <div class="px-stat-value" id="errors">0</div>
-                </div>
-                <div class="px-stat">
-                  <div class="px-stat-label">Words</div>
-                  <div class="px-stat-value" id="words-count">0 / 0</div>
-                </div>
-              </div>
-
-              <button id="restart-btn" class="btn small practice-restart-btn">
-                Restart session
+            <!-- Bottom: Reset (left) + Result (right) -->
+            <div class="practice-bottom-actions">
+              <button type="button" id="reset-btn" class="px-btn secondary">
+                Reset
               </button>
-            </div>
-          </div>
-
-          <!-- Keyboard -->
-          <div class="practice-keyboard">
-            <div class="kbd-row-sm">
-              <span data-key="q">Q</span><span data-key="w">W</span><span data-key="e">E</span><span data-key="r">R</span><span data-key="t">T</span>
-              <span data-key="y">Y</span><span data-key="u">U</span><span data-key="i">I</span><span data-key="o">O</span><span data-key="p">P</span>
-            </div>
-            <div class="kbd-row-sm">
-              <span class="kbd-key-wide" data-key="tab">Tab</span>
-              <span data-key="a">A</span><span data-key="s">S</span><span data-key="d">D</span><span data-key="f">F</span><span data-key="g">G</span>
-              <span data-key="h">H</span><span data-key="j">J</span><span data-key="k">K</span><span data-key="l">L</span>
-              <span class="kbd-key-wide" data-key="enter">↵</span>
-            </div>
-            <div class="kbd-row-sm">
-              <span class="kbd-key-wide" data-key="shift">Shift</span>
-              <span data-key="z">Z</span><span data-key="x">X</span><span data-key="c">C</span><span data-key="v">V</span><span data-key="b">B</span>
-              <span data-key="n">N</span><span data-key="m">M</span>
-              <span class="kbd-key-wide" data-key="shift">Shift</span>
-            </div>
-            <div class="kbd-space-sm">
-              <span data-key=" ">Space</span>
+              <button type="button" id="finish-btn" class="px-btn">
+                Result
+              </button>
             </div>
           </div>
         </div>
@@ -138,17 +110,34 @@
             <div class="practice-timer-name">
               Name: <span id="practice-user-name">Guest</span>
             </div>
+
+            <!-- UPPER time box: yahi rahega -->
             <div class="practice-timer-box">
               <div class="practice-timer-label">Time left</div>
               <div class="practice-timer-value" id="time">00:00</div>
             </div>
 
+            <!-- Auto scroll + Pause + Backspace -->
             <div class="px-mini">
               <div class="px-mini-row">
                 <span class="px-mini-label">Auto scroll passage</span>
                 <label class="toggle-label">
                   <input type="checkbox" id="auto-scroll-enabled" checked />
                   Enabled
+                </label>
+              </div>
+              <div class="px-mini-row">
+                <span class="px-mini-label">Pause time</span>
+                <label class="toggle-label">
+                  <input type="checkbox" id="pause-time-toggle" />
+                  Pause
+                </label>
+              </div>
+              <div class="px-mini-row">
+                <span class="px-mini-label">Backspace</span>
+                <label class="toggle-label">
+                  <input type="checkbox" id="backspace-allowed" checked />
+                  Allowed
                 </label>
               </div>
             </div>
@@ -175,24 +164,22 @@
             </div>
           </div>
 
-          <div class="time-mode-row">
-            <span>Time</span>
-            <div class="time-buttons">
-              <button class="time-btn" data-seconds="60">1 min</button>
-              <button class="time-btn active" data-seconds="300">5 min</button>
-              <button class="time-btn" data-seconds="600">10 min</button>
-              <button class="time-btn" data-seconds="1200">20 min</button>
-              <button class="time-btn" data-seconds="1800">30 min</button>
-            </div>
-
-            <div class="toggle-row">
-              <span class="toggle-label">Backspace</span>
-              <label class="toggle-label">
-                <input type="checkbox" id="backspace-allowed" checked /> Allowed
-              </label>
+          <!-- Neeche pehle time buttons the, ab yahan session info -->
+          <div class="time-mode-row session-row">
+            <div class="typing-stats-top typing-stats-side">
+              <span>
+                Current session:
+                <strong id="session-label">—</strong>
+              </span>
+              <div class="px-badges">
+                <span class="px-pill" id="px-mode-pill">—</span>
+                <span class="px-pill" id="px-layout-pill">—</span>
+                <!-- "Next: ..." pill ab nahi hoga -->
+              </div>
             </div>
           </div>
 
+          <!-- Time limit config (internal) -->
           <select id="time-limit-select" class="hidden">
             <option value="60">1 minute</option>
             <option value="300" selected>5 minutes</option>
@@ -219,19 +206,15 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="js/firebase-config.js"></script>
 
-  <!-- Ensure feedback.js condition passes -->
   <script>
     window.firebase = window.firebase || window.firebase || firebase;
   </script>
 
-  <!-- Optional fallback random (safe to keep for now) -->
   <script src="js/random-texts.js"></script>
 
   <script src="js/testEngine.js"></script>
   <script src="js/typing.js"></script>
 
-  <!-- ✅ Feedback widget -->
   <script src="js/feedback.js"></script>
 </body>
-
 </html>
