@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <title>FastType - Books & Projects</title>
-  <link rel="stylesheet" href="CSS/style.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- ✅ Book page specific clean CSS -->
+  <link rel="stylesheet" href="css/book.css" />
 </head>
-<body>
+<body data-page="book">
   <header class="navbar">
     <div class="nav-left">
       <img src="assets/logo.png" alt="Logo" class="logo" />
@@ -16,9 +18,13 @@
       <a href="index.html">Home</a>
       <a href="practice.html">Practice &amp; Books</a>
       <a href="admin.html">Admin</a>
+
+      <!-- ✅ Navbar auth controls -->
       <span id="nav-user-info" class="nav-user-info hidden"></span>
       <a href="login.html" id="nav-login-link" class="nav-cta">Log in</a>
-      <button id="nav-logout-btn" class="nav-cta secondary hidden">Logout</button>
+      <button id="nav-logout-btn" class="nav-cta secondary hidden" type="button">
+        Logout
+      </button>
     </nav>
   </header>
 
@@ -41,6 +47,67 @@
     <div id="books-area" class="hidden" style="margin-top:12px;">
       <h2>Books</h2>
       <div id="books-list" class="books-list"></div>
+
+      <!-- ✅ Subscription / Pricing section -->
+      <section id="subscription-section" class="subscription-section">
+        <h2>Plans & Subscription</h2>
+        <p id="user-plan-status" class="sub-status">
+          Checking your current plan and trial status…
+        </p>
+        <p id="pending-request-status" class="sub-status"></p>
+
+        <div class="plans-grid">
+          <!-- Monthly -->
+          <article class="plan-card highlight">
+            <div class="plan-title">Monthly Plan</div>
+            <div class="plan-price">₹69<span style="font-size:0.85rem;">/month</span></div>
+            <div class="plan-tagline">Good for short exam preparation bursts.</div>
+            <ul>
+              <li>Full access to all free + paid books</li>
+              <li>Unlimited chapter practice</li>
+              <li>Random texts (including premium)</li>
+            </ul>
+            <button class="plan-btn" data-plan="monthly">
+              Subscribe (Monthly)
+            </button>
+          </article>
+
+          <!-- 3 months -->
+          <article class="plan-card">
+            <div class="plan-title">3‑Month Plan</div>
+            <div class="plan-price">₹149<span style="font-size:0.85rem;">/3 months</span></div>
+            <div class="plan-tagline">Best balance for most students.</div>
+            <ul>
+              <li>Everything in Monthly plan</li>
+              <li>Better value for 90‑day practice</li>
+              <li>Priority support & feedback</li>
+            </ul>
+            <button class="plan-btn" data-plan="3m">
+              Subscribe (3 months)
+            </button>
+          </article>
+
+          <!-- Yearly -->
+          <article class="plan-card">
+            <div class="plan-title">Yearly Plan</div>
+            <div class="plan-price">₹399<span style="font-size:0.85rem;">/year</span></div>
+            <div class="plan-tagline">For long‑term growth and multiple exams.</div>
+            <ul>
+              <li>Everything in 3‑month plan</li>
+              <li>Access to future premium content</li>
+              <li>Best value per month</li>
+            </ul>
+            <button class="plan-btn" data-plan="yearly">
+              Subscribe (Yearly)
+            </button>
+          </article>
+        </div>
+
+        <p id="subscription-note" class="sub-note">
+          These subscription buttons create a <code>paymentRequests</code> entry with your UPI transaction ID.
+          Your payment will be verified within 24‑48 hours, after which your plan will be activated. 
+        </p>
+      </section>
 
       <div id="chapters-area" class="hidden" style="margin-top:24px;">
         <h2 id="chapters-title">Chapters</h2>
@@ -98,15 +165,87 @@
     </div>
   </div>
 
+  <!-- ✅ UPI payment request modal -->
+  <div id="plan-modal" class="modal hidden">
+    <div class="modal-content plan-modal-content">
+      <h3 id="plan-modal-title">Subscribe</h3>
+      <p id="plan-modal-amount" class="sub-status">Amount: —</p>
+
+      <div class="upi-box">
+        <p>
+          1. Open your UPI app (PhonePe / GPay / Paytm / BHIM etc.)<br />
+          2. Scan this QR or pay to the UPI ID below for the selected plan.<br />
+          3. After payment, enter your UPI Transaction ID / UTR and submit.
+        </p>
+        <!-- 🔁 Replace this image path + UPI ID with your real values -->
+        <img
+          src="assets/payments/upi-qr.png"
+          alt="UPI QR code"
+          class="upi-qr"
+        />
+        <p>
+          UPI ID:
+          <strong id="upi-id-text">yourupi@bank</strong>
+        </p>
+      </div>
+
+      <div class="pr-field">
+        <label for="pr-name">Full Name</label>
+        <input type="text" id="pr-name" placeholder="Your full name" />
+      </div>
+
+      <div class="pr-field">
+        <label for="pr-email">Email</label>
+        <input type="email" id="pr-email" placeholder="you@example.com" />
+      </div>
+
+      <div class="pr-field">
+        <label for="pr-phone">Mobile Number</label>
+        <input type="text" id="pr-phone" placeholder="+91XXXXXXXXXX" />
+      </div>
+
+      <div class="pr-field">
+        <label for="pr-note">Note / Reference (optional)</label>
+        <textarea
+          id="pr-note"
+          rows="2"
+          placeholder="Anything you want to mention for admin..."
+        ></textarea>
+      </div>
+
+      <div class="pr-field">
+        <label for="pr-txn-id">UPI Transaction ID / UTR (required)</label>
+        <input
+          type="text"
+          id="pr-txn-id"
+          placeholder="e.g. 1234567890@okaxis or UTR from bank"
+        />
+      </div>
+
+      <div class="plan-modal-actions">
+        <button id="plan-modal-cancel" class="btn small secondary" type="button">
+          Cancel
+        </button>
+        <button id="plan-modal-submit" class="btn small primary" type="button">
+          I have paid – Send for verification
+        </button>
+      </div>
+
+      <p id="plan-modal-status"></p>
+    </div>
+  </div>
+
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
   <script src="js/firebase-config.js"></script>
-  <script src="js/nav-auth.js"></script>
+  <script src="js/main.js"></script>
   <script src="js/testEngine.js"></script>
   <script src="js/book.js"></script>
-</body>
 
+  <!-- ✅ Feedback widget -->
+  <script src="js/feedback.js"></script>
+</body>
 </html>
