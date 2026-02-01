@@ -520,3 +520,23 @@
   background: rgba(15, 23, 42, 0.98);
   color: #e5e7eb;
 }
+
+/* ==== FORCE BIG HINDI / KRUTI FONT ONLY ON PRACTICE PAGE ==== */
+
+/* Hindi (Unicode / Mangal) – reference + input text */
+.practice-page #typing-text.font-hindi,
+.practice-page #typing-input.font-hindi,
+.practice-page .typing-text.font-hindi,
+.practice-page .typing-input-large.font-hindi {
+  font-size: 1rem !important;    /* approx double of old size */
+  line-height: 2 !important;
+}
+
+/* Hindi (Kruti Dev) – reference + input text */
+.practice-page #typing-text.font-kruti,
+.practice-page #typing-input.font-kruti,
+.practice-page .typing-text.font-kruti,
+.practice-page .typing-input-large.font-kruti {
+  font-size: 1.5rem !important;    /* little bigger for Kruti */
+  line-height: 1.4 !important;
+}
