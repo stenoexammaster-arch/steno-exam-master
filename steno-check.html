@@ -6,9 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Global CSS -->
-  <link rel="stylesheet" href="CSS/style.css" />
+  <link rel="stylesheet" href="css/style.css" />
   <!-- Exam CSS -->
-  <link rel="stylesheet" href="CSS/steno-exam.css" />
+  <link rel="stylesheet" href="css/steno-exam.css" />
 
   <!-- Better UI font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -83,23 +83,26 @@
             <button id="btn-check" class="btn-exam" disabled>Check Dictation / Show Result</button>
             <button id="btn-reset" class="btn-exam ghost">Reset</button>
           </div>
+
+          <!-- SINGLE result section -->
           <section id="result-section" class="result-section" hidden>
-  <div class="result-head">
-    <h3 class="result-title" id="result-title">Result & Analysis</h3>
-    <button id="btn-again" class="btn-exam ghost" type="button">Test Again</button>
-  </div>
+            <div class="result-head">
+              <h3 class="result-title" id="result-title">Result & Analysis</h3>
+              <div class="result-actions">
+                <button id="btn-print" class="btn-exam ghost" type="button" disabled>Print Result</button>
+                <button id="btn-again" class="btn-exam ghost" type="button">Test Again</button>
+              </div>
+            </div>
 
-  <div class="result-sheet" id="result-sheet"></div>
+            <div class="result-sheet" id="result-sheet"></div>
 
-  <div class="diff-title" id="diff-title">Error Highlighting</div>
-  <div class="diff-output" id="diff-output"></div>
-</section>
+            <div class="diff-title" id="diff-title">Error Highlighting</div>
+            <div class="diff-output" id="diff-output"></div>
+          </section>
         </div>
-        
 
         <!-- RIGHT -->
         <aside class="steno-panel exam-panel" id="exam-panel">
-          <!-- BOX 2: Right panel -->
           <div class="panel-body">
             <h2 class="steno-panel-title">Control Panel</h2>
             <p class="steno-panel-sub">
@@ -146,11 +149,37 @@
               <div class="hint" id="book-hint">Books load from Admin (Firestore).</div>
             </div>
 
+            <!-- Volume selection -->
+            <div class="control-group" id="volume-group">
+              <label for="volume-select">Volume</label>
+              <select id="volume-select" class="test-select" disabled>
+                <option value="" selected disabled>Select volume</option>
+              </select>
+            </div>
+
+            <!-- Lesson select (single mode) -->
             <div class="control-group">
               <label for="lesson-select">Lesson / Chapter</label>
               <select id="lesson-select" class="test-select" disabled>
                 <option value="" selected disabled>Select lesson</option>
               </select>
+            </div>
+
+            <!-- Checkbox list for multiple/random -->
+            <div class="control-group" id="lesson-checkbox-group" hidden>
+              <label>Lessons (tick to include)</label>
+              <div id="lesson-checkbox-list"></div>
+            </div>
+
+            <!-- Exercise Mode -->
+            <div class="control-group">
+              <label for="exercise-mode">Exercise Mode</label>
+              <select id="exercise-mode" class="test-select">
+                <option value="single" selected>Single lesson</option>
+                <option value="multiple">Multiple lessons</option>
+                <option value="random">Random lesson</option>
+              </select>
+              <div class="hint" id="exercise-mode-hint">Default: single selected lesson.</div>
             </div>
 
             <div class="control-group">
@@ -159,38 +188,27 @@
             </div>
           </div>
 
-          <!-- Start button bottom -->
           <div class="panel-footer">
             <button id="btn-start" class="btn-exam primary" disabled>Start Test</button>
             <div class="panel-footnote">Timer starts on first key after Start Test.</div>
           </div>
         </aside>
       </div>
-
-      <!-- BOX 3: Result (full width) -->
-      <section id="result-section" class="result-section" hidden>
-  <div class="result-head">
-    <h3 class="result-title" id="result-title">Result & Analysis</h3>
-    <button id="btn-again" class="btn-exam ghost" type="button">Test Again</button>
-  </div>
-
-  <div class="result-sheet" id="result-sheet"></div>
-
-  <div class="diff-title" id="diff-title">Error Highlighting</div>
-  <div class="diff-output" id="diff-output"></div>
-</section>
     </section>
   </main>
 
   <button id="feedback-fab" class="feedback-fab" type="button">Feedback</button>
 
-  <!-- Engine first -->
+  <!-- Engine -->
   <script src="js/testEngine.js"></script>
+  <!-- Mistake rules hook -->
+  <script src="js/mistake-rules.js"></script>
 
   <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="js/firebase-config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="js/firebase-config.js"></script>
 
   <!-- Exam logic -->
   <script src="js/steno-exam.js"></script>
@@ -198,5 +216,4 @@
   <!-- Feedback -->
   <script src="js/feedback.js"></script>
 </body>
-
 </html>
