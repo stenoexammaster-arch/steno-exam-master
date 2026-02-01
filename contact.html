@@ -2,34 +2,262 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>FastType - Contact</title>
-  <link rel="stylesheet" href="CSS/style.css" />
+  <title>Contact & Support | Steno Exam & Typing Practice</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Contact-page specific styles -->
+  <link rel="stylesheet" href="css/contact.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- Existing Navbar -->
   <header class="navbar">
     <div class="nav-left">
       <img src="assets/logo.png" alt="Logo" class="logo" />
-      <span class="brand-name">FastType</span>
     </div>
-    <nav class="nav-right">
+    <nav class="nav-right" aria-label="Main navigation">
       <a href="index.html">Home</a>
       <a href="practice.html">Typing Test</a>
       <a href="book.html">Project Books</a>
       <a href="tools.html">Services</a>
       <a href="tips.html">Tips</a>
-      <a href="contact.html">Contact</a>
+      <a href="contact.html" aria-current="page">Contact</a>
       <a href="login.html" class="nav-cta">Log in</a>
     </nav>
   </header>
 
-  <main class="page-container">
-    <h1>Contact</h1>
-    <p>
-      This page will contain contact details or a contact form for users who want support,
-      queries, or collaboration.
-    </p>
-  </main>
-</body>
+  <main id="main-content" class="page-container contact-page" aria-label="Contact support page">
+    <header class="contact-header">
+      <div class="contact-header-top">
+        <h1>Contact Support</h1>
+        <a href="index.html" class="back-home-btn">← Back to Home</a>
+      </div>
+      <p class="contact-subtitle">
+        Get help for steno exams, typing tests (Hindi/English), result or certificate issues, and preparation guidance.
+      </p>
+      <ul class="contact-tags" aria-label="Support areas">
+        <li>Typing test issues</li>
+        <li>Steno exam doubts</li>
+        <li>Hindi / English typing problems</li>
+        <li>Result / certificate queries</li>
+        <li>Book / course suggestions</li>
+        <li>General feedback</li>
+      </ul>
+    </header>
 
+    <section class="contact-layout">
+      <!-- Left: info + trust -->
+      <aside class="contact-info" aria-label="Contact information and response time">
+        <section class="card card-info" aria-labelledby="contact-info-heading">
+          <h2 id="contact-info-heading" class="section-title">Contact Information</h2>
+
+          <div class="info-row">
+            <p class="info-label">Primary Email</p>
+            <p class="info-value">
+              <a href="mailto:stenoexammaster@gmail.com" id="primaryEmail">
+                stenoexammaster@gmail.com
+              </a>
+            </p>
+          </div>
+
+          <div class="info-row">
+            <p class="info-label">Support Hours</p>
+            <p class="info-value">
+              10:00 AM – 7:00 PM (Mon–Sat, IST)
+            </p>
+          </div>
+
+          <p class="info-note">
+            <strong>Important:</strong> We provide <strong>exam and typing support only</strong>.
+            We cannot respond to job postings, recruitment, or unrelated requests.
+          </p>
+        </section>
+
+        <section class="card card-trust" aria-label="Response time information">
+          <p class="trust-note">
+            <strong>We usually reply within 24–48 hours.</strong><br />
+            On working days, most steno and typing queries are answered the same day.
+          </p>
+        </section>
+      </aside>
+
+      <!-- Right: form + FAQ -->
+      <section class="contact-main">
+        <section class="card card-form" aria-labelledby="contact-form-heading">
+          <h2 id="contact-form-heading" class="section-title">Send us your query</h2>
+          <p class="section-intro">
+            After you submit this form, your message will be stored in the feedback panel and we will reply to you by email.
+          </p>
+
+          <!-- Status / success / generic error -->
+          <div id="formStatus" class="form-status" aria-live="polite"></div>
+
+          <!-- Error summary -->
+          <div id="formErrorSummary" class="form-error-summary" role="alert" aria-live="polite"></div>
+
+          <form id="contactForm" novalidate enctype="multipart/form-data">
+            <div class="form-grid">
+              <!-- Full Name -->
+              <div class="form-field">
+                <label for="fullName" class="form-label">
+                  Full Name <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="fullName"
+                  name="fullName"
+                  class="form-input"
+                  autocomplete="name"
+                  aria-required="true"
+                  aria-describedby="fullNameError"
+                />
+                <p id="fullNameError" class="field-error" aria-live="polite"></p>
+              </div>
+
+              <!-- Email -->
+              <div class="form-field">
+                <label for="email" class="form-label">
+                  Email Address <span class="required">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="form-input"
+                  autocomplete="email"
+                  aria-required="true"
+                  aria-describedby="emailHint emailError"
+                />
+                <p id="emailHint" class="field-hint">
+                  Use an email address that you check regularly. We will send all replies to this address.
+                </p>
+                <p id="emailError" class="field-error" aria-live="polite"></p>
+              </div>
+
+              <!-- Purpose -->
+              <div class="form-field form-field-full">
+                <label for="purpose" class="form-label">
+                  Purpose of Contact <span class="required">*</span>
+                </label>
+                <select
+                  id="purpose"
+                  name="purpose"
+                  class="form-select"
+                  aria-required="true"
+                  aria-describedby="purposeError"
+                >
+                  <option value="">Select a purpose</option>
+                  <option value="typing-test-issue">Typing Test Issue</option>
+                  <option value="steno-exam-doubt">Steno Exam Doubt</option>
+                  <option value="hindi-typing-problem">Hindi Typing Problem</option>
+                  <option value="result-certificate-query">Result / Certificate Query</option>
+                  <option value="book-course-suggestion">Book / Course Suggestion</option>
+                  <option value="feedback-suggestion">Feedback / Suggestion</option>
+                  <option value="other">Other</option>
+                </select>
+                <p id="purposeError" class="field-error" aria-live="polite"></p>
+              </div>
+
+              <!-- Message -->
+              <div class="form-field form-field-full">
+                <label for="message" class="form-label">
+                  Message <span class="required">*</span>
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  class="form-textarea"
+                  rows="6"
+                  aria-required="true"
+                  aria-describedby="messageHint messageError"
+                ></textarea>
+                <p id="messageHint" class="field-hint">
+                  Please include the exam name, language (Hindi/English), your device (mobile/desktop),
+                  browser, and a clear description of your doubt or issue.
+                </p>
+                <p id="messageError" class="field-error" aria-live="polite"></p>
+              </div>
+
+              <!-- Attachment (name only saved) -->
+              <div class="form-field form-field-full">
+                <label for="attachment" class="form-label">
+                  Attach File (optional)
+                </label>
+                <input
+                  type="file"
+                  id="attachment"
+                  name="attachment"
+                  class="form-input-file"
+                  aria-describedby="attachmentHint"
+                />
+                <p id="attachmentHint" class="field-hint">
+                  You may select a screenshot, PDF, or text file. The file name will be saved with your feedback.
+                  (Actual file upload will require Storage integration later.)
+                </p>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">
+                Send Message
+              </button>
+              <p class="form-helper">
+                If you face any issue while submitting, you can also email us directly at
+                <a href="mailto:stenoexammaster@gmail.com">stenoexammaster@gmail.com</a>.
+              </p>
+            </div>
+          </form>
+        </section>
+
+        <section class="card card-faq" aria-labelledby="faq-heading">
+          <h2 id="faq-heading" class="section-title">Quick FAQs</h2>
+          <ul class="faq-list">
+            <li class="faq-item">
+              <h3 class="faq-question">Do you provide phone or WhatsApp support?</h3>
+              <p class="faq-answer">
+                At the moment, we provide support only through email at
+                <a href="mailto:stenoexammaster@gmail.com">stenoexammaster@gmail.com</a>.
+                This helps us keep your queries organized and provide accurate written guidance.
+              </p>
+            </li>
+            <li class="faq-item">
+              <h3 class="faq-question">What details should I include for typing test issues?</h3>
+              <p class="faq-answer">
+                Please mention the test type (Hindi/English), your approximate speed, browser
+                (Chrome/Edge, etc.), device (mobile/desktop), and the exact problem
+                (for example: result mismatch, timer issue, keyboard problem, or page not loading).
+              </p>
+            </li>
+            <li class="faq-item">
+              <h3 class="faq-question">Can I ask for preparation guidance and book suggestions?</h3>
+              <p class="faq-answer">
+                Yes. You can ask for a practice strategy, exam pattern clarification, and book or course
+                suggestions for major central and state-level steno and typing exams.
+              </p>
+            </li>
+          </ul>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Exam &amp; Typing Support Only · Steno Exam &amp; Typing Practice Portal</p>
+  </footer>
+
+  <!-- Firebase SDKs (v8) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <!-- Your Firebase config (creates window.db) -->
+  <script src="js/firebase-config.js"></script>
+
+  <!-- Floating feedback widget (your existing file) -->
+  <script src="js/feedback.js"></script>
+
+  <!-- Contact page logic (uses window.db) -->
+  <script src="js/contact.js"></script>
+</body>
 </html>
