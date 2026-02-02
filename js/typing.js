@@ -1,17 +1,28 @@
 // js/typing.js
-// FINAL: Word-based errors, Unicode-safe (English + Hindi)
-// --------------------------------------------------------
-// Gross WPM  = (Total Characters Typed ÷ 5) ÷ Time in Minutes
-// Net WPM    = Gross WPM − (ErrorWords ÷ Time in Minutes)
-// Accuracy%  ≈ ((TotalChars − ErrorWords*5) ÷ TotalChars) × 100
+// FINAL: Character-based errors, Unicode-safe (English + Hindi)
+// -------------------------------------------------------------
+// Error counting (same for English & Hindi):
+//   - Error = mismatched character compared to lesson
+//   - Extra characters = errors
+//   - Missing characters = errors
+//   - Backspace correction reduces errors because we recompute from full text
 //
-// ErrorWords:
-//   - If typed word != reference word at same index => 1 error word
-//   - Extra typed word beyond reference             => 1 error word
-//   - Missing reference word beyond typed           => 1 error word
+// ENGLISH TYPING:
 //
-// 1 wrong word = 1 full penalty, NOT per character.
-// Backspace reduces wrong words naturally because we recompute fresh each time.
+// Gross WPM = (Total Characters Typed / 5) / Time in Minutes
+// Net WPM   = ((Total Characters Typed − Errors) / 5) / Time in Minutes
+// Accuracy  = (Correct Characters / Total Characters Typed) × 100
+//
+// HINDI TYPING:
+//
+// Gross WPM = (Total Characters Typed / 5) / Time in Minutes
+// Net WPM   = Gross WPM − (Errors / Time in Minutes)
+// Accuracy  = (Correct Characters / Total Characters Typed) × 100
+//
+// - Same Unicode-safe logic for English & Hindi
+// - Timer starts on first keypress, uses elapsedSeconds/60 as minutes
+// - Net WPM clamped to >= 0
+// - Accuracy clamped between 0 and 100
 
 (function () {
   "use strict";
@@ -164,66 +175,86 @@
     return Array.from(normalized);
   }
 
-  // ---------------- WORD-BASED EXAM STATS (main fix) ----------------
+  // ---------------- CHARACTER-BASED EXAM STATS ----------------
+  //
+  // 1) Determine:
+  //    - typedChars    (Unicode graphemes)
+  //    - correctChars  (matching graphemes by position)
+  //    - errorChars    (mismatched + extra + missing)
+  //
+  // 2) ENGLISH:
+  //    Gross WPM = (typedChars / 5) / minutes
+  //    Net   WPM = ((typedChars − errorChars) / 5) / minutes
+  //    Acc%      = (correctChars / typedChars) * 100
+  //
+  // 3) HINDI:
+  //    Gross WPM = (typedChars / 5) / minutes
+  //    Net   WPM = Gross WPM − (errorChars / minutes)
+  //    Acc%      = (correctChars / typedChars) * 100
+  //
+  // Time:
+  //   - minutes = max(elapsedSeconds, 1) / 60
+  //   - no ignore-5-seconds rule now
 
   function computeBasicStats(targetText, typedText, elapsedSeconds) {
-    // Characters (Unicode-safe) for speed
-    const typedSeg   = segmentText(typedText);
-    const typedChars = typedSeg.length;
+    const refSeg   = segmentText(targetText);
+    const typedSeg = segmentText(typedText);
 
-    // Words (space-based) for error counting
-    const refWords = String(targetText || "")
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean);
+    const lenRef   = refSeg.length;
+    const lenTyped = typedSeg.length;
+    const maxLen   = Math.max(lenRef, lenTyped);
 
-    const typedWords = String(typedText || "")
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean);
+    let correctChars = 0;
+    let errorChars   = 0;
 
-    const lenRefW   = refWords.length;
-    const lenTypedW = typedWords.length;
-    const minW      = Math.min(lenRefW, lenTypedW);
+    for (let i = 0; i < maxLen; i++) {
+      const r = i < lenRef   ? refSeg[i]   : null;
+      const t = i < lenTyped ? typedSeg[i] : null;
 
-    let errorWords = 0;
-
-    // Wrong/mismatched words
-    for (let i = 0; i < minW; i++) {
-      if (typedWords[i] !== refWords[i]) {
-        errorWords++;
+      if (r !== null && t !== null) {
+        if (r === t) correctChars++;
+        else         errorChars++;
+      } else if (r !== null && t === null) {
+        // missing char
+        errorChars++;
+      } else if (r === null && t !== null) {
+        // extra char
+        errorChars++;
       }
     }
 
-    // Extra words beyond reference
-    if (lenTypedW > lenRefW) {
-      errorWords += (lenTypedW - lenRefW);
+    const typedChars = lenTyped; // characters actually typed
+    const elapsed    = Math.max(elapsedSeconds || 1, 1); // in seconds
+    const minutes    = elapsed / 60;
+
+    const grossWpm = minutes > 0
+      ? (typedChars / 5) / minutes
+      : 0;
+
+    let netWpm;
+    const langLower = String(state.lang || "").toLowerCase();
+
+    if (langLower === "english") {
+      // ENGLISH Net WPM
+      const netChars = Math.max(typedChars - errorChars, 0);
+      netWpm = minutes > 0
+        ? (netChars / 5) / minutes
+        : 0;
+    } else {
+      // HINDI Net WPM
+      const errorPerMin = minutes > 0 ? (errorChars / minutes) : 0;
+      netWpm = grossWpm - errorPerMin;
     }
-    // Missing reference words beyond typed
-    else if (lenRefW > lenTypedW) {
-      errorWords += (lenRefW - lenTypedW);
-    }
 
-    const elapsed = Math.max(elapsedSeconds || 1, 1); // total time
-    const minutes = elapsed / 60;
-
-    // 1 exam word = 5 characters
-    const grossWords = typedChars / 5;
-    const grossWpm   = minutes > 0 ? grossWords / minutes : 0;
-
-    const errorPerMin = minutes > 0 ? errorWords / minutes : 0;
-    let   netWpm      = grossWpm - errorPerMin;
     if (!Number.isFinite(netWpm) || netWpm < 0) netWpm = 0;
 
-    // Approximate correct chars as "words without error" × 5
-    const approxCorrectWords = Math.max(grossWords - errorWords, 0);
-    let   correctChars       = Math.round(approxCorrectWords * 5);
-    if (correctChars > typedChars) correctChars = typedChars;
-    const errorChars         = Math.max(typedChars - correctChars, 0);
+    let accuracy = 0;
+    if (typedChars > 0) {
+      accuracy = (correctChars / typedChars) * 100;
+    }
 
-    const accuracy = typedChars > 0
-      ? (correctChars / typedChars) * 100
-      : 0;
+    const trimmed    = (typedText || "").trim();
+    const wordsTyped = trimmed ? trimmed.split(/\s+/).length : 0;
 
     return {
       timeSeconds: elapsed,
@@ -231,10 +262,9 @@
       correctChars,
       errorChars,
       accuracy,
-      wordsTyped: lenTypedW,
+      wordsTyped,
       grossWpm,
-      netWpm,
-      errorWords
+      netWpm
     };
   }
 
@@ -245,7 +275,9 @@
     let   net   = Number.isFinite(stats.netWpm)   ? stats.netWpm   : 0;
     if (net < 0) net = 0;
 
-    const acc = Number.isFinite(stats.accuracy) ? stats.accuracy : 0;
+    let acc = Number.isFinite(stats.accuracy) ? stats.accuracy : 0;
+    if (acc < 0)   acc = 0;
+    if (acc > 100) acc = 100;
 
     if (gwpmTopEl) gwpmTopEl.textContent = gross.toFixed(2);
     if (nwpmTopEl) nwpmTopEl.textContent = net.toFixed(2);
@@ -293,9 +325,9 @@
   function setFontForLanguage(lang) {
     [typingTextEl, typingInputEl].forEach((el) => {
       el.classList.remove("font-english", "font-hindi", "font-kruti");
-      if (lang === "english")       el.classList.add("font-english");
+      if (lang === "english")           el.classList.add("font-english");
       else if (lang === "hindi-kruti") el.classList.add("font-kruti");
-      else                           el.classList.add("font-hindi");
+      else                             el.classList.add("font-hindi");
     });
     state.lang = lang;
 
@@ -594,7 +626,7 @@
   function saveSummary(reason, stats) {
     const summary = {
       reason,
-      stats,                    // includes grossWpm, netWpm, accuracy, errorWords etc.
+      stats,                    // includes grossWpm, netWpm, accuracy
       lang: state.lang,
       timeLimit: state.timeLimitSeconds,
       elapsed: state.elapsedSeconds,
