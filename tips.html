@@ -2,11 +2,951 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>FastType - Typing Tips</title>
-  <link rel="stylesheet" href="CSS/style.css" />
+  <title>FastType - Typing & Steno Tips</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Practical typing & stenography guide for government exams. Learn how to use Steno Exam Master, exam rules, Hindi shortcuts, and get preparation tips."
+  />
+  <!-- Your global stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Page-specific styles (prefixed with stm-) -->
+  <style>
+    :root {
+      --stm-bg: #f3f4f6;
+      --stm-surface: #ffffff;
+      --stm-primary: #1d4ed8;
+      --stm-primary-dark: #1e3a8a;
+      --stm-primary-soft: #e0ebff;
+      --stm-accent: #0ea5e9;
+      --stm-border: #e5e7eb;
+      --stm-text: #0f172a;
+      --stm-muted: #64748b;
+      --stm-shadow-soft: 0 12px 30px rgba(15, 23, 42, 0.08);
+      --stm-radius-card: 0.9rem;
+      --stm-radius-pill: 999px;
+      --stm-transition-fast: 0.2s ease;
+    }
+
+    /* NAVBAR (using your existing structure) */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1.25rem;
+      background-color: #ffffff;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+    }
+
+    .nav-left .logo {
+      height: 32px;
+      width: 32px;
+      object-fit: contain;
+    }
+
+    .brand-name {
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 0.92rem;
+      color: var(--stm-primary-dark);
+      white-space: nowrap;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.88rem;
+    }
+
+    .nav-right a {
+      text-decoration: none;
+      color: #4b5563;
+      padding: 0.25rem 0.4rem;
+      border-radius: 999px;
+      transition: background-color var(--stm-transition-fast),
+        color var(--stm-transition-fast);
+      white-space: nowrap;
+    }
+
+    .nav-right a:hover,
+    .nav-right a:focus-visible {
+      background-color: #e5edff;
+      color: var(--stm-primary-dark);
+      outline: none;
+    }
+
+    .nav-right .nav-cta {
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      background-color: var(--stm-primary);
+      color: #f9fafb;
+      font-weight: 600;
+    }
+
+    .nav-right .nav-cta:hover,
+    .nav-right .nav-cta:focus-visible {
+      background-color: var(--stm-primary-dark);
+    }
+
+    /* LAYOUT */
+    .stm-main {
+      background-color: var(--stm-bg);
+      color: var(--stm-text); /* force readable text, even if global body color is white */
+      padding-bottom: 2.5rem;
+    }
+
+    .stm-container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    /* BUTTONS */
+    .stm-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.7rem 1.5rem;
+      border-radius: var(--stm-radius-pill);
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background-color var(--stm-transition-fast),
+        color var(--stm-transition-fast),
+        border-color var(--stm-transition-fast),
+        box-shadow var(--stm-transition-fast),
+        transform 0.08s ease-out;
+      text-decoration: none;
+      line-height: 1.1;
+      gap: 0.4rem;
+      background: none;
+    }
+
+    .stm-btn-primary {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: #f9fafb;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+      border-color: transparent;
+    }
+
+    .stm-btn-primary:hover,
+    .stm-btn-primary:focus-visible {
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+      box-shadow: 0 14px 32px rgba(30, 64, 175, 0.42);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .stm-btn-secondary {
+      background-color: #e5edff;
+      color: var(--stm-primary-dark);
+      border-color: #cbd5f5;
+    }
+
+    .stm-btn-secondary:hover,
+    .stm-btn-secondary:focus-visible {
+      background-color: #d9e4ff;
+      border-color: #b4c6ff;
+      outline: none;
+    }
+
+    .stm-btn-ghost {
+      background-color: transparent;
+      border-color: #cbd5f5;
+      color: var(--stm-primary-dark);
+    }
+
+    .stm-btn-ghost:hover,
+    .stm-btn-ghost:focus-visible {
+      background-color: #e5edff;
+      outline: none;
+    }
+
+    .stm-btn-icon {
+      font-size: 1rem;
+    }
+
+    /* BACK BUTTON ROW */
+    .stm-back-bar {
+      padding: 0.9rem 0 0.3rem;
+    }
+
+    .stm-back-button {
+      font-size: 0.85rem;
+      padding: 0.45rem 1rem;
+    }
+
+    /* GENERAL SECTIONS */
+    .stm-section {
+      padding: 2.4rem 0;
+    }
+
+    /* HERO */
+    .stm-hero {
+      padding-top: 2rem;
+      background: radial-gradient(
+            circle at top left,
+            rgba(129, 140, 248, 0.18),
+            transparent 55%
+          ),
+        radial-gradient(
+            circle at bottom right,
+            rgba(56, 189, 248, 0.10),
+            transparent 50%
+          );
+    }
+
+    .stm-hero-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+    }
+
+    .stm-hero-text {
+      max-width: 680px;
+    }
+
+    .stm-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.12rem 0.6rem;
+      border-radius: var(--stm-radius-pill);
+      background-color: #e0f2fe;
+      color: #075985;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.8rem;
+    }
+
+    .stm-eyebrow-icon {
+      font-size: 0.85rem;
+    }
+
+    .stm-hero-title {
+      font-size: 2.2rem;
+      line-height: 1.15;
+      margin: 0 0 0.6rem;
+      letter-spacing: -0.02em;
+      color: var(--stm-text);
+    }
+
+    .stm-hero-subtitle {
+      font-size: 1rem;
+      margin: 0 0 1.3rem;
+      color: var(--stm-muted);
+      max-width: 32rem;
+    }
+
+    .stm-hero-highlight {
+      font-weight: 600;
+      color: var(--stm-primary-dark);
+    }
+
+    .stm-hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .stm-hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      font-size: 0.82rem;
+      color: var(--stm-muted);
+    }
+
+    .stm-hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: var(--stm-radius-pill);
+      background-color: rgba(15, 23, 42, 0.02);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .stm-hero-side {
+      max-width: 100%;
+    }
+
+    .stm-hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+      max-width: 480px;
+    }
+
+    .stm-hero-stat {
+      padding: 0.7rem 0.85rem;
+      border-radius: 0.75rem;
+      background-color: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      font-size: 0.78rem;
+      color: var(--stm-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .stm-hero-stat-label {
+      font-weight: 600;
+      color: var(--stm-primary-dark);
+      font-size: 0.8rem;
+    }
+
+    /* SECTION HEADINGS */
+    .stm-section-heading {
+      margin-bottom: 1.8rem;
+    }
+
+    .stm-section-eyebrow {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #6b7280;
+      margin-bottom: 0.3rem;
+    }
+
+    .stm-section-title {
+      margin: 0 0 0.3rem;
+      font-size: 1.45rem;
+      color: var(--stm-text);
+    }
+
+    .stm-section-subtitle {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--stm-muted);
+      max-width: 34rem;
+    }
+
+    /* CARD */
+    .stm-card {
+      background-color: var(--stm-surface);
+      border-radius: var(--stm-radius-card);
+      box-shadow: var(--stm-shadow-soft);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      padding: 1.4rem 1.3rem;
+    }
+
+    .stm-card-title {
+      margin: 0 0 0.3rem;
+      font-size: 1rem;
+      color: var(--stm-text);
+    }
+
+    .stm-card-subtitle {
+      margin: 0;
+      font-size: 0.86rem;
+      color: var(--stm-muted);
+    }
+
+    /* HOW TO USE - STEPS */
+    .stm-steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+      gap: 1rem;
+    }
+
+    .stm-step-card {
+      position: relative;
+      padding-top: 1.1rem;
+      overflow: hidden;
+    }
+
+    .stm-step-number {
+      position: absolute;
+      top: 0.6rem;
+      left: 1.2rem;
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 0.75rem;
+      background: #e0ecff;
+      color: #1d4ed8;
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stm-step-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--stm-primary-dark);
+      margin-bottom: 0.2rem;
+      padding-left: 2.6rem;
+    }
+
+    .stm-step-card h3 {
+      margin: 0 0 0.35rem;
+      font-size: 0.98rem;
+      padding-left: 2.6rem;
+    }
+
+    .stm-step-body {
+      font-size: 0.86rem;
+      color: var(--stm-muted);
+      padding-left: 2.6rem;
+    }
+
+    .stm-step-body ul {
+      padding-left: 1rem;
+      margin: 0.4rem 0 0;
+    }
+
+    .stm-step-body li {
+      margin-bottom: 0.25rem;
+    }
+
+    /* PRACTICE MODES */
+    .stm-modes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+      gap: 1rem;
+    }
+
+    .stm-mode-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #4b5563;
+      padding: 0.12rem 0.55rem;
+      border-radius: var(--stm-radius-pill);
+      background-color: #eff6ff;
+      margin-bottom: 0.5rem;
+    }
+
+    .stm-mode-body {
+      font-size: 0.86rem;
+      color: var(--stm-muted);
+      margin-top: 0.4rem;
+    }
+
+    .stm-mode-body strong {
+      color: var(--stm-text);
+    }
+
+    .stm-mode-list {
+      margin: 0.4rem 0 0;
+      padding-left: 1rem;
+    }
+
+    .stm-mode-list li {
+      margin-bottom: 0.25rem;
+    }
+
+    /* TIPS */
+    .stm-tips-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1rem;
+    }
+
+    .stm-tips-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.35rem;
+      font-size: 0.98rem;
+    }
+
+    .stm-tips-card p {
+      margin: 0 0 0.5rem;
+      font-size: 0.86rem;
+      color: var(--stm-muted);
+    }
+
+    .stm-tips-list {
+      padding-left: 1rem;
+      margin: 0.2rem 0 0;
+      font-size: 0.9rem;
+    }
+
+    .stm-tips-list li {
+      margin-bottom: 0.25rem;
+    }
+
+    /* ACCORDION (RULES) */
+    .stm-accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .stm-accordion-item {
+      border-radius: 0.85rem;
+      background-color: var(--stm-surface);
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      box-shadow: var(--stm-shadow-soft);
+      overflow: hidden;
+    }
+
+    .stm-accordion-header {
+      width: 100%;
+      text-align: left;
+      padding: 0.9rem 1rem;
+      background: none;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      cursor: pointer;
+    }
+
+    .stm-accordion-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--stm-text);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .stm-accordion-icon {
+      font-size: 1rem;
+      color: var(--stm-primary);
+    }
+
+    .stm-accordion-toggle {
+      font-size: 1rem;
+      color: var(--stm-muted);
+      flex-shrink: 0;
+      transition: transform var(--stm-transition-fast),
+        color var(--stm-transition-fast);
+    }
+
+    .stm-accordion-body {
+      padding: 0 1rem 0.9rem;
+      font-size: 0.86rem;
+      color: var(--stm-muted);
+    }
+
+    .stm-accordion-body p {
+      margin-top: 0;
+      margin-bottom: 0.35rem;
+    }
+
+    .stm-accordion-body ul {
+      margin-top: 0.2rem;
+      margin-bottom: 0;
+      padding-left: 1rem;
+    }
+
+    .stm-accordion-body li {
+      margin-bottom: 0.25rem;
+    }
+
+    body.stm-js .stm-accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    body.stm-js .stm-accordion-item.stm-active .stm-accordion-body {
+      padding: 0 1rem 0.9rem;
+    }
+
+    body.stm-js .stm-accordion-item.stm-active .stm-accordion-toggle {
+      transform: rotate(90deg);
+      color: var(--stm-primary);
+    }
+
+    /* HINDI SHORTCUTS TABLE */
+    .stm-table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 480px;
+      background-color: var(--stm-surface);
+      border-radius: var(--stm-radius-card);
+      box-shadow: var(--stm-shadow-soft);
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      overflow: hidden;
+      color: var(--stm-text); /* ensure table text visible */
+    }
+
+    thead {
+      background-color: #eff6ff;
+    }
+
+    th,
+    td {
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--stm-border);
+    }
+
+    th {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #4b5563;
+      white-space: nowrap;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    td:first-child {
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .stm-table-note {
+      margin-top: 0.6rem;
+      font-size: 0.8rem;
+      color: var(--stm-muted);
+    }
+
+    /* PRICING */
+    .stm-pricing-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1rem;
+    }
+
+    .stm-pricing-card {
+      position: relative;
+      padding-top: 1.2rem;
+    }
+
+    .stm-pricing-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1.1rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.15rem 0.6rem;
+      border-radius: var(--stm-radius-pill);
+      background-color: #fee2e2;
+      color: #b91c1c;
+      font-weight: 600;
+    }
+
+    .stm-pricing-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #4b5563;
+      margin-bottom: 0.15rem;
+    }
+
+    .stm-pricing-tagline {
+      font-size: 0.85rem;
+      color: var(--stm-muted);
+      margin-bottom: 0.55rem;
+    }
+
+    .stm-pricing-price {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--stm-primary-dark);
+      margin-bottom: 0.1rem;
+    }
+
+    .stm-pricing-period {
+      font-size: 0.8rem;
+      color: var(--stm-muted);
+    }
+
+    .stm-pricing-features {
+      margin: 0.75rem 0 1.1rem;
+      padding-left: 1rem;
+      font-size: 0.86rem;
+      color: var(--stm-muted);
+    }
+
+    .stm-pricing-features li {
+      margin-bottom: 0.25rem;
+    }
+
+    .stm-pricing-footer-note {
+      font-size: 0.8rem;
+      color: var(--stm-muted);
+      margin-top: 0.3rem;
+    }
+
+    /* REQUEST FORM */
+    .stm-request-card {
+      padding: 1.5rem 1.4rem 1.5rem;
+    }
+
+    .stm-request-text {
+      font-size: 0.9rem;
+      color: var(--stm-muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .stm-form-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.8rem;
+    }
+
+    .stm-form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .stm-form-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #4b5563;
+    }
+
+    .stm-form-label span {
+      color: #dc2626;
+    }
+
+    .stm-form-input,
+    .stm-form-select,
+    .stm-form-textarea {
+      border-radius: 0.6rem;
+      border: 1px solid var(--stm-border);
+      padding: 0.5rem 0.7rem;
+      font-size: 0.9rem;
+      font-family: inherit;
+      transition: border-color var(--stm-transition-fast),
+        box-shadow var(--stm-transition-fast),
+        background-color var(--stm-transition-fast);
+      background-color: #f9fafb;
+      min-height: 2.4rem;
+      color: var(--stm-text);
+    }
+
+    .stm-form-textarea {
+      resize: vertical;
+      min-height: 5rem;
+    }
+
+    .stm-form-input:focus-visible,
+    .stm-form-select:focus-visible,
+    .stm-form-textarea:focus-visible {
+      outline: none;
+      border-color: var(--stm-primary);
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
+      background-color: #ffffff;
+    }
+
+    .stm-form-helper {
+      font-size: 0.78rem;
+      color: var(--stm-muted);
+    }
+
+    .stm-form-actions {
+      margin-top: 0.8rem;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .stm-btn-submit {
+      padding-inline: 1.7rem;
+    }
+
+    .stm-request-status {
+      margin-top: 0.55rem;
+      font-size: 0.8rem;
+      color: #f87171; /* default error color */
+    }
+
+    /* LOGIN FLOW */
+    .stm-flow-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .stm-flow-card {
+      position: relative;
+      padding-top: 1.1rem;
+    }
+
+    .stm-flow-number {
+      position: absolute;
+      top: 0.8rem;
+      left: 1.2rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 999px;
+      background-color: #ecfeff;
+      border: 1px solid #0e7490;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #0e7490;
+    }
+
+    .stm-flow-card h3 {
+      margin: 0 0 0.25rem;
+      font-size: 0.95rem;
+      padding-left: 2.5rem;
+      color: var(--stm-text);
+    }
+
+    .stm-flow-card p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--stm-muted);
+      padding-left: 2.5rem;
+    }
+
+    /* FOOTER */
+    .stm-footer {
+      border-top: 1px solid rgba(203, 213, 225, 0.9);
+      padding: 1.4rem 0 1.6rem;
+      background-color: #f9fafb;
+      font-size: 0.84rem;
+      margin-top: 1.5rem;
+    }
+
+    .stm-footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .stm-footer-main {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .stm-footer-email-label {
+      color: #4b5563;
+      font-weight: 600;
+    }
+
+    .stm-footer-email {
+      color: var(--stm-primary-dark);
+      font-weight: 600;
+      word-break: break-all;
+    }
+
+    .stm-footer-note {
+      color: var(--stm-muted);
+    }
+
+    .stm-footer-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      justify-content: space-between;
+      color: #9ca3af;
+    }
+
+    .stm-footer-bottom span {
+      white-space: nowrap;
+    }
+
+    /* RESPONSIVE */
+    @media (min-width: 640px) {
+      .stm-hero-title {
+        font-size: 2.45rem;
+      }
+
+      .stm-hero-subtitle {
+        font-size: 1.02rem;
+      }
+
+      .stm-section-title {
+        font-size: 1.55rem;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .stm-hero-inner {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .stm-hero-text {
+        max-width: 60%;
+      }
+
+      .stm-hero-side {
+        max-width: 36%;
+      }
+
+      .stm-tips-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .stm-pricing-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .stm-form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .stm-form-grid-full {
+        grid-column: 1 / -1;
+      }
+
+      .stm-footer-inner {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .stm-footer-main {
+        align-items: flex-start;
+      }
+    }
+
+    @media (min-width: 960px) {
+      .stm-hero {
+        padding-top: 2.6rem;
+        padding-bottom: 2.8rem;
+      }
+
+      .stm-section {
+        padding: 3rem 0;
+      }
+    }
+  </style>
 </head>
 <body>
+  <!-- Your original navbar -->
   <header class="navbar">
     <div class="nav-left">
       <img src="assets/logo.png" alt="Logo" class="logo" />
@@ -23,13 +963,990 @@
     </nav>
   </header>
 
-  <main class="page-container">
-    <h1>Typing Tips</h1>
-    <p>
-      This page will include practical tips and guides for English & Hindi typing, accuracy
-      improvement, and govt exam preparation.
-    </p>
-  </main>
-</body>
+  <main class="stm-main" id="top">
+    <!-- BACK BUTTON TO HOME -->
+    <div class="stm-container stm-back-bar">
+      <a href="index.html" class="stm-btn stm-btn-ghost stm-back-button">
+        <span class="stm-btn-icon">←</span>
+        <span>Back to Home</span>
+      </a>
+    </div>
 
+    <!-- HERO -->
+    <section class="stm-section stm-hero" aria-labelledby="stm-hero-title">
+      <div class="stm-container stm-hero-inner">
+        <div class="stm-hero-text">
+          <div class="stm-eyebrow">
+            <span class="stm-eyebrow-icon">⌨️</span>
+            <span>Typing &amp; Stenography Guide</span>
+          </div>
+          <h1 id="stm-hero-title" class="stm-hero-title">Steno Exam Master</h1>
+          <p class="stm-hero-subtitle">
+            <span class="stm-hero-highlight">Practice. Analyze. Improve. Crack the Exam.</span>
+            Use this page as your step-by-step guide for English &amp; Hindi typing and
+            stenography practice for SSC, HSSC, CPCT and other government exams.
+          </p>
+          <div class="stm-hero-actions">
+            <a href="practice.html" class="stm-btn stm-btn-primary">
+              <span>Start Practice</span>
+              <span class="stm-btn-icon">➜</span>
+            </a>
+            <a href="#how-it-works" class="stm-btn stm-btn-secondary">
+              <span>How It Works</span>
+            </a>
+          </div>
+          <div class="stm-hero-meta">
+            <span class="stm-hero-pill">🖋️ SSC / HSSC / CPCT / Court &amp; Other Boards</span>
+            <span class="stm-hero-pill">📊 Exam-style evaluation with detailed mistakes</span>
+          </div>
+        </div>
+        <aside class="stm-hero-side" aria-label="Key highlights">
+          <div class="stm-hero-stats">
+            <div class="stm-hero-stat">
+              <span class="stm-hero-stat-label">Real Exam Logic</span>
+              <span>Full, half &amp; ignored mistakes calculated like board checkers.</span>
+            </div>
+            <div class="stm-hero-stat">
+              <span class="stm-hero-stat-label">English &amp; Hindi</span>
+              <span>Separate rules, fonts &amp; symbols for bilingual government exams.</span>
+            </div>
+            <div class="stm-hero-stat">
+              <span class="stm-hero-stat-label">Typing &amp; Steno</span>
+              <span>Support for normal typing, dictation and shorthand practice.</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- HOW TO USE -->
+    <section id="how-it-works" class="stm-section" aria-labelledby="stm-how-title">
+      <div class="stm-container">
+        <div class="stm-section-heading">
+          <div class="stm-section-eyebrow">How to use Steno Exam Master</div>
+          <h2 id="stm-how-title" class="stm-section-title">Step-by-step practice workflow</h2>
+          <p class="stm-section-subtitle">
+            Follow these steps for any typing or stenography test. The same flow works for
+            SSC, HSSC, CPCT and other typing/steno exams.
+          </p>
+        </div>
+        <div class="stm-steps-grid">
+          <article class="stm-card stm-step-card">
+            <span class="stm-step-number">1</span>
+            <div class="stm-step-label">Start from Dashboard</div>
+            <h3>Open <strong>Steno Check</strong></h3>
+            <p class="stm-step-body">
+              Log in to your account and go to the <strong>Steno Check</strong> section. This is your
+              main area for typing and stenography practice.
+            </p>
+          </article>
+
+          <article class="stm-card stm-step-card">
+            <span class="stm-step-number">2</span>
+            <div class="stm-step-label">Match your target exam</div>
+            <h3>Select Exam (HSSC / SSC / CPCT)</h3>
+            <p class="stm-step-body">
+              Choose the exact exam for which you are preparing.  
+              Rules for mistakes and timing will automatically adjust to that exam pattern.
+            </p>
+          </article>
+
+          <article class="stm-card stm-step-card">
+            <span class="stm-step-number">3</span>
+            <div class="stm-step-label">Choose practice language</div>
+            <h3>Select Language (English / Hindi)</h3>
+            <p class="stm-step-body">
+              Pick <strong>English</strong> or <strong>Hindi</strong> based on your paper.  
+              Font, keyboard logic and mistake checking change as per language.
+            </p>
+          </article>
+
+          <article class="stm-card stm-step-card">
+            <span class="stm-step-number">4</span>
+            <div class="stm-step-label">Set your timing</div>
+            <h3>Select Time Duration</h3>
+            <p class="stm-step-body">
+              Fix test time as per your exam pattern (e.g. 5, 10, 15 minutes).  
+              The timer will start the moment you begin typing.
+            </p>
+          </article>
+
+          <article class="stm-card stm-step-card">
+            <span class="stm-step-number">5</span>
+            <div class="stm-step-label">Use standard texts</div>
+            <h3>Choose Book &amp; Chapter</h3>
+            <p class="stm-step-body">
+              Select the <strong>book</strong> and <strong>chapter / paragraph</strong> from which you want
+              to practice. We use commonly recommended exam books and official passages.
+            </p>
+          </article>
+
+          <article class="stm-card stm-step-card">
+            <span class="stm-step-number">6</span>
+            <div class="stm-step-label">Start the test</div>
+            <h3>Start Typing</h3>
+            <p class="stm-step-body">
+              Place your fingers correctly and start typing or transcribing the passage.  
+              Do not look at the keyboard. Follow exam rules for:
+            </p>
+            <div class="stm-step-body">
+              <ul>
+                <li>Capital vs small letters</li>
+                <li>Word spacing and punctuation</li>
+                <li>Correct use of Hindi matras and symbols</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="stm-card stm-step-card">
+            <span class="stm-step-number">7</span>
+            <div class="stm-step-label">End the test</div>
+            <h3>Submit Test</h3>
+            <p class="stm-step-body">
+              When time is over or you finish early, click <strong>Submit</strong>.  
+              Your typing is immediately checked against the original passage.
+            </p>
+          </article>
+
+          <article class="stm-card stm-step-card">
+            <span class="stm-step-number">8</span>
+            <div class="stm-step-label">Analyse like an examiner</div>
+            <h3>View Detailed Result</h3>
+            <div class="stm-step-body">
+              Get an exam-style report with:
+              <ul>
+                <li><strong>Gross Speed</strong> (Total strokes per minute)</li>
+                <li><strong>Net Speed</strong> (After mistake penalty)</li>
+                <li><strong>Accuracy%</strong> (Correct characters / total)</li>
+                <li><strong>Full Mistakes</strong> – counted fully as per rules</li>
+                <li><strong>Half Mistakes</strong> – minor but still penalised</li>
+                <li><strong>Ignored Mistakes</strong> – not counted by the exam board</li>
+              </ul>
+              Use this report to decide what to improve in the next attempt.
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRACTICE MODES -->
+    <section id="practice-modes" class="stm-section" aria-labelledby="stm-modes-title">
+      <div class="stm-container">
+        <div class="stm-section-heading">
+          <div class="stm-section-eyebrow">Typing practice modes</div>
+          <h2 id="stm-modes-title" class="stm-section-title">
+            Flexible modes for every stage of preparation
+          </h2>
+          <p class="stm-section-subtitle">
+            Switch between book-based practice, custom text and full exam simulations.
+            Each mode is designed to target a specific skill area.
+          </p>
+        </div>
+
+        <div class="stm-modes-grid">
+          <article class="stm-card">
+            <div class="stm-mode-tag">📘 Mode · Book-based Typing</div>
+            <h3 class="stm-card-title">Book-based Typing Practice</h3>
+            <p class="stm-card-subtitle">
+              Practise directly from standard exam books and official passages to match
+              real-paper difficulty and style.
+            </p>
+            <div class="stm-mode-body">
+              <strong>How to use:</strong>
+              <ul class="stm-mode-list">
+                <li>Select your <strong>exam</strong>, <strong>language</strong> and then choose the book name.</li>
+                <li>Pick the exact <strong>chapter / paragraph number</strong> you want to attempt.</li>
+                <li>Type the passage exactly as shown, focusing first on <strong>accuracy</strong>.</li>
+                <li>Repeat the same passage on multiple days to track gradual improvement.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="stm-card">
+            <div class="stm-mode-tag">✏️ Mode · Custom Text</div>
+            <h3 class="stm-card-title">Custom Text Typing</h3>
+            <p class="stm-card-subtitle">
+              Paste any paragraph or official notice and practise on your own customised text.
+            </p>
+            <div class="stm-mode-body">
+              <strong>How to use:</strong>
+              <ul class="stm-mode-list">
+                <li>Open <strong>Custom Text</strong> option from the Steno Check area.</li>
+                <li>Paste your text (office letters, notices, judgments, etc.).</li>
+                <li>Select language, duration and start typing.</li>
+                <li>Use this mode to match the vocabulary of your target department.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="stm-card">
+            <div class="stm-mode-tag">🎯 Mode · Exam Simulation</div>
+            <h3 class="stm-card-title">Exam Simulation Mode</h3>
+            <p class="stm-card-subtitle">
+              Full exam-like environment with fixed time, automatic submit and strict mistake rules.
+            </p>
+            <div class="stm-mode-body">
+              <strong>How to use:</strong>
+              <ul class="stm-mode-list">
+                <li>Choose your <strong>exact exam pattern</strong> (e.g. HSSC 10 min English).</li>
+                <li>Use exam-time <strong>duration</strong> and disable all external help.</li>
+                <li>Attempt in a quiet environment, sitting like a real exam.</li>
+                <li>Compare your net speed with the <strong>official qualifying speed</strong>.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="stm-card">
+            <div class="stm-mode-tag">🔍 Mode · Mistake Analysis</div>
+            <h3 class="stm-card-title">Mistake Analysis Mode</h3>
+            <p class="stm-card-subtitle">
+              Special mode designed to understand and remove repeated mistakes from your typing.
+            </p>
+            <div class="stm-mode-body">
+              <strong>How to use:</strong>
+              <ul class="stm-mode-list">
+                <li>Open the detailed result after any test and switch to
+                  <strong>Mistake View</strong>.</li>
+                <li>See each mistake highlighted with its <strong>type</strong> (full / half / ignored).</li>
+                <li>Note patterns – capital letters, spaces, matras, punctuation, etc.</li>
+                <li>Re-attempt only the mistaken lines until accuracy crosses <strong>98–99%</strong>.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- TYPING & STENO TIPS -->
+    <section id="tips" class="stm-section" aria-labelledby="stm-tips-title">
+      <div class="stm-container">
+        <div class="stm-section-heading">
+          <div class="stm-section-eyebrow">Stenography &amp; typing tips</div>
+          <h2 id="stm-tips-title" class="stm-section-title">
+            Practical tips for exam-oriented practice
+          </h2>
+          <p class="stm-section-subtitle">
+            Small corrections in technique can create a big difference in your final
+            speed and accuracy.
+          </p>
+        </div>
+
+        <div class="stm-tips-grid">
+          <article class="stm-card stm-tips-card" aria-label="Typing tips">
+            <h3>⌨️ Typing Tips</h3>
+            <p>Focus on building a clean and consistent typing style before chasing very high speeds.</p>
+            <ul class="stm-tips-list">
+              <li><strong>Focus on accuracy first</strong> – maintain at least 95–98% accuracy before
+                pushing for higher WPM. In exams, high speed with low accuracy is not useful.</li>
+              <li><strong>Maintain proper spacing</strong> – avoid extra spaces before commas,
+                full stops and brackets. Use <em>one</em> space between words and after punctuation.</li>
+              <li><strong>Avoid unnecessary backspace</strong> – frequent corrections break rhythm.
+                Correct only when absolutely required in exam-style practice.</li>
+              <li><strong>Develop typing rhythm</strong> – press keys softly and steadily instead of
+                hitting them hard. A smooth rhythm reduces fatigue and increases consistency.</li>
+              <li><strong>Use home-row position</strong> – always return fingers to ASDF / JKL; for English
+                or the central row for Hindi layouts.</li>
+            </ul>
+          </article>
+
+          <article class="stm-card stm-tips-card" aria-label="Stenography tips">
+            <h3>📝 Steno Tips</h3>
+            <p>Stenography requires smart practice with clear rules, not just raw speed.</p>
+            <ul class="stm-tips-list">
+              <li><strong>Follow exam-specific rules</strong> – each board (SSC, HSSC, Court, etc.)
+                has its own marking scheme. Practise with the same rules enabled in Steno Exam Master.</li>
+              <li><strong>Revise mistakes after every test</strong> – immediately repeat dictation
+                for lines where strokes were missed or wrongly transcribed.</li>
+              <li><strong>Practice with real exam format</strong> – same speed, same passage length,
+                and same transcription time as your actual exam.</li>
+              <li><strong>Time management is key</strong> – divide your time between
+                shorthand practice, transcription and error review. Do not spend your full time only on new outlines.</li>
+              <li><strong>Maintain neat notebooks</strong> – clear strokes and spacing help you
+                read faster during transcription, reducing typing mistakes.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ENGLISH & HINDI TYPING RULES -->
+    <section id="rules" class="stm-section" aria-labelledby="stm-rules-title">
+      <div class="stm-container">
+        <div class="stm-section-heading">
+          <div class="stm-section-eyebrow">Rule awareness</div>
+          <h2 id="stm-rules-title" class="stm-section-title">
+            English &amp; Hindi typing rules used in checking
+          </h2>
+          <p class="stm-section-subtitle">
+            Understanding checking logic is as important as speed.  
+            Steno Exam Master follows exam-oriented rules for both English and Hindi papers.
+          </p>
+        </div>
+
+        <div class="stm-accordion" role="list">
+          <article class="stm-accordion-item" role="listitem">
+            <button
+              class="stm-accordion-header"
+              type="button"
+              aria-expanded="false"
+              aria-controls="stm-rule-1-body"
+              id="stm-rule-1-header"
+            >
+              <span class="stm-accordion-title">
+                <span class="stm-accordion-icon">🔠</span>
+                Capital vs small letter importance
+              </span>
+              <span class="stm-accordion-toggle">›</span>
+            </button>
+            <div
+              class="stm-accordion-body"
+              id="stm-rule-1-body"
+              role="region"
+              aria-labelledby="stm-rule-1-header"
+            >
+              <p>
+                In government exams, wrong use of capital letters is generally treated as a
+                <strong>full mistake</strong>, especially in:
+              </p>
+              <ul>
+                <li>Starting letter of sentences.</li>
+                <li>Names of persons, departments, designations and places.</li>
+                <li>Abbreviations (e.g. SSC, HSSC, CPCT, Govt., Ltd.).</li>
+              </ul>
+              <p>
+                Always carefully match the original passage. Do not randomly capitalise or
+                convert capitals to small letters. During practice, slow down slightly whenever
+                you see a capital letter coming next.
+              </p>
+            </div>
+          </article>
+
+          <article class="stm-accordion-item" role="listitem">
+            <button
+              class="stm-accordion-header"
+              type="button"
+              aria-expanded="false"
+              aria-controls="stm-rule-2-body"
+              id="stm-rule-2-header"
+            >
+              <span class="stm-accordion-title">
+                <span class="stm-accordion-icon">↔️</span>
+                Word spacing rules
+              </span>
+              <span class="stm-accordion-toggle">›</span>
+            </button>
+            <div
+              class="stm-accordion-body"
+              id="stm-rule-2-body"
+              role="region"
+              aria-labelledby="stm-rule-2-header"
+            >
+              <p>
+                Extra or missing spaces are a very common reason for losing marks. Exams
+                generally follow these principles:
+              </p>
+              <ul>
+                <li><strong>Single space</strong> between each word – never press space twice.</li>
+                <li><strong>No space</strong> before comma, full stop, question mark or colon.</li>
+                <li><strong>One space</strong> after punctuation marks (except before closing brackets).</li>
+                <li>In Hindi, avoid breaking words in the middle by extra spacing around matras.</li>
+              </ul>
+              <p>
+                While practising, keep your thumb movement consistent and avoid tapping
+                spacebar unnecessarily when you feel nervous.
+              </p>
+            </div>
+          </article>
+
+          <article class="stm-accordion-item" role="listitem">
+            <button
+              class="stm-accordion-header"
+              type="button"
+              aria-expanded="false"
+              aria-controls="stm-rule-3-body"
+              id="stm-rule-3-header"
+            >
+              <span class="stm-accordion-title">
+                <span class="stm-accordion-icon">🕒</span>
+                Punctuation awareness
+              </span>
+              <span class="stm-accordion-toggle">›</span>
+            </button>
+            <div
+              class="stm-accordion-body"
+              id="stm-rule-3-body"
+              role="region"
+              aria-labelledby="stm-rule-3-header"
+            >
+              <p>
+                Missing or wrong punctuation can change the meaning of a sentence and is
+                almost always counted as a <strong>full mistake</strong>.
+              </p>
+              <ul>
+                <li>Use the correct symbol – <strong>comma (,)</strong>, <strong>full stop (.)</strong>,
+                  <strong>colon (:)</strong>, <strong>semicolon (;)</strong> and <strong>hyphen (-)</strong>
+                  as shown in the passage.</li>
+                <li>Keep brackets, quotation marks and slashes in the same order as original.</li>
+                <li>In Hindi, do not replace the <strong>“।” (danda)</strong> with an English dot.</li>
+              </ul>
+              <p>
+                During revision, quickly scan only punctuation marks while ignoring words.
+                This helps you catch punctuation errors separately from spelling mistakes.
+              </p>
+            </div>
+          </article>
+
+          <article class="stm-accordion-item" role="listitem">
+            <button
+              class="stm-accordion-header"
+              type="button"
+              aria-expanded="false"
+              aria-controls="stm-rule-4-body"
+              id="stm-rule-4-header"
+            >
+              <span class="stm-accordion-title">
+                <span class="stm-accordion-icon">🕉️</span>
+                Hindi anusvaar (ं) &amp; conjunct basics
+              </span>
+              <span class="stm-accordion-toggle">›</span>
+            </button>
+            <div
+              class="stm-accordion-body"
+              id="stm-rule-4-body"
+              role="region"
+              aria-labelledby="stm-rule-4-header"
+            >
+              <p>
+                Hindi typing mistakes mostly occur in <strong>anusvaar (ं)</strong>, matras and conjunct
+                (half) letters.
+              </p>
+              <ul>
+                <li><strong>Anusvaar (ं)</strong> – used for nasal sound. Using an extra or missing anusvaar
+                  is usually treated as a full mistake.</li>
+                <li><strong>Half letters (्)</strong> – created using “halant/virama”. Wrong use in
+                  conjuncts like <em>क्त, त्र, ज्ञ, श्र</em> results in spelling errors.</li>
+                <li><strong>Matras</strong> – गलती in matras (ा,ि,ी,ु,ू,े,ै,ो,ौ) is counted as spelling
+                  mistake, even if the base consonant is correct.</li>
+              </ul>
+              <p>
+                Always practise with <strong>the same keyboard layout</strong> that is used in your real exam
+                (Inscript, Remington, Kruti Dev, etc.) to avoid confusion in matras and conjuncts.
+              </p>
+            </div>
+          </article>
+
+          <article class="stm-accordion-item" role="listitem">
+            <button
+              class="stm-accordion-header"
+              type="button"
+              aria-expanded="false"
+              aria-controls="stm-rule-5-body"
+              id="stm-rule-5-header"
+            >
+              <span class="stm-accordion-title">
+                <span class="stm-accordion-icon">📊</span>
+                Exam-oriented checking logic
+              </span>
+              <span class="stm-accordion-toggle">›</span>
+            </button>
+            <div
+              class="stm-accordion-body"
+              id="stm-rule-5-body"
+              role="region"
+              aria-labelledby="stm-rule-5-header"
+            >
+              <p>
+                Steno Exam Master aims to follow the checking style of government exam boards:
+              </p>
+              <ul>
+                <li><strong>Full mistakes</strong> – wrong word, missing word, extra word,
+                  wrong capitalisation, wrong punctuation, major spelling difference.</li>
+                <li><strong>Half mistakes</strong> – minor spelling variations, acceptable alternatives
+                  where boards give partial penalty.</li>
+                <li><strong>Ignored mistakes</strong> – differences which are normally ignored by
+                  examiners (e.g. some spacing issues within limits, allowed abbreviations).</li>
+              </ul>
+              <p>
+                This logic is updated according to the selected exam so that your practice result
+                is as close as possible to the real evaluation.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- HINDI TYPING SHORTCUTS -->
+    <section id="shortcuts" class="stm-section" aria-labelledby="stm-shortcuts-title">
+      <div class="stm-container">
+        <div class="stm-section-heading">
+          <div class="stm-section-eyebrow">Hindi typing shortcuts &amp; alt codes</div>
+          <h2 id="stm-shortcuts-title" class="stm-section-title">
+            Common Hindi symbols &amp; useful key methods
+          </h2>
+          <p class="stm-section-subtitle">
+            These are some frequently used characters in Hindi typing.  
+            Exact key combinations may vary slightly with font and keyboard layout, so always
+            confirm with your exam instructions.
+          </p>
+        </div>
+
+        <div class="stm-table-wrapper" aria-label="Hindi typing shortcuts table">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Character</th>
+                <th scope="col">Shortcut / Key method</th>
+                <th scope="col">Usage tip</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>। (Danda)</td>
+                <td>Windows Alt code: <strong>Alt + 2404</strong> or dedicated key in exam software</td>
+                <td>Use at the end of every Hindi sentence instead of English full stop (.).</td>
+              </tr>
+              <tr>
+                <td>॥ (Double danda)</td>
+                <td>Windows Alt code: <strong>Alt + 2405</strong></td>
+                <td>Occasionally used in headings or Sanskrit texts. Mostly seen in official book passages.</td>
+              </tr>
+              <tr>
+                <td>ं (Anusvaar)</td>
+                <td>Commonly: consonant + <strong>anusvaar key</strong> or Windows Alt code <strong>Alt + 2306</strong></td>
+                <td>For nasal sound (e.g. हिंदी, अंक). Do not replace with full “ङ” unless written so.</td>
+              </tr>
+              <tr>
+                <td>् (Halant / Virama)</td>
+                <td>Dedicated <strong>halant</strong> key or Windows Alt code <strong>Alt + 2381</strong></td>
+                <td>Use to create half-letters in conjuncts (क्त, त्र, ज्ञ). Missing halant changes the word.</td>
+              </tr>
+              <tr>
+                <td>ः (Visarga)</td>
+                <td>Windows Alt code: <strong>Alt + 2307</strong></td>
+                <td>Mainly in Sanskrit-based words. If present in passage, typing it is compulsory.</td>
+              </tr>
+              <tr>
+                <td>ॐ (Om)</td>
+                <td>Windows Alt code: <strong>Alt + 2384</strong></td>
+                <td>Used in some official documents, religious references and logos.</td>
+              </tr>
+              <tr>
+                <td>₹ (Rupee symbol)</td>
+                <td><strong>Ctrl + Alt + 4</strong> or Windows Alt code <strong>Alt + 8377</strong></td>
+                <td>Type exactly as shown in the passage for salary, fees or amount related texts.</td>
+              </tr>
+              <tr>
+                <td>ज्ञ, त्र, श्र</td>
+                <td>Consonant + <strong>halant (्)</strong> + second consonant (layout specific)</td>
+                <td>Practise these common conjuncts repeatedly to avoid spelling mistakes in Hindi dictations.</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="stm-table-note">
+            Note: On many exam systems, special fonts (e.g. Kruti Dev) or specific Hindi layouts
+            are used. Always practise on Steno Exam Master with the <strong>same keyboard option</strong>
+            that your exam uses.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUBSCRIPTION & BOOK ACCESS -->
+    <section id="subscription" class="stm-section" aria-labelledby="stm-plans-title">
+      <div class="stm-container">
+        <div class="stm-section-heading">
+          <div class="stm-section-eyebrow">Subscription &amp; book access</div>
+          <h2 id="stm-plans-title" class="stm-section-title">Choose your practice plan</h2>
+          <p class="stm-section-subtitle">
+            Start free and upgrade only when you need deeper analysis and complete book access.
+          </p>
+        </div>
+
+        <div class="stm-pricing-grid">
+          <article class="stm-card stm-pricing-card" aria-label="Free plan">
+            <div class="stm-pricing-name">Free Plan</div>
+            <div class="stm-pricing-tagline">Best for starting your preparation</div>
+            <p class="stm-pricing-price">₹0</p>
+            <p class="stm-pricing-period">No card required</p>
+            <ul class="stm-pricing-features">
+              <li>Access to selected <strong>limited books</strong> and chapters.</li>
+              <li>Standard typing and steno practice interface.</li>
+              <li>Basic result with <strong>gross speed</strong> and <strong>net speed</strong>.</li>
+              <li>Good for testing your current level and understanding the platform.</li>
+            </ul>
+            <a href="login.html" class="stm-btn stm-btn-ghost" aria-label="Continue with free plan">
+              Continue Free
+            </a>
+          </article>
+
+          <article class="stm-card stm-pricing-card" aria-label="Premium plan">
+            <span class="stm-pricing-badge">Recommended</span>
+            <div class="stm-pricing-name">Premium Plan</div>
+            <div class="stm-pricing-tagline">For serious exam aspirants</div>
+            <p class="stm-pricing-price">₹69</p>
+            <p class="stm-pricing-period">Per month · Cancel anytime</p>
+            <ul class="stm-pricing-features">
+              <li>Unlock <strong>all available books</strong> and <strong>all chapters</strong>.</li>
+              <li>Full mistake analysis with <strong>full / half / ignored</strong> classification.</li>
+              <li>Exam-wise rule sets for SSC, HSSC, CPCT and other boards.</li>
+              <li>Separate logic for English &amp; Hindi papers.</li>
+              <li>Priority access to <strong>new books &amp; exams</strong> as we add them.</li>
+              <li>Faster updates and improved checking algorithms.</li>
+            </ul>
+            <a href="login.html" class="stm-btn stm-btn-primary" aria-label="Upgrade to Premium plan">
+              Upgrade Now
+            </a>
+            <p class="stm-pricing-footer-note">
+              Ideal if your exam date is near and you want <strong>exam-style reports</strong> for every attempt.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- REQUEST NEW BOOK / EXAM (SAVES INTO "feedback" COLLECTION) -->
+    <section id="request" class="stm-section" aria-labelledby="stm-request-title">
+      <div class="stm-container">
+        <div class="stm-section-heading">
+          <div class="stm-section-eyebrow">Content request</div>
+          <h2 id="stm-request-title" class="stm-section-title">
+            Request a new book or exam pattern
+          </h2>
+          <p class="stm-section-subtitle">
+            If you do not find your specific book or exam in the list, you can suggest it here.
+            We continuously expand our database based on student demand.
+          </p>
+        </div>
+
+        <article class="stm-card stm-request-card">
+          <p class="stm-request-text">
+            If you need practice material for any special exam, you can suggest us here.  
+            Our team reviews all requests and tries to add <strong>most requested books
+            within 3–7 working days</strong>, depending on availability.
+          </p>
+
+          <form id="stm-request-form" action="#" method="post" novalidate>
+            <div class="stm-form-grid">
+              <div class="stm-form-field">
+                <label for="stm-exam-name" class="stm-form-label">
+                  Exam Name <span>*</span>
+                </label>
+                <input
+                  type="text"
+                  id="stm-exam-name"
+                  name="examName"
+                  class="stm-form-input"
+                  placeholder="e.g. HSSC Clerk, SSC Stenographer Grade C, CPCT"
+                  required
+                />
+              </div>
+
+              <div class="stm-form-field">
+                <label for="stm-book-name" class="stm-form-label">
+                  Book Name / Source <span>*</span>
+                </label>
+                <input
+                  type="text"
+                  id="stm-book-name"
+                  name="bookName"
+                  class="stm-form-input"
+                  placeholder="e.g. XYZ Typing Book, Official CPCT booklet"
+                  required
+                />
+              </div>
+
+              <div class="stm-form-field">
+                <label for="stm-language" class="stm-form-label">
+                  Language <span>*</span>
+                </label>
+                <select
+                  id="stm-language"
+                  name="language"
+                  class="stm-form-select"
+                  required
+                >
+                  <option value="">Select language</option>
+                  <option value="English">English</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Both">Both English &amp; Hindi</option>
+                </select>
+              </div>
+
+              <div class="stm-form-field stm-form-grid-full">
+                <label for="stm-message" class="stm-form-label">
+                  Details / Message
+                </label>
+                <textarea
+                  id="stm-message"
+                  name="message"
+                  class="stm-form-textarea"
+                  placeholder="Mention edition, chapter type (letter, passage, judgment), and any special instructions you want us to follow."
+                ></textarea>
+                <p class="stm-form-helper">
+                  Do not upload PDFs here. Just share book and chapter details.  
+                  Your request will be stored in the same <strong>feedback</strong> collection used by your feedback system.
+                </p>
+              </div>
+            </div>
+
+            <div class="stm-form-actions">
+              <button type="submit" class="stm-btn stm-btn-primary stm-btn-submit">
+                Submit Request
+              </button>
+            </div>
+            <p id="stm-request-status" class="stm-request-status"></p>
+          </form>
+        </article>
+      </div>
+    </section>
+
+    <!-- LOGIN & PAYMENT FLOW -->
+    <section id="login-flow" class="stm-section" aria-labelledby="stm-login-title">
+      <div class="stm-container">
+        <div class="stm-section-heading">
+          <div class="stm-section-eyebrow">Access &amp; payments</div>
+          <h2 id="stm-login-title" class="stm-section-title">
+            Login &amp; payment flow (step-by-step)
+          </h2>
+          <p class="stm-section-subtitle">
+            The process is simple, secure and quick so that you can focus on practice,
+            not on technical issues.
+          </p>
+        </div>
+
+        <div class="stm-flow-grid">
+          <article class="stm-card stm-flow-card">
+            <span class="stm-flow-number">1</span>
+            <h3>Login / Register</h3>
+            <p>
+              Create your account using a valid email or mobile number.  
+              This keeps your test history, speed records and settings safely stored.
+            </p>
+          </article>
+
+          <article class="stm-card stm-flow-card">
+            <span class="stm-flow-number">2</span>
+            <h3>Choose Plan</h3>
+            <p>
+              Start with the <strong>Free</strong> plan or select <strong>Premium ₹69 / month</strong>
+              for full access. You can change or cancel anytime.
+            </p>
+          </article>
+
+          <article class="stm-card stm-flow-card">
+            <span class="stm-flow-number">3</span>
+            <h3>Make Payment</h3>
+            <p>
+              Complete payment using secure options (UPI / card / net banking, as available).
+              Payment is processed through trusted gateways.
+            </p>
+          </article>
+
+          <article class="stm-card stm-flow-card">
+            <span class="stm-flow-number">4</span>
+            <h3>Get Instant Access</h3>
+            <p>
+              Once payment is confirmed, your account is upgraded <strong>instantly</strong>.  
+              All premium books, chapters and analysis tools become available in your dashboard.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="stm-footer">
+    <div class="stm-container stm-footer-inner">
+      <div class="stm-footer-main">
+        <div class="stm-footer-email-label">Contact for support &amp; queries:</div>
+        <div class="stm-footer-email">
+          Email: <a href="mailto:stenoexammaster@gmail.com">stenoexammaster@gmail.com</a>
+        </div>
+        <div class="stm-footer-note">
+          Made for serious exam aspirants preparing for typing &amp; stenography tests.
+        </div>
+      </div>
+      <div class="stm-footer-bottom">
+        <span>© <span id="stm-year"></span> Steno Exam Master</span>
+        <span>All rights reserved</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- IMPORTANT:
+       Make sure on this page you also include the same Firebase init script
+       that you use on other pages (which defines window.firebase and window.db),
+       BEFORE the inline script below. Example:
+
+       <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app.js"></script>
+       <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore.js"></script>
+       <script src="js/your-firebase-init.js"></script>
+
+       Do NOT include feedback.js here (removed as requested).
+  -->
+
+  <!-- Page-specific JS (accordion + request->feedback integration) -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Mark JS enabled for accordion
+      document.body.classList.add("stm-js");
+
+      // Year in footer
+      var yearSpan = document.getElementById("stm-year");
+      if (yearSpan) {
+        yearSpan.textContent = new Date().getFullYear();
+      }
+
+      // Accordion behaviour
+      var accordionItems = document.querySelectorAll(".stm-accordion-item");
+      if (accordionItems.length) {
+        var firstItem = accordionItems[0];
+        var firstHeader = firstItem.querySelector(".stm-accordion-header");
+        var firstBody = firstItem.querySelector(".stm-accordion-body");
+        firstItem.classList.add("stm-active");
+        firstHeader.setAttribute("aria-expanded", "true");
+        firstBody.style.maxHeight = firstBody.scrollHeight + "px";
+
+        accordionItems.forEach(function (item) {
+          var header = item.querySelector(".stm-accordion-header");
+          var body = item.querySelector(".stm-accordion-body");
+
+          header.addEventListener("click", function () {
+            var isOpen = item.classList.contains("stm-active");
+
+            accordionItems.forEach(function (otherItem) {
+              var otherBody = otherItem.querySelector(".stm-accordion-body");
+              var otherHeader = otherItem.querySelector(".stm-accordion-header");
+              if (otherItem !== item) {
+                otherItem.classList.remove("stm-active");
+                otherBody.style.maxHeight = null;
+                otherHeader.setAttribute("aria-expanded", "false");
+              }
+            });
+
+            if (!isOpen) {
+              item.classList.add("stm-active");
+              body.style.maxHeight = body.scrollHeight + "px";
+              header.setAttribute("aria-expanded", "true");
+            } else {
+              item.classList.remove("stm-active");
+              body.style.maxHeight = null;
+              header.setAttribute("aria-expanded", "false");
+            }
+          });
+        });
+
+        window.addEventListener("resize", function () {
+          var activeItem = document.querySelector(".stm-accordion-item.stm-active");
+          if (activeItem) {
+            var activeBody = activeItem.querySelector(".stm-accordion-body");
+            activeBody.style.maxHeight = activeBody.scrollHeight + "px";
+          }
+        });
+      }
+
+      // REQUEST FORM -> SAVE INTO "feedback" COLLECTION
+      var requestForm = document.getElementById("stm-request-form");
+      if (requestForm) {
+        requestForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          var examEl = document.getElementById("stm-exam-name");
+          var bookEl = document.getElementById("stm-book-name");
+          var langEl = document.getElementById("stm-language");
+          var msgEl  = document.getElementById("stm-message");
+          var statusEl = document.getElementById("stm-request-status");
+
+          if (!statusEl) return;
+
+          var exam = (examEl && examEl.value || "").trim();
+          var book = (bookEl && bookEl.value || "").trim();
+          var lang = (langEl && langEl.value || "").trim();
+          var details = (msgEl && msgEl.value || "").trim();
+
+          statusEl.textContent = "";
+          statusEl.style.color = "#f87171"; // default red
+
+          if (!exam || !book || !lang) {
+            statusEl.textContent = "Please fill Exam, Book and Language fields.";
+            return;
+          }
+
+          // Payload structure similar to feedback.js
+          var payload = {
+            name: null,
+            location: null,
+            email: null,
+            message:
+              "[BOOK / EXAM REQUEST]\n" +
+              "Exam: " + exam + "\n" +
+              "Book: " + book + "\n" +
+              "Language: " + lang + "\n" +
+              "Details: " + (details || "N/A"),
+            page: window.location.pathname,
+            createdAt: Date.now()
+          };
+
+          // Try Firestore first (requires window.db + window.firebase to be defined)
+          if (window.db && window.firebase && window.firebase.firestore) {
+            try {
+              var ts =
+                window.firebase.firestore.FieldValue &&
+                window.firebase.firestore.FieldValue.serverTimestamp();
+              if (ts) payload.createdAt = ts;
+
+              window.db
+                .collection("feedback")
+                .add(payload)
+                .then(function () {
+                  statusEl.style.color = "#22c55e"; // green
+                  statusEl.textContent =
+                    "Thank you. Your request has been submitted.";
+                  requestForm.reset();
+                })
+                .catch(function (e) {
+                  console.error("Book request save error:", e);
+                  // Fallback to localStorage
+                  try {
+                    var key = "steno-feedback-local";
+                    var existing = JSON.parse(localStorage.getItem(key) || "[]");
+                    existing.push(payload);
+                    localStorage.setItem(key, JSON.stringify(existing));
+                    statusEl.style.color = "#22c55e";
+                    statusEl.textContent =
+                      "Saved locally (no server). Admin will not see this online.";
+                    requestForm.reset();
+                  } catch (err) {
+                    statusEl.textContent =
+                      "Could not send request. Please try again later.";
+                  }
+                });
+
+              return;
+            } catch (e) {
+              console.error("Book request Firestore error:", e);
+              // fall through to localStorage below
+            }
+          }
+
+          // If Firestore not available at all
+          try {
+            var keyLS = "steno-feedback-local";
+            var existingLS = JSON.parse(localStorage.getItem(keyLS) || "[]");
+            existingLS.push(payload);
+            localStorage.setItem(keyLS, JSON.stringify(existingLS));
+            statusEl.style.color = "#22c55e";
+            statusEl.textContent =
+              "Saved locally (no server). Admin will not see this online.";
+            requestForm.reset();
+          } catch (e2) {
+            statusEl.textContent = "Could not save request locally.";
+          }
+        });
+      }
+    });
+  </script>
+</body>
 </html>
