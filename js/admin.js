@@ -104,6 +104,14 @@
         // KPIs
         await loadKpisAndStats();
 
+        // ✅ NEW: init feedback + users tables (so data dikh sake)
+        if (window.ftAdminFeedback && typeof window.ftAdminFeedback.init === "function") {
+          await window.ftAdminFeedback.init();
+        }
+        if (window.ftAdminUsers && typeof window.ftAdminUsers.init === "function") {
+          await window.ftAdminUsers.init();
+        }
+
         // expose for other modules
         window.ftAdminState = {
           getCurrentBook: () => currentBook,
@@ -1129,7 +1137,7 @@
         containerEl.innerHTML = "<p>No items match your filters.</p>";
       }
     } catch (e) {
-      console.error(e);
+      console.error("Error loading random texts:", e);
       if (reset) containerEl.innerHTML = "<p>Error loading random texts: " + e.message + "</p>";
     }
   }
