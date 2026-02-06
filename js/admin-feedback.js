@@ -1,33 +1,115 @@
 // admin-feedback.js
 // Feedback table with pagination + resolve action
 // Backward compatible: old feedback docs without status will be treated as "new".
+// Now also shows any attached files when opening a feedback.
 
-(function(){
+(function () {
+  "use strict";
+
   const PAGE_SIZE = 25;
   let lastDoc = null;
   let firstDoc = null;
   let pageStack = []; // for prev
 
-  function tsToText(v){
+  function tsToText(v) {
     try {
       if (!v) return "-";
       if (typeof v === "number") return new Date(v).toLocaleString();
       if (v.toDate) return v.toDate().toLocaleString();
       return String(v);
-    } catch { return "-"; }
+    } catch {
+      return "-";
+    }
   }
 
-  function statusOf(doc){
+  function statusOf(doc) {
     const d = doc || {};
     return String(d.status || "new");
   }
 
-  function short(s, n=90){
+  function short(s, n = 90) {
     s = String(s || "");
-    return s.length > n ? s.slice(0,n) + "…" : s;
+    return s.length > n ? s.slice(0, n) + "…" : s;
   }
 
-  async function loadPage(direction="next"){
+  function escapeHtml(str) {
+    return String(str || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function escapeAttr(str) {
+    return String(str || "")
+      .replace(/&/g, "&amp;")
+      .replace(/"/g, "&quot;");
+  }
+
+  // Try to normalize attachments from different possible field names
+  function normalizeAttachments(d) {
+    const out = [];
+    if (!d || typeof d !== "object") return out;
+
+    // attachments: [string] or [{url, name}]
+    if (Array.isArray(d.attachments)) {
+      d.attachments.forEach((item, idx) => {
+        if (!item) return;
+        if (typeof item === "string") {
+          out.push({ url: item, label: `Attachment ${idx + 1}` });
+        } else if (item.url) {
+          out.push({
+            url: item.url,
+            label: item.name || item.fileName || `Attachment ${idx + 1}`,
+          });
+        }
+      });
+    }
+
+    // files: [string] or [{url, name}]
+    if (Array.isArray(d.files)) {
+      d.files.forEach((item, idx) => {
+        if (!item) return;
+        if (typeof item === "string") {
+          out.push({ url: item, label: `File ${idx + 1}` });
+        } else if (item.url) {
+          out.push({
+            url: item.url,
+            label: item.name || item.fileName || `File ${idx + 1}`,
+          });
+        }
+      });
+    }
+
+    // Single-url fields (most common patterns)
+    const singleUrlFields = [
+      ["fileUrl", "fileName"],
+      ["fileURL", "fileName"],
+      ["attachmentUrl", "attachmentName"],
+      ["attachmentURL", "attachmentName"],
+    ];
+
+    singleUrlFields.forEach(([urlKey, nameKey]) => {
+      const url = d[urlKey];
+      if (typeof url === "string") {
+        out.push({
+          url,
+          label: d[nameKey] || "Attachment",
+        });
+      }
+    });
+
+    // de-dupe by URL
+    const seen = new Set();
+    return out.filter((att) => {
+      if (!att.url) return false;
+      if (seen.has(att.url)) return false;
+      seen.add(att.url);
+      return true;
+    });
+  }
+
+  async function loadPage(direction = "next") {
     const tbody = document.getElementById("fb-tbody");
     const filter = document.getElementById("fb-filter-status");
     const search = document.getElementById("fb-search");
@@ -71,7 +153,7 @@
       if (direction === "next") pageStack.push(firstDoc);
 
       tbody.innerHTML = "";
-      snap.forEach((doc)=>{
+      snap.forEach((doc) => {
         const d = doc.data() || {};
         const st = statusOf(d);
 
@@ -79,7 +161,7 @@
         if (statusVal !== "all" && st !== statusVal) return;
 
         // search (client-side)
-        const blob = `${d.email||""} ${d.message||""} ${d.page||""}`.toLowerCase();
+        const blob = `${d.email || ""} ${d.message || ""} ${d.page || ""}`.toLowerCase();
         if (qText && !blob.includes(qText)) return;
 
         const tr = document.createElement("tr");
@@ -107,48 +189,178 @@
     }
   }
 
-  async function resolveFeedback(id){
+  async function resolveFeedback(id) {
     const ok = await window.ftAdminUI.confirmBox({
       title: "Resolve Feedback",
       message: "Mark this feedback as resolved?",
-      okText: "Resolve"
+      okText: "Resolve",
     });
     if (!ok) return;
 
-    try{
-      await window.db.collection("feedback").doc(id).update({
-        status: "resolved",
-        resolvedAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
+    try {
+      await window.db
+        .collection("feedback")
+        .doc(id)
+        .update({
+          status: "resolved",
+          resolvedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
       window.ftAdminUI?.toast("Marked resolved", "success");
       await loadPage("next"); // refresh current view
-    }catch(e){
+    } catch (e) {
       console.error(e);
       window.ftAdminUI?.toast("Resolve failed", "error");
     }
   }
 
-  async function openFeedback(id){
-    // simple open: show full message using alert (can upgrade to modal later)
-    try{
+  async function openFeedback(id) {
+    try {
       const snap = await window.db.collection("feedback").doc(id).get();
       const d = snap.data() || {};
-      alert(
-        `Email: ${d.email || "-"}\nPage: ${d.page || "-"}\nStatus: ${d.status || "new"}\n\n${d.message || ""}`
+      const attachments = normalizeAttachments(d);
+
+      // Try to open a new window with nicely formatted HTML
+      const popup = window.open(
+        "",
+        "_blank",
+        "width=720,height=600,scrollbars=yes,resizable=yes"
       );
-    }catch(e){
+
+      const baseInfoText = `Name: ${d.name || "-"}
+Email: ${d.email || "-"}
+Location: ${d.location || "-"}
+Page: ${d.page || "-"}
+Status: ${d.status || "new"}
+Created: ${tsToText(d.createdAt)}`;
+
+      if (!popup) {
+        // Popup blocked – fallback to alert with attachment URLs in plain text
+        let msg =
+          baseInfoText +
+          "\n\nMessage:\n" +
+          (d.message || "");
+
+        if (attachments.length) {
+          msg += "\n\nAttachments:\n";
+          attachments.forEach((att, idx) => {
+            msg += `${idx + 1}) ${att.label || "Attachment"}: ${att.url}\n`;
+          });
+        }
+        alert(msg);
+        return;
+      }
+
+      const doc = popup.document;
+      doc.open();
+      doc.write(`<!DOCTYPE html><html><head><meta charset="utf-8" />`);
+      doc.write(
+        `<title>${escapeHtml(
+          `Feedback from ${d.email || "-"}`
+        )}</title>`
+      );
+      doc.write(`
+        <style>
+          body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            margin: 16px;
+            line-height: 1.5;
+            background: #0b1120;
+            color: #e5e7eb;
+          }
+          h1 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+          h2 { font-size: 1rem; margin-top: 1.5rem; }
+          pre {
+            white-space: pre-wrap;
+            background: #020617;
+            border: 1px solid #1f2937;
+            color: #e5e7eb;
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+          }
+          a { color: #3b82f6; }
+          ul { padding-left: 1.2rem; }
+          li { margin-bottom: 0.75rem; }
+          img, video {
+            max-width: 100%;
+            height: auto;
+            margin-top: 4px;
+            border-radius: 4px;
+            border: 1px solid #1f2937;
+          }
+        </style>
+      </head><body>`);
+
+      doc.write(`<h1>Feedback detail</h1>`);
+      doc.write(
+        `<p>
+          <b>Name:</b> ${escapeHtml(d.name || "-")}<br/>
+          <b>Email:</b> ${escapeHtml(d.email || "-")}<br/>
+          <b>Location:</b> ${escapeHtml(d.location || "-")}<br/>
+          <b>Page:</b> ${escapeHtml(d.page || "-")}<br/>
+          <b>Status:</b> ${escapeHtml(d.status || "new")}<br/>
+          <b>Created:</b> ${escapeHtml(tsToText(d.createdAt))}
+        </p>`
+      );
+
+      doc.write(`<h2>Message</h2>`);
+      doc.write(`<pre>${escapeHtml(d.message || "")}</pre>`);
+
+      if (attachments.length) {
+        doc.write(`<h2>Attachments</h2><ul>`);
+        attachments.forEach((att) => {
+          const url = att.url || "#";
+          const href = escapeAttr(url);
+          const label = escapeHtml(att.label || url);
+          const lower = url.toLowerCase();
+
+          doc.write("<li>");
+          doc.write(
+            `<a href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`
+          );
+
+          // inline preview for common image extensions
+          if (/\.(png|jpe?g|gif|webp|bmp|svg)(\?|#|$)/.test(lower)) {
+            doc.write(`<br/><img src="${href}" alt="${label}" />`);
+          }
+          // inline preview for common video extensions
+          else if (/\.(mp4|webm|ogg|mov|m4v)(\?|#|$)/.test(lower)) {
+            doc.write(
+              `<br/><video controls src="${href}">Your browser does not support video.</video>`
+            );
+          }
+
+          doc.write("</li>");
+        });
+        doc.write(`</ul>`);
+      } else {
+        doc.write(`<p><i>No file attachments.</i></p>`);
+      }
+
+      doc.write(`</body></html>`);
+      doc.close();
+    } catch (e) {
+      console.error(e);
       window.ftAdminUI?.toast("Open failed", "error");
     }
   }
 
-  function bind(){
+  function bind() {
     const tbody = document.getElementById("fb-tbody");
-    document.getElementById("fb-next")?.addEventListener("click", ()=> loadPage("next"));
-    document.getElementById("fb-prev")?.addEventListener("click", ()=> loadPage("prev"));
-    document.getElementById("fb-filter-status")?.addEventListener("change", ()=> loadPage("next"));
-    document.getElementById("fb-search")?.addEventListener("input", ()=> loadPage("next"));
+    document.getElementById("fb-next")?.addEventListener("click", () =>
+      loadPage("next")
+    );
+    document.getElementById("fb-prev")?.addEventListener("click", () =>
+      loadPage("prev")
+    );
+    document.getElementById("fb-filter-status")?.addEventListener("change", () =>
+      loadPage("next")
+    );
+    document.getElementById("fb-search")?.addEventListener("input", () =>
+      loadPage("next")
+    );
 
-    tbody?.addEventListener("click", (e)=>{
+    tbody?.addEventListener("click", (e) => {
       const btn = e.target.closest("button");
       if (!btn) return;
       const act = btn.dataset.act;
@@ -159,7 +371,7 @@
     });
   }
 
-  async function init(){
+  async function init() {
     bind();
     await loadPage("next");
   }
