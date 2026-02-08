@@ -3,7 +3,7 @@
 // + Subscription UI + UPI payment request modal (manual verification)
 
 // 🔁 Change this to your real UPI ID
-const UPI_ID = "yourupi@bank";
+const UPI_ID = "s.57724@ptyes";
 
 const TRIAL_DAYS = 6;
 
@@ -816,4 +816,5 @@ function formatLanguage(lang) {
   if (lang === "hindi-mangal") return "Hindi (Mangal)";
   if (lang === "hindi-kruti") return "Hindi (Kruti Dev)";
   return "English";
+
 }
