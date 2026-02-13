@@ -1,12 +1,11 @@
 // js/book.js
 // Books + chapters typing using TestEngine
 // + Subscription UI + UPI payment request modal (manual verification)
-// ✅ Trial removed: paid content requires subscription
+// ✅ Trial removed: Paid content requires subscribed/active plan
 
-// 🔁 Change this to your real UPI ID
 const UPI_ID = "s.57724@ptyes";
 
-// Trial removed (kept constant to avoid breaking any references)
+// Trial removed (kept only so old references don't break if any)
 const TRIAL_DAYS = 0;
 
 let currentBook = null;
@@ -23,21 +22,9 @@ let accessState = {
 
 // ✅ Updated prices
 const PLAN_CONFIG = {
-  monthly: {
-    key: "monthly",
-    name: "Monthly Plan",
-    amount: 69
-  },
-  "3m": {
-    key: "3m",
-    name: "3‑Month Plan",
-    amount: 149
-  },
-  yearly: {
-    key: "yearly",
-    name: "Yearly Plan",
-    amount: 399
-  }
+  monthly: { key: "monthly", name: "Monthly Plan", amount: 69 },
+  "3m": { key: "3m", name: "3‑Month Plan", amount: 149 },
+  yearly: { key: "yearly", name: "Yearly Plan", amount: 399 }
 };
 
 function redirectToLogin(reason) {
@@ -54,7 +41,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const paywallEl = document.getElementById("paywall");
 
   firebase.auth().onAuthStateChanged(async (user) => {
-    // ✅ Guard: book page only for logged-in users
     if (!user) {
       redirectToLogin("not_logged_in");
       return;
@@ -64,12 +50,12 @@ window.addEventListener("DOMContentLoaded", () => {
     if (loginWarningEl) loginWarningEl.classList.add("hidden");
     if (booksAreaEl) booksAreaEl.classList.remove("hidden");
 
-    // Load user data (trial removed)
     const userRef = window.db.collection("users").doc(user.uid);
     let snap = await userRef.get();
     let data = snap.data() || {};
 
-    // ✅ Ensure user doc exists (but do NOT set trialStart anymore)
+    // ✅ Trial removed: no trialStart set
+    // Ensure user doc exists
     if (!snap.exists) {
       await userRef.set(
         {
@@ -100,7 +86,6 @@ window.addEventListener("DOMContentLoaded", () => {
 function evaluateTrialAndPlan(userData) {
   const now = new Date();
 
-  // Plan-based subscription (optional)
   let planActive = false;
   if (
     userData.plan &&
@@ -116,21 +101,18 @@ function evaluateTrialAndPlan(userData) {
 
   return {
     subscribed,
-    trialExpired: true, // trial removed
+    trialExpired: true,
     daysLeft: 0
   };
 }
 
 function updateTrialUI(state, bannerEl, paywallEl) {
-  if (bannerEl) bannerEl.classList.add("hidden"); // trial removed => always hide
+  if (bannerEl) bannerEl.classList.add("hidden"); // trial removed
 
   if (!paywallEl) return;
 
-  if (state.subscribed) {
-    paywallEl.classList.add("hidden");
-  } else {
-    paywallEl.classList.remove("hidden");
-  }
+  if (state.subscribed) paywallEl.classList.add("hidden");
+  else paywallEl.classList.remove("hidden");
 }
 
 // ---------- SUBSCRIPTION UI (status + buttons) ----------
@@ -235,16 +217,10 @@ function openPlanModal(planKey) {
   const qrSrc = qrSrcMap[config.key] || fallbackQr;
   if (upiQrEl) upiQrEl.src = qrSrc;
 
-  // Prefill from Firestore profile / auth
-  if (currentUserProfile && nameEl) {
-    nameEl.value = currentUserProfile.name || "";
-  }
-  if (currentUser && emailEl) {
-    emailEl.value = currentUser.email || currentUserProfile?.email || "";
-  }
-  if (currentUserProfile && phoneEl) {
-    phoneEl.value = currentUserProfile.phone || "";
-  }
+  if (currentUserProfile && nameEl) nameEl.value = currentUserProfile.name || "";
+  if (currentUser && emailEl) emailEl.value = currentUser.email || currentUserProfile?.email || "";
+  if (currentUserProfile && phoneEl) phoneEl.value = currentUserProfile.phone || "";
+
   if (noteEl) noteEl.value = "";
   if (txnEl) txnEl.value = "";
   if (statusEl) {
@@ -404,11 +380,7 @@ async function loadLatestPendingRequest(userId) {
       const planName = prettyPlanName(d.plan || "free");
       const when = formatTimestampForDisplay(d.createdAt);
       pendingEl.textContent =
-        "Pending verification for " +
-        planName +
-        " (submitted on " +
-        when +
-        ").";
+        "Pending verification for " + planName + " (submitted on " + when + ").";
     } else {
       pendingEl.textContent = "";
     }
@@ -497,20 +469,12 @@ async function loadBooksList(containerEl) {
     bookDocs.forEach((doc, index) => {
       const book = doc.data();
       const isPaid = !!book.isPaid;
-      const stats = statsList[index] || {
-        hasChapters: false,
-        chapters: 0,
-        volumes: 0
-      };
+      const stats = statsList[index] || { hasChapters: false, chapters: 0, volumes: 0 };
 
       let accessLabel;
-      if (!isPaid) {
-        accessLabel = "Free book";
-      } else if (accessState.subscribed) {
-        accessLabel = "Paid book (unlocked)";
-      } else {
-        accessLabel = "Paid book (locked)";
-      }
+      if (!isPaid) accessLabel = "Free book";
+      else if (accessState.subscribed) accessLabel = "Paid book (full access)";
+      else accessLabel = "Paid book (locked)";
 
       const langLabel = formatLanguage(book.language);
 
@@ -568,9 +532,7 @@ function openBook(bookId, book) {
     chaptersTitleEl.textContent =
       "Chapters for: " + (book.title || "Untitled book");
   if (chaptersSubtitleEl)
-    chaptersSubtitleEl.textContent = `Language: ${formatLanguage(
-      book.language
-    )}`;
+    chaptersSubtitleEl.textContent = `Language: ${formatLanguage(book.language)}`;
 
   chaptersAreaEl.classList.remove("hidden");
 
@@ -637,24 +599,27 @@ async function loadChaptersList(bookId, language) {
   }
 }
 
-// ---------- TYPING FOR CHAPTER ----------
+// ---------- TYPING FOR CHAPTER (PAID LOCK) ----------
 
 function openChapterForTyping(bookId, chapterId, chapter, language) {
-  // ✅ Paid lock (trial removed)
-  // supports per-chapter isPaid override, otherwise book-level isPaid
-  const isPaid =
-    typeof chapter?.isPaid === "boolean" ? chapter.isPaid : !!currentBook?.isPaid;
-
-  if (isPaid && !accessState.subscribed) {
-    alert("This is a paid chapter. Please subscribe to unlock.");
-    return;
-  }
-
   const sectionEl = document.getElementById("chapter-typing-section");
   const titleEl = document.getElementById("chapter-title");
   const metaEl = document.getElementById("chapter-meta");
   const textEl = document.getElementById("chapter-typing-text");
   const inputEl = document.getElementById("chapter-typing-input");
+
+  // ✅ Paid lock:
+  // - If chapter has isFree === false => paid
+  // - Else if book.isPaid === true and chapter not explicitly free => paid
+  const chapterPaid =
+    (chapter && chapter.isFree === false) || (chapter && chapter.isPaid === true);
+  const bookPaid = !!currentBook?.isPaid;
+  const isPaid = chapterPaid || (bookPaid && !(chapter && chapter.isFree === true));
+
+  if (isPaid && !accessState.subscribed) {
+    alert("This is a paid chapter. Please subscribe to unlock access.");
+    return;
+  }
 
   const originalText = chapter.content || "";
 
@@ -664,16 +629,8 @@ function openChapterForTyping(bookId, chapterId, chapter, language) {
     currentBook.title || "Untitled book"
   }${labelPart} • ${formatLanguage(language)}`;
 
-  textEl.classList.remove(
-    "font-english",
-    "font-hindi-mangal",
-    "font-hindi-kruti"
-  );
-  inputEl.classList.remove(
-    "font-english",
-    "font-hindi-mangal",
-    "font-hindi-kruti"
-  );
+  textEl.classList.remove("font-english", "font-hindi-mangal", "font-hindi-kruti");
+  inputEl.classList.remove("font-english", "font-hindi-mangal", "font-hindi-kruti");
 
   if (language === "hindi-mangal") {
     textEl.classList.add("font-hindi-mangal");
@@ -686,9 +643,7 @@ function openChapterForTyping(bookId, chapterId, chapter, language) {
     inputEl.classList.add("font-english");
   }
 
-  if (chapterEngine) {
-    chapterEngine.cancel();
-  }
+  if (chapterEngine) chapterEngine.cancel();
 
   const timeEl = document.getElementById("chapter-time");
   const wpmEl = document.getElementById("chapter-wpm");
@@ -700,7 +655,8 @@ function openChapterForTyping(bookId, chapterId, chapter, language) {
   accuracyEl.textContent = "100%";
   errorsEl.textContent = "0";
 
-  // ✅ No preview mode (trial removed)
+  // ✅ Trial/preview removed
+  const previewMode = false;
   const timeLimitSeconds = 0;
 
   chapterEngine = TestEngine.create({
@@ -717,7 +673,7 @@ function openChapterForTyping(bookId, chapterId, chapter, language) {
       wordsCountEl: null
     },
     onFinish: (result) => {
-      showChapterResultModal(result, chapter, false);
+      showChapterResultModal({ ...result }, chapter, previewMode);
     }
   });
 
@@ -743,15 +699,12 @@ function showChapterResultModal(result, chapter, previewMode) {
   const accEl = document.getElementById("chapter-result-accuracy");
   const wordsTypedEl = document.getElementById("chapter-result-words-typed");
   const wordsTotalEl = document.getElementById("chapter-result-words-total");
-  const errorsWordsEl = document.getElementById(
-    "chapter-result-errors-words"
-  );
-  const errorsCharsEl = document.getElementById(
-    "chapter-result-errors-chars"
-  );
+  const errorsWordsEl = document.getElementById("chapter-result-errors-words");
+  const errorsCharsEl = document.getElementById("chapter-result-errors-chars");
   const closeBtn = document.getElementById("chapter-result-close");
 
-  let reasonText = result.reason || "";
+  const reasonText = result.reason || "";
+
   reasonEl.textContent = reasonText;
   timeEl.textContent = `${result.formattedTime} (${result.totalSeconds}s)`;
   grossEl.textContent = String(result.grossWpm);
