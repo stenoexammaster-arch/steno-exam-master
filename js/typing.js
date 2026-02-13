@@ -1,28 +1,6 @@
 // js/typing.js
 // FINAL: Character-based errors, Unicode-safe (English + Hindi)
 // -------------------------------------------------------------
-// Error counting (same for English & Hindi):
-//   - Error = mismatched character compared to lesson
-//   - Extra characters = errors
-//   - Missing characters = errors
-//   - Backspace correction reduces errors because we recompute from full text
-//
-// ENGLISH TYPING:
-//
-// Gross WPM = (Total Characters Typed / 5) / Time in Minutes
-// Net WPM   = ((Total Characters Typed − Errors) / 5) / Time in Minutes
-// Accuracy  = (Correct Characters / Total Characters Typed) × 100
-//
-// HINDI TYPING:
-//
-// Gross WPM = (Total Characters Typed / 5) / Time in Minutes
-// Net WPM   = Gross WPM − (Errors / Time in Minutes)
-// Accuracy  = (Correct Characters / Total Characters Typed) × 100
-//
-// - Same Unicode-safe logic for English & Hindi
-// - Timer starts on first keypress, uses elapsedSeconds/60 as minutes
-// - Net WPM clamped to >= 0
-// - Accuracy clamped between 0 and 100
 
 (function () {
   "use strict";
@@ -108,16 +86,6 @@
     });
   }
 
-  function getCurrentUser() {
-    try { return JSON.parse(localStorage.getItem("sm_user") || "null") || {}; }
-    catch { return {}; }
-  }
-
-  function isLoggedIn() {
-    const u = getCurrentUser();
-    return !!u.loggedIn;
-  }
-
   function formatTime(seconds) {
     seconds = Math.max(0, Math.floor(seconds || 0));
     const m = Math.floor(seconds / 60);
@@ -161,6 +129,49 @@
     }
   }
 
+  // ---------------- Firebase access helpers (NEW) ----------------
+
+  function getAuthInstance() {
+    try {
+      if (window.auth && typeof window.auth.onAuthStateChanged === "function") return window.auth;
+      if (typeof firebase !== "undefined" && firebase.auth) return firebase.auth();
+    } catch {}
+    return null;
+  }
+
+  function waitForFirebaseUserOnce() {
+    return new Promise((resolve) => {
+      const a = getAuthInstance();
+      if (!a || typeof a.onAuthStateChanged !== "function") return resolve(null);
+      const unsub = a.onAuthStateChanged((u) => {
+        try { unsub(); } catch {}
+        resolve(u || null);
+      });
+    });
+  }
+
+  async function getPaidAccessFromFirestore() {
+    try {
+      if (!window.db) return { loggedIn: false, subscribed: false };
+
+      const user = await waitForFirebaseUserOnce();
+      if (!user) return { loggedIn: false, subscribed: false };
+
+      const snap = await window.db.collection("users").doc(user.uid).get();
+      const data = snap.data() || {};
+
+      const now = new Date();
+      let planActive = false;
+      if (data.plan && data.plan !== "none" && data.planExpiresAt && data.planExpiresAt.toDate) {
+        planActive = data.planExpiresAt.toDate() > now;
+      }
+
+      return { loggedIn: true, subscribed: !!data.subscribed || planActive };
+    } catch {
+      return { loggedIn: false, subscribed: false };
+    }
+  }
+
   // ---------------- Unicode-safe segmentation ----------------
 
   function segmentText(str) {
@@ -174,27 +185,6 @@
 
     return Array.from(normalized);
   }
-
-  // ---------------- CHARACTER-BASED EXAM STATS ----------------
-  //
-  // 1) Determine:
-  //    - typedChars    (Unicode graphemes)
-  //    - correctChars  (matching graphemes by position)
-  //    - errorChars    (mismatched + extra + missing)
-  //
-  // 2) ENGLISH:
-  //    Gross WPM = (typedChars / 5) / minutes
-  //    Net   WPM = ((typedChars − errorChars) / 5) / minutes
-  //    Acc%      = (correctChars / typedChars) * 100
-  //
-  // 3) HINDI:
-  //    Gross WPM = (typedChars / 5) / minutes
-  //    Net   WPM = Gross WPM − (errorChars / minutes)
-  //    Acc%      = (correctChars / typedChars) * 100
-  //
-  // Time:
-  //   - minutes = max(elapsedSeconds, 1) / 60
-  //   - no ignore-5-seconds rule now
 
   function computeBasicStats(targetText, typedText, elapsedSeconds) {
     const refSeg   = segmentText(targetText);
@@ -215,33 +205,25 @@
         if (r === t) correctChars++;
         else         errorChars++;
       } else if (r !== null && t === null) {
-        // missing char
         errorChars++;
       } else if (r === null && t !== null) {
-        // extra char
         errorChars++;
       }
     }
 
-    const typedChars = lenTyped; // characters actually typed
-    const elapsed    = Math.max(elapsedSeconds || 1, 1); // in seconds
+    const typedChars = lenTyped;
+    const elapsed    = Math.max(elapsedSeconds || 1, 1);
     const minutes    = elapsed / 60;
 
-    const grossWpm = minutes > 0
-      ? (typedChars / 5) / minutes
-      : 0;
+    const grossWpm = minutes > 0 ? (typedChars / 5) / minutes : 0;
 
     let netWpm;
     const langLower = String(state.lang || "").toLowerCase();
 
     if (langLower === "english") {
-      // ENGLISH Net WPM
       const netChars = Math.max(typedChars - errorChars, 0);
-      netWpm = minutes > 0
-        ? (netChars / 5) / minutes
-        : 0;
+      netWpm = minutes > 0 ? (netChars / 5) / minutes : 0;
     } else {
-      // HINDI Net WPM
       const errorPerMin = minutes > 0 ? (errorChars / minutes) : 0;
       netWpm = grossWpm - errorPerMin;
     }
@@ -249,9 +231,7 @@
     if (!Number.isFinite(netWpm) || netWpm < 0) netWpm = 0;
 
     let accuracy = 0;
-    if (typedChars > 0) {
-      accuracy = (correctChars / typedChars) * 100;
-    }
+    if (typedChars > 0) accuracy = (correctChars / typedChars) * 100;
 
     const trimmed    = (typedText || "").trim();
     const wordsTyped = trimmed ? trimmed.split(/\s+/).length : 0;
@@ -288,15 +268,9 @@
     const elapsed = state.elapsedSeconds;
     const typed   = typingInputEl.value || "";
 
-    const stats = computeBasicStats(
-      state.targetText,
-      typed,
-      elapsed
-    );
-
+    const stats = computeBasicStats(state.targetText, typed, elapsed);
     stats.totalKeystrokes = state.totalKeystrokes;
     stats.backspaceCount  = state.backspaceCount;
-
     return stats;
   }
 
@@ -362,9 +336,8 @@
 
     while ((m = re.exec(text)) !== null) {
       const tok = m[0];
-      if (/^\s+$/.test(tok)) {
-        tokens.push({ type: "ws", text: tok });
-      } else {
+      if (/^\s+$/.test(tok)) tokens.push({ type: "ws", text: tok });
+      else {
         tokens.push({ type: "word", text: tok, wordIndex });
         wordIndex++;
       }
@@ -382,9 +355,8 @@
     const frag = document.createDocumentFragment();
 
     for (const t of state.targetTokens) {
-      if (t.type === "ws") {
-        frag.appendChild(document.createTextNode(t.text));
-      } else {
+      if (t.type === "ws") frag.appendChild(document.createTextNode(t.text));
+      else {
         state.targetWords.push(t.text);
 
         const span = document.createElement("span");
@@ -406,12 +378,8 @@
     const rawParts = rawText.split(/\s+/);
     const words    = rawParts.filter((w) => w.length > 0);
 
-    const finishedCount = endsWithSpace
-      ? words.length
-      : Math.max(words.length - 1, 0);
-
-    const currentWord =
-      !endsWithSpace && words.length > 0 ? words[words.length - 1] : "";
+    const finishedCount = endsWithSpace ? words.length : Math.max(words.length - 1, 0);
+    const currentWord = !endsWithSpace && words.length > 0 ? words[words.length - 1] : "";
 
     return { words, finishedCount, currentWord, endsWithSpace };
   }
@@ -427,49 +395,36 @@
     const topDiff    = r.top    - boxRect.top;
     const bottomDiff = r.bottom - boxRect.bottom;
 
-    if (topDiff < 0)          box.scrollTop += topDiff - 16;
+    if (topDiff < 0) box.scrollTop += topDiff - 16;
     else if (bottomDiff > 0) box.scrollTop += bottomDiff + 16;
   }
 
   function updateWordHighlights() {
-    const { words, finishedCount, currentWord, endsWithSpace } =
-      getTypedWordsInfo();
+    const { words, finishedCount, currentWord, endsWithSpace } = getTypedWordsInfo();
     const total = state.targetWords.length;
 
     for (let i = 0; i < total; i++) {
       const span = state.wordEls[i];
       if (!span) continue;
 
-      span.classList.remove(
-        "tt-word-correct",
-        "tt-word-wrong",
-        "tt-word-current",
-        "tt-word-current-error"
-      );
+      span.classList.remove("tt-word-correct","tt-word-wrong","tt-word-current","tt-word-current-error");
 
       const target = state.targetWords[i];
 
       if (i < finishedCount) {
         const typedWord = words[i] || "";
-        if (typedWord === target) {
-          span.classList.add("tt-word-correct");
-        } else {
-          span.classList.add("tt-word-wrong");
-        }
+        if (typedWord === target) span.classList.add("tt-word-correct");
+        else span.classList.add("tt-word-wrong");
       } else if (i === finishedCount && !endsWithSpace && currentWord) {
-        if (target.startsWith(currentWord)) {
-          span.classList.add("tt-word-current");
-        } else {
-          span.classList.add("tt-word-current-error");
-        }
+        if (target.startsWith(currentWord)) span.classList.add("tt-word-current");
+        else span.classList.add("tt-word-current-error");
       }
     }
 
     if (total > 0) {
       let nextIdx;
       if (finishedCount >= total) nextIdx = total - 1;
-      else                        nextIdx = finishedCount;
-
+      else nextIdx = finishedCount;
       scrollWordIntoBox(nextIdx);
     }
   }
@@ -479,9 +434,7 @@
   function showLockedOverlay(message) {
     state.locked = true;
     typingInputEl.disabled = true;
-    const safeHtml = escapeHtml(
-      message || "This lesson is locked.\n\nPlease log in to practice this lesson."
-    ).replace(/\n/g, "<br>");
+    const safeHtml = escapeHtml(message || "This lesson is locked.").replace(/\n/g, "<br>");
     typingTextEl.innerHTML = `
       <div class="px-overlay">
         <h3>Locked lesson</h3>
@@ -499,12 +452,7 @@
     let lang  = cfg.lang || "english";
 
     if (cfg.source === "custom") {
-      return {
-        text:  String(cfg.customText || "").trim(),
-        label: "Practice",
-        langUsed: lang,
-        locked: false
-      };
+      return { text: String(cfg.customText || "").trim(), label: "Practice", langUsed: lang, locked: false };
     }
 
     if (cfg.source === "book" && cfg.bookId && cfg.chapterId && window.db) {
@@ -513,59 +461,50 @@
       const book    = bookSnap.data() || {};
       lang          = book.language || lang;
 
-      const chSnap = await bookRef
-        .collection("chapters")
-        .doc(cfg.chapterId)
-        .get();
+      const chSnap = await bookRef.collection("chapters").doc(cfg.chapterId).get();
       if (!chSnap.exists) {
-        return {
-          text:  "Chapter not found. Go back and reselect.",
-          label: "Book",
-          langUsed: lang,
-          locked: false
-        };
+        return { text: "Chapter not found. Go back and reselect.", label: "Book", langUsed: lang, locked: false };
       }
 
-      const ch         = chSnap.data() || {};
-      const loggedIn   = isLoggedIn();
-      const isLessonPaid = ch.isFree === false || !!book.isPaid;
+      const ch = chSnap.data() || {};
 
       if (ch.isVisible === false) {
-        return {
-          text:  "This lesson is hidden by admin.",
-          label: book.title || "Book",
-          langUsed: lang,
-          locked: true
-        };
+        return { text: "This lesson is hidden by admin.", label: book.title || "Book", langUsed: lang, locked: true };
       }
 
-      if (!loggedIn && isLessonPaid) {
-        return {
-          text:  "This lesson is locked.\n\nPlease log in to practice this lesson.",
-          label: book.title || "Book",
-          langUsed: lang,
-          locked: true
-        };
+      const isLessonPaid = (ch.isFree === false) || !!book.isPaid;
+
+      // ✅ TRIAL REMOVED: paid access requires subscription
+      if (isLessonPaid) {
+        const access = await getPaidAccessFromFirestore();
+
+        if (!access.loggedIn) {
+          return {
+            text: "This is a paid lesson.\n\nPlease log in to access this lesson.",
+            label: book.title || "Book",
+            langUsed: lang,
+            locked: true
+          };
+        }
+
+        if (!access.subscribed) {
+          return {
+            text: "This is a paid lesson.\n\nPlease subscribe to unlock this lesson.",
+            label: book.title || "Book",
+            langUsed: lang,
+            locked: true
+          };
+        }
       }
 
       const text = resolveTextField(ch);
       const chLabel =
-        `${(ch.code || "").trim()} ${(ch.name || "").trim()}`.trim() ||
-        "Chapter";
-      return {
-        text,
-        label: `${chLabel} • ${book.title || "Book"}`,
-        langUsed: lang,
-        locked: false
-      };
+        `${(ch.code || "").trim()} ${(ch.name || "").trim()}`.trim() || "Chapter";
+
+      return { text, label: `${chLabel} • ${book.title || "Book"}`, langUsed: lang, locked: false };
     }
 
-    return {
-      text:  "Please go back and start again from typing test setup.",
-      label: "Practice",
-      langUsed: lang,
-      locked: false
-    };
+    return { text: "Please go back and start again from typing test setup.", label: "Practice", langUsed: lang, locked: false };
   }
 
   // ---------------- Timer + Pause ----------------
@@ -580,10 +519,7 @@
       state.elapsedSeconds += 1;
 
       if (state.timeLimitSeconds > 0) {
-        const remaining = Math.max(
-          0,
-          state.timeLimitSeconds - state.elapsedSeconds
-        );
+        const remaining = Math.max(0, state.timeLimitSeconds - state.elapsedSeconds);
         updateTimeUI(remaining);
         setRingProgress(remaining / state.timeLimitSeconds);
 
@@ -617,7 +553,6 @@
     } else {
       state.paused  = false;
       if (!state.locked) typingInputEl.disabled = false;
-      // timer restarts on next key
     }
   }
 
@@ -626,7 +561,7 @@
   function saveSummary(reason, stats) {
     const summary = {
       reason,
-      stats,                    // includes grossWpm, netWpm, accuracy
+      stats,
       lang: state.lang,
       timeLimit: state.timeLimitSeconds,
       elapsed: state.elapsedSeconds,
@@ -635,9 +570,7 @@
       config: activeConfig || null
     };
 
-    try {
-      localStorage.setItem("ft-last-result", JSON.stringify(summary));
-    } catch {}
+    try { localStorage.setItem("ft-last-result", JSON.stringify(summary)); } catch {}
     return summary;
   }
 
@@ -663,13 +596,9 @@
     saveSummary(reason, stats);
 
     let msg = "";
-    if (reason === "Time up") {
-      msg = "Your time is over.\nClick OK to see your result.";
-    } else if (reason === "Lesson completed") {
-      msg = "You have completed this lesson.\nClick OK to see your result.";
-    } else {
-      msg = "Your test is finished.\nClick OK to see your result.";
-    }
+    if (reason === "Time up") msg = "Your time is over.\nClick OK to see your result.";
+    else if (reason === "Lesson completed") msg = "You have completed this lesson.\nClick OK to see your result.";
+    else msg = "Your test is finished.\nClick OK to see your result.";
 
     if (msg) alert(msg);
     window.location.href = AFTER_TEST_REDIRECT;
@@ -692,13 +621,10 @@
 
   function setTimeLimit(seconds) {
     state.timeLimitSeconds = Number.isFinite(seconds) ? seconds : 300;
-    if (timeLimitSelect)
-      timeLimitSelect.value = String(state.timeLimitSeconds);
+    if (timeLimitSelect) timeLimitSelect.value = String(state.timeLimitSeconds);
     updateTimeUI(state.timeLimitSeconds > 0 ? state.timeLimitSeconds : 0);
     setRingProgress(1);
   }
-
-  // ---------------- End condition: full passage attempted ----------------
 
   function checkLessonCompletion() {
     if (state.finished || !state.targetText) return;
@@ -706,9 +632,7 @@
     const refLen   = segmentText(state.targetText).length;
     const typedLen = segmentText(typingInputEl.value || "").length;
 
-    if (refLen > 0 && typedLen >= refLen) {
-      endPractice("Lesson completed");
-    }
+    if (refLen > 0 && typedLen >= refLen) endPractice("Lesson completed");
   }
 
   // ---------------- Input events ----------------
@@ -718,7 +642,6 @@
     if (state.paused) return;
 
     startTimerIfNeeded();
-
     updateWordHighlights();
 
     const st = computeLiveStats();
@@ -729,19 +652,14 @@
       typedChars.length - 1,
       Array.from(state.targetText).length - 1
     );
-    updateKeyboardHighlight(
-      state.targetText[idx] || null,
-      typedChars[idx]      || null
-    );
 
+    updateKeyboardHighlight(state.targetText[idx] || null, typedChars[idx] || null);
     checkLessonCompletion();
   }
 
   function moveCaretToEnd() {
     const len = typingInputEl.value.length;
-    try {
-      typingInputEl.setSelectionRange(len, len);
-    } catch {}
+    try { typingInputEl.setSelectionRange(len, len); } catch {}
   }
 
   function handleKeyDown(e) {
@@ -758,26 +676,12 @@
       state.totalKeystrokes++;
     }
 
-    if (
-      key === "Backspace" &&
-      typingInputEl.dataset.backspaceAllowed === "0"
-    ) {
+    if (key === "Backspace" && typingInputEl.dataset.backspaceAllowed === "0") {
       e.preventDefault();
       return;
     }
 
-    if (
-      [
-        "ArrowLeft",
-        "ArrowRight",
-        "ArrowUp",
-        "ArrowDown",
-        "Home",
-        "End",
-        "PageUp",
-        "PageDown"
-      ].includes(key)
-    ) {
+    if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown","Home","End","PageUp","PageDown"].includes(key)) {
       e.preventDefault();
       moveCaretToEnd();
       return;
@@ -791,23 +695,22 @@
     const cfg = activeConfig || {};
 
     if (userNameEl) userNameEl.textContent = cfg.userName || "Guest";
-    if (modePillEl)
-      modePillEl.textContent = cfg.mode === "exam" ? "Exam" : "Practice";
+    if (modePillEl) modePillEl.textContent = cfg.mode === "exam" ? "Exam" : "Practice";
 
     let chosenSeconds;
     if (Number.isFinite(cfg.seconds)) {
-      chosenSeconds        = cfg.seconds;
-      state.allowTimeChange= false;
+      chosenSeconds = cfg.seconds;
+      state.allowTimeChange = false;
     } else {
-      chosenSeconds        = 300;
-      state.allowTimeChange= true;
+      chosenSeconds = 300;
+      state.allowTimeChange = true;
     }
     setTimeLimit(chosenSeconds);
 
     timeButtons.forEach((btn) => {
       const btnSec = parseInt(btn.dataset.seconds || "0", 10);
       if (btnSec === chosenSeconds) btn.classList.add("active");
-      else                          btn.classList.remove("active");
+      else btn.classList.remove("active");
       btn.disabled = !state.allowTimeChange;
     });
 
@@ -825,8 +728,7 @@
       state.timerId = null;
     }
 
-    const allowBackspace =
-      cfg.mode === "exam" ? false : cfg.backspaceAllowed !== false;
+    const allowBackspace = cfg.mode === "exam" ? false : cfg.backspaceAllowed !== false;
     typingInputEl.dataset.backspaceAllowed = allowBackspace ? "1" : "0";
     if (backspaceAllowedCheckbox) {
       backspaceAllowedCheckbox.checked  = allowBackspace;
@@ -836,8 +738,7 @@
     const info = await getPracticeText();
 
     setFontForLanguage(info.langUsed || "english");
-    if (sessionLabelEl)
-      sessionLabelEl.textContent = info.label || "Practice";
+    if (sessionLabelEl) sessionLabelEl.textContent = info.label || "Practice";
 
     if (!info.text) info.text = "No text available.";
 
@@ -893,9 +794,7 @@
       });
     });
 
-    if (restartBtn) {
-      restartBtn.addEventListener("click", restartPractice);
-    }
+    if (restartBtn) restartBtn.addEventListener("click", restartPractice);
 
     if (backspaceAllowedCheckbox) {
       backspaceAllowedCheckbox.addEventListener("change", () => {
