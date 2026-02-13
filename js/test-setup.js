@@ -4,8 +4,9 @@
 // - HardWords / Random texts
 // - Paid lessons gating based on Firebase Auth + Firestore users:
 //   * Guest  -> sirf free lessons
-//   * Logged-in + trial active OR subscribed plan -> sab lessons open
-//   * Logged-in + trial khatam + no plan        -> paid lessons locked
+//   * Logged-in + subscribed plan -> sab lessons open
+//   * Logged-in + no plan        -> paid lessons locked
+// ✅ Trial removed
 
 window.addEventListener("DOMContentLoaded", () => {
   const $ = (id) => document.getElementById(id);
@@ -49,8 +50,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
   let volumeListenerBound = false;
 
-  // ---- User access state (same logic as book.js) ----
-  const TRIAL_DAYS = 6;
+  // ---- User access state (TRIAL REMOVED) ----
+  const TRIAL_DAYS = 0;
 
   let userAccess = {
     loggedIn: false,
@@ -62,7 +63,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
   function evaluateTrialAndPlan(userData) {
     const now = new Date();
-    const msPerDay = 24 * 60 * 60 * 1000;
 
     // Plan-based subscription (same as book.js)
     let planActive = false;
@@ -77,31 +77,15 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     const subscribed = !!userData.subscribed || planActive;
-    if (subscribed) {
-      return { subscribed: true, trialExpired: false, daysLeft: 0 };
-    }
-
-    // Trial logic
-    let startDate;
-    if (userData.trialStart && userData.trialStart.toDate) {
-      startDate = userData.trialStart.toDate();
-    } else {
-      startDate = new Date();
-    }
-
-    const diffDays = Math.floor((now - startDate) / msPerDay);
-    const trialExpired = diffDays >= TRIAL_DAYS;
-    const daysLeft = Math.max(0, TRIAL_DAYS - diffDays);
 
     return {
-      subscribed: false,
-      trialExpired,
-      daysLeft
+      subscribed,
+      trialExpired: true,
+      daysLeft: 0
     };
   }
 
   async function refreshUserAccess(firebaseUser) {
-    // Guest
     if (!firebaseUser || !window.db) {
       userAccess = {
         loggedIn: !!firebaseUser,
@@ -110,35 +94,22 @@ window.addEventListener("DOMContentLoaded", () => {
         daysLeft: 0,
         loaded: true
       };
-      renderChaptersUI(); // update dropdown if visible
+      renderChaptersUI();
       return;
     }
 
     try {
       const userRef = window.db.collection("users").doc(firebaseUser.uid);
-      let snap = await userRef.get();
-      let data = snap.data() || {};
-
-      // Agar trialStart missing hai to book.js jaisa hi yahan bhi set kar do
-      if (!data.trialStart) {
-        await userRef.set(
-          {
-            trialStart: firebase.firestore.FieldValue.serverTimestamp(),
-            subscribed: data.subscribed || false
-          },
-          { merge: true }
-        );
-        snap = await userRef.get();
-        data = snap.data() || data;
-      }
+      const snap = await userRef.get();
+      const data = snap.data() || {};
 
       const access = evaluateTrialAndPlan(data);
 
       userAccess = {
         loggedIn: true,
         subscribed: !!access.subscribed,
-        trialExpired: !!access.trialExpired,
-        daysLeft: access.daysLeft || 0,
+        trialExpired: true,
+        daysLeft: 0,
         loaded: true
       };
     } catch (e) {
@@ -156,8 +127,15 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function setupAuthListener() {
-    if (!window.auth || typeof window.auth.onAuthStateChanged !== "function") {
-      // Auth library load nahi hui -> page guest ki tarah behave karega
+    // Use window.auth if available, else fallback to firebase.auth()
+    let authObj = window.auth;
+    try {
+      if (!authObj && window.firebase && window.firebase.auth) authObj = window.firebase.auth();
+      if (!authObj && window.firebase && window.firebase.auth) authObj = window.firebase.auth();
+      if (!authObj && typeof firebase !== "undefined" && firebase.auth) authObj = firebase.auth();
+    } catch {}
+
+    if (!authObj || typeof authObj.onAuthStateChanged !== "function") {
       userAccess = {
         loggedIn: false,
         subscribed: false,
@@ -165,10 +143,11 @@ window.addEventListener("DOMContentLoaded", () => {
         daysLeft: 0,
         loaded: true
       };
+      renderChaptersUI();
       return;
     }
 
-    window.auth.onAuthStateChanged((user) => {
+    authObj.onAuthStateChanged((user) => {
       refreshUserAccess(user);
     });
   }
@@ -177,14 +156,9 @@ window.addEventListener("DOMContentLoaded", () => {
     return !!userAccess.loggedIn;
   }
 
-  // Paid content ke liye full access:
-  //  - logged-in ho
-  //  - aur (subscribed ho OR trial abhi khatam na hua ho)
+  // Paid content access: logged-in AND subscribed
   function hasFullPaidAccess() {
-    return (
-      !!userAccess.loggedIn &&
-      (!userAccess.trialExpired || userAccess.subscribed)
-    );
+    return !!userAccess.loggedIn && !!userAccess.subscribed;
   }
 
   // ---- UI helpers ----
@@ -269,14 +243,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
     sourceSelect.innerHTML = "";
 
-    // Random option based on language
     if (lang === "english") {
       sourceSelect.appendChild(makeOption("random-en", "Random passage"));
     } else {
       sourceSelect.appendChild(makeOption("random-hi", "Random passage"));
     }
 
-    // Books filtered by language
     const ids = Object.keys(booksMap)
       .filter((id) => matchesSelectedLanguage(booksMap[id].language, lang))
       .sort((a, b) => (booksMap[a].title || "").localeCompare(booksMap[b].title || ""));
@@ -287,13 +259,9 @@ window.addEventListener("DOMContentLoaded", () => {
       sourceSelect.appendChild(makeOption("book:" + id, b.title || "Untitled book"));
     });
 
-    // Hard words BELOW books (second last)
     sourceSelect.appendChild(makeOption("hardwords", "Hard Words practice"));
-
-    // Custom LAST
     sourceSelect.appendChild(makeOption("custom", "Custom text (paste your own)"));
 
-    // preserve value if exists, else set first
     const exists = Array.from(sourceSelect.options).some((o) => o.value === prev);
     sourceSelect.value = exists ? prev : (lang === "english" ? "random-en" : "random-hi");
   }
@@ -301,19 +269,16 @@ window.addEventListener("DOMContentLoaded", () => {
   function syncSourceUI() {
     const val = sourceSelect?.value || "random-en";
 
-    // custom
     if (customWrap) {
       if (val === "custom") customWrap.classList.remove("hidden");
       else customWrap.classList.add("hidden");
     }
 
-    // hardwords
     if (hwRow) {
       if (val === "hardwords") hwRow.classList.remove("hidden");
       else hwRow.classList.add("hidden");
     }
 
-    // book controls
     if (lessonRow) {
       if (isBookOption(val)) lessonRow.classList.remove("hidden");
       else lessonRow.classList.add("hidden");
@@ -325,7 +290,6 @@ window.addEventListener("DOMContentLoaded", () => {
     if (isBookOption(val)) {
       loadBookStructure(extractBookId(val));
     } else {
-      // reset book cache view
       if (volumeRow) volumeRow.classList.add("hidden");
       if (lessonSelect) {
         lessonSelect.innerHTML = "";
@@ -363,7 +327,6 @@ window.addEventListener("DOMContentLoaded", () => {
     bookCache.chapters = [];
     bookCache.hasVolumes = false;
 
-    // UI loading states
     if (volumeSelect) {
       volumeSelect.innerHTML = "";
       volumeSelect.appendChild(makeOption("", "Loading…"));
@@ -374,7 +337,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     if (chapterHint) chapterHint.textContent = "";
 
-    // volumes
     const volSnap = await window.db.collection("books").doc(bookId).collection("volumes").orderBy("order", "asc").get();
     volSnap.forEach((d) => {
       const v = d.data() || {};
@@ -383,7 +345,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     bookCache.hasVolumes = bookCache.volumes.length > 0;
 
-    // chapters
     const chSnap = await window.db.collection("books").doc(bookId).collection("chapters").orderBy("order", "asc").get();
     chSnap.forEach((doc) => {
       const ch = doc.data() || {};
@@ -399,11 +360,10 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    renderVolumeUI();     // build volume select ONCE
-    renderChaptersUI();   // build chapters list based on current volume selection
+    renderVolumeUI();
+    renderChaptersUI();
   }
 
-  // Volume select only changes chapters, not itself
   function renderVolumeUI() {
     if (!volumeRow || !volumeSelect) return;
 
@@ -416,7 +376,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
     volumeRow.classList.remove("hidden");
 
-    // preserve selected volume if possible
     const prev = volumeSelect.value || "";
 
     volumeSelect.innerHTML = "";
@@ -426,15 +385,13 @@ window.addEventListener("DOMContentLoaded", () => {
       volumeSelect.appendChild(makeOption(v.id, v.title));
     });
 
-    // restore selection if still exists
     const exists = Array.from(volumeSelect.options).some(o => o.value === prev);
     volumeSelect.value = exists ? prev : "";
 
-    // bind listener only once
     if (!volumeListenerBound) {
       volumeListenerBound = true;
       volumeSelect.addEventListener("change", () => {
-        renderChaptersUI(); // ONLY chapters update
+        renderChaptersUI();
       });
     }
   }
@@ -459,7 +416,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
     let list = bookCache.chapters.slice();
 
-    // filter by volume
     if (bookCache.hasVolumes && selectedVol) {
       list = list.filter(c => c.volumeId === selectedVol);
       if (chapterHint) chapterHint.textContent = "Chapters filtered by selected volume.";
@@ -470,13 +426,9 @@ window.addEventListener("DOMContentLoaded", () => {
     const visible = list;
 
     if (!visible.length) {
-      lessonSelect.appendChild(
-        makeOption("", "No lessons found", { disabled: true })
-      );
+      lessonSelect.appendChild(makeOption("", "No lessons found", { disabled: true }));
       if (!loggedIn) {
-        lessonSelect.appendChild(
-          makeOption("", "Log in to access locked lessons", { disabled: true })
-        );
+        lessonSelect.appendChild(makeOption("", "Log in to access locked lessons", { disabled: true }));
       }
       return;
     }
@@ -505,7 +457,6 @@ window.addEventListener("DOMContentLoaded", () => {
         lessonSelect.appendChild(opt);
       });
 
-    // Info option at bottom
     if (!loggedIn && paidCount > 0) {
       const msg = paidCount === 1
         ? "Log in to practice 1 paid lesson"
@@ -513,8 +464,8 @@ window.addEventListener("DOMContentLoaded", () => {
       lessonSelect.appendChild(makeOption("", msg, { disabled: true }));
     } else if (loggedIn && !fullPaid && paidCount > 0) {
       const msg = paidCount === 1
-        ? "Upgrade to paid plan to practice 1 locked lesson"
-        : `Upgrade to paid plan to practice ${paidCount} locked lessons`;
+        ? "Subscribe to practice 1 locked lesson"
+        : `Subscribe to practice ${paidCount} locked lessons`;
       lessonSelect.appendChild(makeOption("", msg, { disabled: true }));
     }
   }
@@ -529,14 +480,13 @@ window.addEventListener("DOMContentLoaded", () => {
       const list = [];
       snap.forEach(d => {
         const x = d.data() || {};
-        if (!fullPaid && x.isFree === false) return;   // paid random text -> sirf paid/trial user
+        if (!fullPaid && x.isFree === false) return;
         const t = String(x.text || "").trim();
         if (t) list.push(t);
       });
       return pickRandom(list);
     }
 
-    // hindi: prefer selected layout
     const priority = (lang === "hindi-kruti") ? ["hindi-kruti", "hindi-mangal"] : ["hindi-mangal", "hindi-kruti"];
     for (const hLang of priority) {
       const snap = await window.db.collection("randomTexts").where("language", "==", hLang).get();
@@ -569,7 +519,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
     if (!words.length) return null;
 
-    // shuffle
     for (let i = words.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [words[i], words[j]] = [words[j], words[i]];
@@ -581,10 +530,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // ---------------- Init ----------------
   (async function init() {
-    // Auth listener (Firebase) -> userAccess update
     setupAuthListener();
-
-    // Books, etc.
     await loadBooksFromAdmin();
     rebuildSourceOptionsPreserve();
     syncSourceUI();
@@ -617,7 +563,6 @@ window.addEventListener("DOMContentLoaded", () => {
     let custom = "";
 
     try {
-      // Random (language-specific)
       if (selectedSource === "random-en") {
         const text = await getRandomText({ wanted: "english", lang });
         if (!text) return setMessage("No random English texts found. Please add in Admin panel.");
@@ -632,7 +577,6 @@ window.addEventListener("DOMContentLoaded", () => {
         custom = text;
       }
 
-      // Hard words
       if (selectedSource === "hardwords") {
         const diff = hwDifficulty ? hwDifficulty.value : "all";
         const cnt = hwCount ? hwCount.value : "30";
@@ -642,7 +586,6 @@ window.addEventListener("DOMContentLoaded", () => {
         custom = text;
       }
 
-      // Custom
       if (selectedSource === "custom") {
         custom = customText ? customText.value.trim() : "";
         if (!custom) {
@@ -653,7 +596,6 @@ window.addEventListener("DOMContentLoaded", () => {
         source = "custom";
       }
 
-      // Book
       if (isBookOption(selectedSource)) {
         bookId = extractBookId(selectedSource);
         if (!bookId) return setMessage("Please select a valid book.");
@@ -673,19 +615,17 @@ window.addEventListener("DOMContentLoaded", () => {
               return;
             }
             if (!fullPaid) {
-              setMessage("Your free trial has ended. Subscribe to access paid lessons.");
+              setMessage("Subscription required to access paid lessons.");
               return;
             }
           }
 
           chapterId = chosen;
         } else {
-          // random chapter from allowed list
           const selectedVol = bookCache.hasVolumes ? (volumeSelect?.value || "") : "";
 
           let candidates = bookCache.chapters.filter(c => c.isVisible !== false);
 
-          // Guest OR logged-in without full paid access -> sirf free lessons
           if (!loggedIn || !fullPaid) {
             candidates = candidates.filter(c => c.isFree !== false);
           }
@@ -710,7 +650,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const config = {
         userName,
         lang,
-        source,          // custom | book
+        source,
         seconds,
         mode,
         customText: custom,
