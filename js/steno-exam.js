@@ -108,28 +108,26 @@
     volumeKey: "",
     exerciseMode: "single",     // "single" | "multiple" | "random"
     selectedChapterIds: [],
+
+    hasVolumes: false,
   };
 
-  const booksMap = {};      // bookId -> {title, language}
+  // ✅ booksMap now includes isPaid
+  const booksMap = {};      // bookId -> {title, language, isPaid}
   const chaptersCache = {}; // bookId -> [chapterObj]
   const chaptersById  = {}; // bookId -> { chapterId: chapterObj }
 
-  // chapterObj: { id, code, name, volumeKey, volumeLabel, isPaid, text }
+  // chapterObj: { id, code, name, volumeKey, volumeLabel, isPaid, isFree, text }
 
-  // ---------- USER / LOGIN / SUBSCRIPTION ----------
-  const TRIAL_DAYS = 6;
-
+  // ---------- USER / LOGIN / SUBSCRIPTION (TRIAL REMOVED) ----------
   let userAccess = {
     loggedIn: false,
     subscribed: false,
-    trialExpired: true,
-    daysLeft: 0,
     loaded: false
   };
 
-  function evaluateTrialAndPlan(userData) {
+  function evaluateAccess(userData) {
     const now = new Date();
-    const msPerDay = 24 * 60 * 60 * 1000;
 
     let planActive = false;
     if (
@@ -143,26 +141,16 @@
     }
 
     const subscribed = !!userData.subscribed || planActive;
-    if (subscribed) {
-      return { subscribed: true, trialExpired: false, daysLeft: 0 };
-    }
 
-    let startDate;
-    if (userData.trialStart && userData.trialStart.toDate) {
-      startDate = userData.trialStart.toDate();
-    } else {
-      startDate = new Date();
-    }
+    return { subscribed };
+  }
 
-    const diffDays = Math.floor((now - startDate) / msPerDay);
-    const trialExpired = diffDays >= TRIAL_DAYS;
-    const daysLeft = Math.max(0, TRIAL_DAYS - diffDays);
-
-    return {
-      subscribed: false,
-      trialExpired,
-      daysLeft
-    };
+  function getAuthObj() {
+    try {
+      if (window.auth && typeof window.auth.onAuthStateChanged === "function") return window.auth;
+      if (typeof firebase !== "undefined" && firebase.auth) return firebase.auth();
+    } catch {}
+    return null;
   }
 
   async function refreshUserAccess(firebaseUser) {
@@ -170,37 +158,22 @@
       userAccess = {
         loggedIn: !!firebaseUser,
         subscribed: false,
-        trialExpired: true,
-        daysLeft: 0,
         loaded: true
       };
+      applyAccessToLessonUI();
       return;
     }
 
     try {
       const userRef = window.db.collection("users").doc(firebaseUser.uid);
-      let snap = await userRef.get();
-      let data = snap.data() || {};
+      const snap = await userRef.get();
+      const data = snap.data() || {};
 
-      if (!data.trialStart) {
-        await userRef.set(
-          {
-            trialStart: firebase.firestore.FieldValue.serverTimestamp(),
-            subscribed: data.subscribed || false
-          },
-          { merge: true }
-        );
-        snap = await userRef.get();
-        data = snap.data() || data;
-      }
-
-      const access = evaluateTrialAndPlan(data);
+      const access = evaluateAccess(data);
 
       userAccess = {
         loggedIn: true,
         subscribed: !!access.subscribed,
-        trialExpired: !!access.trialExpired,
-        daysLeft: access.daysLeft || 0,
         loaded: true
       };
     } catch (e) {
@@ -208,26 +181,26 @@
       userAccess = {
         loggedIn: true,
         subscribed: false,
-        trialExpired: true,
-        daysLeft: 0,
         loaded: true
       };
     }
+
+    applyAccessToLessonUI();
   }
 
   function setupAuthListener() {
-    if (!window.auth || typeof window.auth.onAuthStateChanged !== "function") {
+    const authObj = getAuthObj();
+    if (!authObj || typeof authObj.onAuthStateChanged !== "function") {
       userAccess = {
         loggedIn: false,
         subscribed: false,
-        trialExpired: true,
-        daysLeft: 0,
         loaded: true
       };
+      applyAccessToLessonUI();
       return;
     }
 
-    window.auth.onAuthStateChanged((user) => {
+    authObj.onAuthStateChanged((user) => {
       refreshUserAccess(user);
     });
   }
@@ -236,11 +209,9 @@
     return !!userAccess.loggedIn;
   }
 
+  // ✅ Paid access = subscribed only (trial removed)
   function hasFullPaidAccess() {
-    return (
-      !!userAccess.loggedIn &&
-      (!userAccess.trialExpired || userAccess.subscribed)
-    );
+    return !!userAccess.loggedIn && !!userAccess.subscribed;
   }
 
   // ---------- Misc utils ----------
@@ -275,6 +246,11 @@
   function setLocked(locked) {
     el.textArea.disabled = locked;
     el.editorLock.style.display = locked ? "grid" : "none";
+  }
+
+  function isPaidLessonObj(ch) {
+    // ch.isPaid already computed in loadChaptersForBook with book-level isPaid support.
+    return !!ch?.isPaid;
   }
 
   // ---------- Copy/Paste rules ----------
@@ -499,8 +475,7 @@
       cb.type = "checkbox";
       cb.value = ch.id;
 
-      let isPaid = ch.isPaid === true;
-      if (ch.isFree === false) isPaid = true;
+      const isPaid = isPaidLessonObj(ch);
 
       let suffix = "";
       let disabled = false;
@@ -540,7 +515,7 @@
       if (lessonSelectGroup) lessonSelectGroup.style.display = "";
       el.lessonSelect.multiple = false;
       el.lessonSelect.size = 1;
-      renderLessonCheckboxesForScope(); // will hide group
+      renderLessonCheckboxesForScope();
     } else {
       if (lessonSelectGroup) lessonSelectGroup.style.display = "none";
       renderLessonCheckboxesForScope();
@@ -681,11 +656,52 @@
       booksMap[doc.id] = {
         title: b.title || "Untitled book",
         language: b.language || "english",
+        isPaid: !!b.isPaid
       };
     });
 
     el.bookSelect.disabled = false;
     rebuildBookOptions();
+  }
+
+  function rebuildLessonOptionsNoVolume() {
+    if (!el.lessonSelect || !state.bookId) return;
+
+    const chapters = chaptersCache[state.bookId] || [];
+    const loggedIn = isLoggedIn();
+    const fullPaid = hasFullPaidAccess();
+
+    if (!chapters.length) {
+      el.lessonSelect.innerHTML = `<option value="" selected disabled>No lessons added yet</option>`;
+      el.lessonSelect.disabled = true;
+      renderLessonCheckboxesForScope();
+      return;
+    }
+
+    el.lessonSelect.innerHTML = `<option value="" selected disabled>Select lesson</option>`;
+    chapters.forEach((ch) => {
+      const opt = document.createElement("option");
+      opt.value = ch.id;
+
+      let label = `${(ch.code || "").trim()} ${(ch.name || "").trim()}`.trim() || "Lesson";
+      if (ch.isPaid) {
+        if (!loggedIn) {
+          label += " (Login required)";
+          opt.disabled = true;
+        } else if (!fullPaid) {
+          label += " (Paid plan required)";
+          opt.disabled = true;
+        } else {
+          label += " (Paid)";
+        }
+      }
+
+      opt.textContent = label;
+      el.lessonSelect.appendChild(opt);
+    });
+
+    el.lessonSelect.disabled = false;
+    renderLessonCheckboxesForScope();
   }
 
   function rebuildLessonOptionsForVolume() {
@@ -711,12 +727,10 @@
     filtered.forEach((ch) => {
       const opt = document.createElement("option");
       opt.value = ch.id;
+
       let label = `${(ch.code || "").trim()} ${(ch.name || "").trim()}`.trim() || "Lesson";
 
-      let isPaid = ch.isPaid === true;
-      if (ch.isFree === false) isPaid = true;
-
-      if (isPaid) {
+      if (ch.isPaid) {
         if (!loggedIn) {
           label += " (Login required)";
           opt.disabled = true;
@@ -749,6 +763,7 @@
     state.chapterId = "";
     state.selectedChapterIds = [];
     state.expectedText = "";
+    state.hasVolumes = false;
 
     if (!window.db || !bookId) return;
 
@@ -771,7 +786,9 @@
 
     const chapters = [];
     const byId = {};
-    const volumeMap = new Map(); // volumeKey -> volumeLabel
+    const volumeMap = new Map();
+
+    const bookPaid = !!booksMap[bookId]?.isPaid;
 
     snap.forEach((doc) => {
       const ch = doc.data() || {};
@@ -779,7 +796,6 @@
         .toString()
         .trim();
 
-      // *** CHANGED: support multiple possible volume field names ***
       const volumeKey = (
         ch.volume ??
         ch.volumeCode ??
@@ -795,13 +811,16 @@
         ch.volume ??
         volumeKey
       ).toString().trim();
-      // *** END CHANGE ***
 
-      const isPaid =
+      // ✅ paid detection (chapter-level + book-level)
+      // If book is paid => chapter is paid unless explicitly isFree === true
+      const chapterPaid =
         ch.isFree === false ||
         ch.isPaid === true ||
         ch.paid === true ||
         ch.requiresSubscription === true;
+
+      const isPaid = chapterPaid || (bookPaid && ch.isFree !== true);
 
       const obj = {
         id: doc.id,
@@ -827,40 +846,14 @@
     chaptersById[bookId] = byId;
 
     const hasVolumes = el.volumeSelect && volumeMap.size > 0;
+    state.hasVolumes = !!hasVolumes;
 
     if (!hasVolumes) {
       if (el.volumeSelect) {
         el.volumeSelect.disabled = true;
         el.volumeSelect.innerHTML = `<option value="" selected disabled>No volumes</option>`;
       }
-
-      const loggedIn = isLoggedIn();
-      const fullPaid = hasFullPaidAccess();
-
-      el.lessonSelect.innerHTML = `<option value="" selected disabled>Select lesson</option>`;
-      chapters.forEach((ch) => {
-        const opt = document.createElement("option");
-        opt.value = ch.id;
-        let label = `${ch.code} ${ch.name}`.trim() || "Lesson";
-
-        if (ch.isPaid) {
-          if (!loggedIn) {
-            label += " (Login required)";
-            opt.disabled = true;
-          } else if (!fullPaid) {
-            label += " (Paid plan required)";
-            opt.disabled = true;
-          } else {
-            label += " (Paid)";
-          }
-        }
-
-        opt.textContent = label;
-        el.lessonSelect.appendChild(opt);
-      });
-
-      el.lessonSelect.disabled = false;
-      renderLessonCheckboxesForScope();
+      rebuildLessonOptionsNoVolume();
       return;
     }
 
@@ -969,9 +962,9 @@
 
   function showPaidBlockMessage(reason) {
     if (reason === "login") {
-      alert("Ye paid lesson hai. Result dekhne ke liye pehle login ya signup karein.");
+      alert("Ye paid lesson hai. Practice ke liye pehle login ya signup karein.");
     } else {
-      alert("Ye paid lesson hai. Result dekhne ke liye paid subscription chahiye.");
+      alert("Ye paid lesson hai. Practice ke liye paid subscription chahiye.");
     }
   }
 
@@ -1130,6 +1123,7 @@
     state.volumeKey = "";
     state.exerciseMode = "single";
     state.selectedChapterIds = [];
+    state.hasVolumes = false;
 
     el.examType.disabled = false;
     el.examLanguage.disabled = false;
@@ -1189,6 +1183,28 @@
     syncPanelHeight();
   }
 
+  // ✅ When subscription/login state changes, re-apply locks
+  function applyAccessToLessonUI() {
+    try {
+      if (!state.bookId) return;
+
+      // If chapters already loaded for selected book, rebuild options from cache
+      if (chaptersCache[state.bookId] && chaptersCache[state.bookId].length) {
+        if (state.hasVolumes) {
+          if (state.volumeKey) rebuildLessonOptionsForVolume();
+          renderLessonCheckboxesForScope();
+        } else {
+          rebuildLessonOptionsNoVolume();
+        }
+      }
+
+      refreshUIState();
+      syncPanelHeight();
+    } catch (e) {
+      console.error("applyAccessToLessonUI error:", e);
+    }
+  }
+
   function wireEvents() {
     el.examType.addEventListener("change", () => {
       state.examKey = el.examType.value;
@@ -1205,6 +1221,7 @@
       state.expectedText = "";
       state.volumeKey = "";
       state.selectedChapterIds = [];
+      state.hasVolumes = false;
 
       rebuildBookOptions();
       el.bookSelect.disabled = false;
@@ -1236,6 +1253,7 @@
       state.expectedText = "";
       state.volumeKey = "";
       state.selectedChapterIds = [];
+      state.hasVolumes = false;
 
       if (el.volumeSelect) {
         el.volumeSelect.disabled = true;
