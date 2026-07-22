@@ -2,337 +2,301 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Steno Master - Admin Panel</title>
+  <title>Steno Master - Professional Admin Console</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Professional Stylesheets -->
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/admin-console.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
 <body class="admin-page">
+  <!-- Top Navigation Bar -->
   <header class="navbar">
     <div class="nav-left">
       <img src="assets/logo.png" alt="Logo" class="logo" />
       <span class="brand-name">Steno Master</span>
     </div>
     <nav class="nav-right">
-      <a href="index.html">Home</a>
-      <a href="practice.html">Practice &amp; Books</a>
-      <a href="admin.html">Admin</a>
-      <a href="login.html" class="nav-cta">Log in</a>
+      <a href="/">Home</a>
+      <a href="/practice">Practice &amp; Books</a>
+      <a href="/admin" class="active">Admin</a>
+      <a href="/login" class="nav-cta">Log in</a>
     </nav>
   </header>
 
   <main class="admin-main">
-    <h1>Admin Panel</h1>
     <div id="admin-warning" class="warning hidden"></div>
 
-    <div id="admin-content" class="hidden">
+    <div id="admin-content">
       <div class="admin-console-shell">
-        <!-- Sidebar -->
+        
+        <!-- Sidebar Navigation -->
         <aside class="admin-console-sidebar">
           <div class="acs-brand">
             <div class="acs-dot"></div>
             <div>
               <div class="acs-title">Admin Console</div>
-              <div class="acs-sub">Steno Master</div>
+              <div class="acs-sub">Steno Master Pro</div>
             </div>
           </div>
 
           <nav class="acs-nav">
-            <a class="acs-link active" href="#dashboard-section">📊 Dashboard</a>
-            <a class="acs-link" href="#books-section">📚 Books &amp; Chapters</a>
-            <a class="acs-link" href="#random-section">🎲 Random Texts</a>
-
-            <!-- ✅ NEW -->
-            <a class="acs-link" href="#hardwords-section">🧩 Hard Words</a>
-
-            <a class="acs-link" href="#feedback-section">💬 Feedback</a>
-            <a class="acs-link" href="#users-section">👤 Users</a>
+            <a class="acs-link active" href="#dashboard-section"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+            <a class="acs-link" href="#books-section"><i class="fa-solid fa-book-open"></i> Books &amp; Lessons</a>
+            <a class="acs-link" href="#random-section"><i class="fa-solid fa-shuffle"></i> Random Practice</a>
+            <a class="acs-link" href="#hardwords-section"><i class="fa-solid fa-spell-check"></i> Hard Words</a>
+            <a class="acs-link" href="#ai-tools-section"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Generator</a>
+            <a class="acs-link" href="#feedback-section"><i class="fa-solid fa-comments"></i> Feedback</a>
+            <a class="acs-link" href="#users-section"><i class="fa-solid fa-users"></i> User Directory</a>
           </nav>
 
           <div class="acs-footer">
-            <button class="btn small secondary" id="acs-refresh-btn" type="button">↻ Refresh</button>
+            <button class="btn small secondary" id="acs-refresh-btn" type="button">
+              <i class="fa-solid fa-rotate-right"></i> Refresh Console
+            </button>
           </div>
         </aside>
 
-        <!-- Main -->
+        <!-- Main Workspace -->
         <div class="admin-console-body">
-          <!-- Topbar -->
+          
+          <!-- Top Control Bar -->
           <div class="admin-console-topbar">
             <div class="admin-console-search">
-              <input id="admin-global-search" type="text" placeholder="Search books, random texts, hard words..." />
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+              <input id="admin-global-search" type="text" placeholder="Global search across books, lessons, users..." />
             </div>
             <div class="admin-console-actions">
-              <span class="admin-user-pill" id="admin-user-pill">Admin</span>
+              <span class="admin-user-pill" id="admin-user-pill"><i class="fa-solid fa-shield-halved"></i> Super Admin</span>
             </div>
           </div>
 
-          <!-- Dashboard -->
+          <!-- Section 1: Dashboard KPI Overview -->
           <section class="admin-section" id="dashboard-section">
-            <h2>Dashboard</h2>
-            <p class="admin-section-description">
-              View-only overview. (Payments/Subscriptions will be added later.)
-            </p>
+            <div class="section-header">
+              <h2>Analytics Overview</h2>
+              <p class="admin-section-description">Real-time stats and performance metrics of Steno Master.</p>
+            </div>
 
             <div class="kpi-grid">
               <div class="kpi-card">
-                <div class="kpi-label">Total Users</div>
-                <div class="kpi-value" id="kpi-users">—</div>
+                <div class="kpi-icon"><i class="fa-solid fa-users"></i></div>
+                <div class="kpi-info">
+                  <div class="kpi-label">Total Users</div>
+                  <div class="kpi-value" id="kpi-users">—</div>
+                </div>
               </div>
               <div class="kpi-card">
-                <div class="kpi-label">Books</div>
-                <div class="kpi-value" id="kpi-books">—</div>
+                <div class="kpi-icon"><i class="fa-solid fa-book"></i></div>
+                <div class="kpi-info">
+                  <div class="kpi-label">Active Books</div>
+                  <div class="kpi-value" id="kpi-books">—</div>
+                </div>
               </div>
               <div class="kpi-card">
-                <div class="kpi-label">Random Texts</div>
-                <div class="kpi-value" id="kpi-random">—</div>
+                <div class="kpi-icon"><i class="fa-solid fa-file-lines"></i></div>
+                <div class="kpi-info">
+                  <div class="kpi-label">Random Passages</div>
+                  <div class="kpi-value" id="kpi-random">—</div>
+                </div>
               </div>
               <div class="kpi-card">
-                <div class="kpi-label">Hard Words</div>
-                <div class="kpi-value" id="kpi-hardwords">—</div>
+                <div class="kpi-icon"><i class="fa-solid fa-font"></i></div>
+                <div class="kpi-info">
+                  <div class="kpi-label">Hard Words DB</div>
+                  <div class="kpi-value" id="kpi-hardwords">—</div>
+                </div>
               </div>
               <div class="kpi-card">
-                <div class="kpi-label">Feedback</div>
-                <div class="kpi-value" id="kpi-feedback">—</div>
-              </div>
-              <div class="kpi-card kpi-muted">
-                <div class="kpi-label">Revenue (future)</div>
-                <div class="kpi-value">—</div>
+                <div class="kpi-icon"><i class="fa-solid fa-comment-dots"></i></div>
+                <div class="kpi-info">
+                  <div class="kpi-label">User Feedback</div>
+                  <div class="kpi-value" id="kpi-feedback">—</div>
+                </div>
               </div>
             </div>
           </section>
 
-          <!-- Hero -->
-          <section class="admin-section admin-hero">
-            <div class="admin-hero-main">
-              <h2>Manage books &amp; lessons</h2>
-              <p class="admin-section-description">
-                Add books, volumes, and chapters/lessons. Control free/paid per chapter.
-              </p>
-            </div>
-            <div class="admin-hero-stats">
-              <div class="admin-hero-stat">
-                <span class="label">Books</span>
-                <span class="value" id="stat-books">–</span>
-              </div>
-              <div class="admin-hero-stat">
-                <span class="label">Random texts</span>
-                <span class="value" id="stat-random">–</span>
-              </div>
-              <div class="admin-hero-stat">
-                <span class="label">Chapters in book</span>
-                <span class="value" id="stat-chapters">–</span>
-              </div>
-            </div>
-          </section>
-
-          <!-- BOOKS + CHAPTERS -->
+          <!-- Section 2: Books & Chapters Manager -->
           <section class="admin-section" id="books-section">
-            <h2>Books &amp; Chapters</h2>
-            <p class="admin-section-description">
-              Left side se book select karo. Right side me book + volumes + chapters manage karo.
-              <br />
-              ✅ New: Chapter level Free/Locked + Visible/Hidden controls.
-            </p>
+            <div class="section-header">
+              <h2>Books &amp; Chapter Manager</h2>
+              <p class="admin-section-description">Configure curriculum, access permissions (Free/Paid), and content structure.</p>
+            </div>
 
             <div class="admin-books-layout">
-              <!-- LEFT: BOOK LIST -->
+              <!-- Sidebar: Book List -->
               <aside class="admin-books-sidebar">
                 <div class="admin-books-sidebar-top">
-                  <span style="font-size:0.85rem;color:#9ca3af;">Books</span>
-                  <button id="new-book-btn" class="btn small primary">+ New Book</button>
+                  <span>Book Catalog</span>
+                  <button id="new-book-btn" class="btn small primary">+ Add Book</button>
                 </div>
                 <div id="books-sidebar-list" class="admin-books-sidebar-list"></div>
               </aside>
 
-              <!-- RIGHT: SELECTED BOOK -->
+              <!-- Pane: Selected Book Detail -->
               <div class="admin-book-pane">
-                <div id="book-none">
-                  <p style="font-size:0.9rem;color:#9ca3af;">
-                    Left side se koi book select karein, ya “New Book” button se nayi book banayein.
-                  </p>
+                <div id="book-none" class="empty-state">
+                  <i class="fa-solid fa-book-bookmark"></i>
+                  <p>Select a book from the sidebar or click "+ Add Book" to build a new collection.</p>
                 </div>
 
                 <div id="book-editor" class="hidden">
-                  <!-- Book meta bar -->
                   <div class="book-meta-bar">
                     <div class="book-meta-main">
-                      <h3 id="book-meta-title">Book title</h3>
+                      <h3 id="book-meta-title">Book Title</h3>
                       <p id="book-meta-subtitle"></p>
                     </div>
                     <div class="book-meta-actions">
-                      <button id="book-toggle-visible-btn" class="btn small secondary" type="button">Hide from tests</button>
-                      <button id="book-toggle-paid-btn" class="btn small secondary" type="button">Mark as Paid</button>
-                      <button id="book-edit-mode-btn" class="btn small" type="button">Edit details</button>
-                      <button id="book-delete-btn" class="btn small secondary" type="button">Delete book</button>
+                      <button id="book-toggle-visible-btn" class="btn small secondary" type="button">Hide Book</button>
+                      <button id="book-toggle-paid-btn" class="btn small secondary" type="button">Mark Paid</button>
+                      <button id="book-edit-mode-btn" class="btn small" type="button">Edit Meta</button>
+                      <button id="book-delete-btn" class="btn small danger" type="button">Delete</button>
                     </div>
                   </div>
 
-                  <!-- Book edit form -->
+                  <!-- Editor Form -->
                   <div id="book-edit-form" class="admin-form hidden">
-                    <label for="book-title-input">Book Title</label>
-                    <input type="text" id="book-title-input" placeholder="Book title" />
+                    <div class="form-grid">
+                      <div class="form-group">
+                        <label for="book-title-input">Book Title</label>
+                        <input type="text" id="book-title-input" class="test-input" placeholder="e.g. Pitman Shorthand Advanced" />
+                      </div>
+                      <div class="form-group">
+                        <label for="book-language-input">Language / Font Script</label>
+                        <select id="book-language-input" class="test-select">
+                          <option value="english">English</option>
+                          <option value="hindi-mangal">Hindi (Mangal / Unicode)</option>
+                          <option value="hindi-kruti">Hindi (Kruti Dev 010)</option>
+                        </select>
+                      </div>
+                    </div>
 
-                    <label for="book-language-input">Language</label>
-                    <select id="book-language-input">
-                      <option value="english">English</option>
-                      <option value="hindi-mangal">Hindi (Mangal / Unicode)</option>
-                      <option value="hindi-kruti">Hindi (Kruti Dev 010)</option>
-                    </select>
+                    <label for="book-description-input">Short Summary</label>
+                    <input type="text" id="book-description-input" class="test-input" placeholder="Visible to students" />
 
-                    <label for="book-description-input">Short Description</label>
-                    <input type="text" id="book-description-input" placeholder="Visible on books page" />
+                    <label for="book-content-input">Admin Notes / Instructions</label>
+                    <textarea id="book-content-input" placeholder="Internal notes for syllabus planning..."></textarea>
 
-                    <label for="book-content-input">Default Content / Note</label>
-                    <textarea id="book-content-input" placeholder="Optional admin notes"></textarea>
+                    <div class="form-checkbox-row">
+                      <label><input type="checkbox" id="book-paid-input" /> Premium Book (Requires Subscription)</label>
+                    </div>
 
-                    <label>
-                      <input type="checkbox" id="book-paid-input" />
-                      Paid book (preview free, full for subscribers)
-                    </label>
-
-                    <!-- ✅ NEW helper -->
-                    <label for="book-free-lessons-count" style="margin-top:10px;">Free lessons count (optional helper)</label>
-                    <input
-                      type="number"
-                      id="book-free-lessons-count"
-                      class="test-input"
-                      placeholder="e.g. 25"
-                      min="0"
-                    />
-                    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
-                      <button id="book-apply-free-lessons-btn" class="btn small secondary" type="button">
-                        Apply free count to chapters
-                      </button>
-                      <span style="font-size:12px;color:#9ca3af;align-self:center;">
-                        (Will mark first N ordered chapters as Free and rest Locked)
-                      </span>
+                    <div class="form-helper-box">
+                      <label for="book-free-lessons-count">Free Preview Chapters Count</label>
+                      <div class="input-inline">
+                        <input type="number" id="book-free-lessons-count" class="test-input" placeholder="25" min="0" />
+                        <button id="book-apply-free-lessons-btn" class="btn small secondary" type="button">Apply Limit</button>
+                      </div>
                     </div>
 
                     <div class="admin-form-actions">
-                      <button id="book-save-btn" class="btn primary" type="button">Save book details</button>
+                      <button id="book-save-btn" class="btn primary" type="button">Save Settings</button>
                       <button id="book-cancel-btn" class="btn small secondary" type="button">Cancel</button>
                     </div>
                   </div>
 
-                  <!-- ✅ KEEP VOLUME MANAGER (do not remove) -->
-                  <div class="admin-form" style="margin-top:12px;">
-                    <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
-                      <div class="control-group" style="flex:1;">
-                        <span class="test-label">Volume Filter</span>
+                  <!-- Volume Controls -->
+                  <div class="admin-card-inner">
+                    <div class="volume-bar-header">
+                      <div class="form-group flex-1">
+                        <label class="test-label">Filter Volume</label>
                         <select id="volume-select" class="test-select">
-                          <option value="__all__">All volumes (show all chapters)</option>
-                          <option value="__none__">No volume (standalone chapters)</option>
+                          <option value="__all__">All Volumes (Show All)</option>
+                          <option value="__none__">Standalone Lessons</option>
                         </select>
                       </div>
-
                       <button id="volume-new-btn" class="btn small primary" type="button">+ New Volume</button>
-                      <button id="volume-edit-btn" class="btn small secondary" type="button">Edit Selected Volume</button>
+                      <button id="volume-edit-btn" class="btn small secondary" type="button">Edit Selected</button>
                     </div>
 
-                    <div id="volume-editor" class="hidden" style="margin-top:10px;">
+                    <div id="volume-editor" class="hidden style-box">
                       <div class="chapter-fields-row">
-                        <div class="control-group" style="flex:1;">
+                        <div class="control-group flex-1">
                           <span class="test-label">Volume Title</span>
-                          <input type="text" id="volume-title-input" class="test-input" placeholder="e.g. Volume 1" />
+                          <input type="text" id="volume-title-input" class="test-input" placeholder="e.g. Part 1" />
                         </div>
-                        <div class="control-group" style="flex:1;">
-                          <span class="test-label">Volume Code (optional)</span>
-                          <input type="text" id="volume-code-input" class="test-input" placeholder="e.g. VOL-001" />
+                        <div class="control-group flex-1">
+                          <span class="test-label">Volume Code</span>
+                          <input type="text" id="volume-code-input" class="test-input" placeholder="VOL-01" />
                         </div>
-                        <div class="control-group" style="max-width:140px;">
-                          <span class="test-label">Order</span>
+                        <div class="control-group width-100">
+                          <span class="test-label">Index Order</span>
                           <input type="number" id="volume-order-input" class="test-input" placeholder="1" />
                         </div>
                       </div>
-
                       <div class="admin-form-actions">
                         <button id="volume-save-btn" class="btn primary" type="button">Save Volume</button>
                         <button id="volume-cancel-btn" class="btn small secondary" type="button">Cancel</button>
-                        <button id="volume-delete-btn" class="btn small secondary" type="button">Delete Volume</button>
+                        <button id="volume-delete-btn" class="btn small danger" type="button">Delete</button>
                       </div>
-
-                      <div id="volume-msg" class="auth-error" style="margin-top:6px;"></div>
                     </div>
                   </div>
 
-                  <!-- CHAPTER EDITOR -->
+                  <!-- Chapter Editor -->
                   <div class="chapter-editor">
-                    <h3>Chapters / Lessons</h3>
-                    <p class="admin-section-description">
-                      ✅ New: Chapter access controls (Visible + Free).
-                      (Use this for “25 free lessons, rest subscribe”)
-                    </p>
-
+                    <h3>Lessons &amp; Passage Editor</h3>
                     <div class="chapter-tools">
-                      <input id="chapter-search" class="test-input" placeholder="Search chapters…" />
-                      <button id="chapter-bulk-import-btn" class="btn small">Bulk Import</button>
-                      <button id="chapter-order-manager-btn" class="btn small secondary">Manage Order</button>
+                      <input id="chapter-search" class="test-input" placeholder="Search lessons..." />
+                      <button id="chapter-bulk-import-btn" class="btn small"><i class="fa-solid fa-file-import"></i> Bulk Import</button>
+                      <button id="chapter-order-manager-btn" class="btn small secondary">Order Manager</button>
                       <button id="chapter-auto-number-btn" class="btn small secondary">Auto Number</button>
                     </div>
 
                     <div class="chapter-fields-row">
                       <div class="control-group">
-                        <span class="test-label">Chapter code / number</span>
-                        <input type="text" id="chapter-code" class="test-input" placeholder="e.g. 001 / 356-I" />
+                        <span class="test-label">Lesson Code / ID</span>
+                        <input type="text" id="chapter-code" class="test-input" placeholder="e.g. LESSON-01" />
                       </div>
                       <div class="control-group">
-                        <span class="test-label">Chapter name</span>
-                        <input type="text" id="chapter-name" class="test-input" placeholder="e.g. Lesson Name" />
+                        <span class="test-label">Lesson Title</span>
+                        <input type="text" id="chapter-name" class="test-input" placeholder="Title of dictation" />
                       </div>
-                      <div class="control-group" style="max-width:140px;">
+                      <div class="control-group width-100">
                         <span class="test-label">Order</span>
                         <input type="number" id="chapter-order" class="test-input" placeholder="1" />
                       </div>
                     </div>
 
-                    <!-- ✅ NEW CHAPTER ACCESS -->
-                    <div class="chapter-fields-row" style="gap:14px; margin-top:6px;">
-                      <label style="display:flex; gap:10px; align-items:center; font-size:13px; font-weight:700;">
-                        <input type="checkbox" id="chapter-visible-input" checked />
-                        Visible in tests
-                      </label>
-
-                      <label style="display:flex; gap:10px; align-items:center; font-size:13px; font-weight:700;">
-                        <input type="checkbox" id="chapter-free-input" checked />
-                        Free lesson (uncheck = locked)
-                      </label>
-
-                      <span style="font-size:12px; color:#9ca3af;">
-                        Tip: Free lessons = show normally. Locked lessons = show “Subscribe for more” (future on user side).
-                      </span>
+                    <div class="chapter-fields-row access-bar">
+                      <label><input type="checkbox" id="chapter-visible-input" checked /> Visible to Students</label>
+                      <label><input type="checkbox" id="chapter-free-input" checked /> Free Access (Uncheck to Lock)</label>
                     </div>
 
                     <div class="chapter-fields-row">
-                      <div class="control-group">
-                        <span class="test-label">Preview font size</span>
+                      <div class="control-group flex-1">
+                        <span class="test-label">Editor Preview Font Size</span>
                         <input type="range" id="chapter-font-size" min="14" max="26" value="18" />
                       </div>
-                      <div class="control-group">
-                        <span class="test-label">Existing chapters (volume filtered)</span>
+                      <div class="control-group flex-1">
+                        <span class="test-label">Select Existing Lesson</span>
                         <select id="chapter-select" class="test-select">
-                          <option value="">New chapter...</option>
+                          <option value="">+ Create New Lesson</option>
                         </select>
                       </div>
                     </div>
 
-                    <div class="chapter-fields-row">
-                      <div class="control-group">
-                        <span class="test-label">Import text file (.txt)</span>
-                        <input type="file" id="chapter-file" accept=".txt" class="test-input" />
-                      </div>
+                    <div class="control-group">
+                      <span class="test-label">Upload Text Passage File (.txt)</span>
+                      <input type="file" id="chapter-file" accept=".txt" class="test-input" />
                     </div>
 
-                    <textarea id="chapter-content" placeholder="Full passage text here..."></textarea>
+                    <textarea id="chapter-content" placeholder="Paste or type transcription passage here..."></textarea>
 
                     <div class="admin-form-actions">
-                      <button id="chapter-save-btn" class="btn primary" type="button">Save chapter</button>
-                      <button id="chapter-new-btn" class="btn small secondary" type="button">New empty</button>
-                      <button id="chapter-delete-btn" class="btn small secondary" type="button">Delete chapter</button>
+                      <button id="chapter-save-btn" class="btn primary" type="button"><i class="fa-solid fa-floppy-disk"></i> Save Lesson</button>
+                      <button id="chapter-new-btn" class="btn small secondary" type="button">Clear Form</button>
+                      <button id="chapter-delete-btn" class="btn small danger" type="button">Delete Lesson</button>
                     </div>
 
-                    <div id="chapters-message" class="auth-error" style="margin-top:6px;"></div>
+                    <div id="chapters-message" class="auth-error"></div>
                     <div class="chapter-list" id="chapter-list"></div>
                   </div>
 
@@ -341,220 +305,85 @@
             </div>
           </section>
 
-          <!-- RANDOM TEXTS -->
-          <section class="admin-section" id="random-section">
-            <h2>Random Texts (Quick Practice)</h2>
-            <p class="admin-section-description">
-              Random texts used in typing test setup.
-            </p>
-
-            <div class="admin-toolbar-row">
-              <select id="rt-filter-language" class="test-select">
-                <option value="all">All languages</option>
-                <option value="english">English</option>
-                <option value="hindi-mangal">Hindi (Mangal)</option>
-                <option value="hindi-kruti">Hindi (Kruti)</option>
-              </select>
-
-              <select id="rt-filter-free" class="test-select">
-                <option value="all">All</option>
-                <option value="free">Free</option>
-                <option value="locked">Locked</option>
-              </select>
-
-              <input id="rt-search" class="test-input" placeholder="Search title/text..." />
+          <!-- Section 3: AI Assistant & Generator Section (NEW) -->
+          <section class="admin-section" id="ai-tools-section">
+            <div class="section-header">
+              <h2><i class="fa-solid fa-wand-magic-sparkles"></i> AI Assistant & Tools</h2>
+              <p class="admin-section-description">Auto-generate hard words, fix formatting errors, and refine dictation passages using AI.</p>
             </div>
 
             <div class="admin-columns">
-              <div>
-                <div class="admin-form">
-                  <label for="rt-title">Title</label>
-                  <input type="text" id="rt-title" placeholder="e.g. Random English #1" />
-
-                  <label for="rt-language">Language</label>
-                  <select id="rt-language">
-                    <option value="english">English</option>
-                    <option value="hindi-mangal">Hindi (Mangal / Unicode)</option>
-                    <option value="hindi-kruti">Hindi (Kruti Dev 010)</option>
-                  </select>
-
-                  <label for="rt-text">Text (Main)</label>
-                  <textarea id="rt-text" placeholder="Full paragraph text here..."></textarea>
-
-                  <button id="rt-advanced-toggle" class="btn small secondary" type="button">Advanced options</button>
-
-                  <div id="rt-advanced-wrap" class="hidden" style="margin-top:6px;">
-                    <label for="rt-code">Code / ID (optional, no spaces)</label>
-                    <input type="text" id="rt-code" placeholder="e.g. en-random-1" />
-
-                    <label>
-                      <input type="checkbox" id="rt-free" checked />
-                      Free random text (available to all users)
-                    </label>
-                  </div>
-
-                  <div class="admin-form-actions">
-                    <button id="rt-add-btn" class="btn primary" type="button">Add Random Text</button>
-                    <button id="rt-cancel-btn" class="btn small secondary hidden" type="button">Cancel edit</button>
-                  </div>
-
-                  <div id="rt-message" class="auth-error" style="margin-top:6px;"></div>
+              <div class="admin-form">
+                <label>Smart Passage Reformatter & AI Cleaner</label>
+                <textarea id="ai-input-text" placeholder="Paste messy text or transcription here..."></textarea>
+                <div class="admin-form-actions">
+                  <button type="button" class="btn primary" id="ai-clean-btn"><i class="fa-solid fa-sparkles"></i> Format & Auto-Correct Text</button>
+                  <button type="button" class="btn secondary" id="ai-extract-words-btn"><i class="fa-solid fa-list-check"></i> Extract Hard Words</button>
                 </div>
               </div>
-
-              <div>
-                <h3 style="margin-bottom:6px;">Existing Random Texts</h3>
-                <div id="rt-list" class="books-list"></div>
-                <div class="admin-form-actions" style="margin-top:12px;">
-                  <button id="rt-load-more" class="btn small secondary" type="button">Load more</button>
-                </div>
+              <div class="admin-form">
+                <label>AI Output / Generated Content</label>
+                <textarea id="ai-output-text" placeholder="Cleaned text or extracted hard words will appear here..." readonly></textarea>
               </div>
             </div>
           </section>
 
-          <!-- ✅ HARD WORDS -->
+          <!-- Section 4: Hard Words Database -->
           <section class="admin-section" id="hardwords-section">
-            <h2>Hard Words</h2>
-            <p class="admin-section-description">
-              Add hard words for practice. (Stored in Firestore collection: <b>hardWords</b>)
-            </p>
+            <div class="section-header">
+              <h2>Hard Words Repository</h2>
+              <p class="admin-section-description">Manage vocabulary & difficult steno words (Firestore: <b>hardWords</b>).</p>
+            </div>
 
             <div class="admin-toolbar-row">
               <select id="hw-filter-lang" class="test-select">
-                <option value="all">All languages</option>
+                <option value="all">All Languages</option>
                 <option value="english">English</option>
                 <option value="hindi-mangal">Hindi (Mangal)</option>
                 <option value="hindi-kruti">Hindi (Kruti)</option>
               </select>
 
               <select id="hw-filter-diff" class="test-select">
-                <option value="all">All difficulty</option>
+                <option value="all">All Difficulties</option>
                 <option value="easy">Easy</option>
                 <option value="medium">Medium</option>
                 <option value="hard" selected>Hard</option>
               </select>
 
-              <input id="hw-search" class="test-input" placeholder="Search words..." />
+              <input id="hw-search" class="test-input" placeholder="Search vocabulary..." />
             </div>
 
             <div class="admin-columns">
-              <div>
-                <div class="admin-form">
-                  <label for="hw-language">Language</label>
-                  <select id="hw-language">
-                    <option value="english">English</option>
-                    <option value="hindi-mangal">Hindi (Mangal / Unicode)</option>
-                    <option value="hindi-kruti">Hindi (Kruti Dev 010)</option>
-                  </select>
+              <div class="admin-form">
+                <label for="hw-language">Language Script</label>
+                <select id="hw-language" class="test-select">
+                  <option value="english">English</option>
+                  <option value="hindi-mangal">Hindi (Mangal / Unicode)</option>
+                  <option value="hindi-kruti">Hindi (Kruti Dev 010)</option>
+                </select>
 
-                  <label for="hw-difficulty">Difficulty</label>
-                  <select id="hw-difficulty">
-                    <option value="easy">Easy</option>
-                    <option value="medium">Medium</option>
-                    <option value="hard" selected>Hard</option>
-                  </select>
+                <label for="hw-difficulty">Difficulty Rating</label>
+                <select id="hw-difficulty" class="test-select">
+                  <option value="easy">Easy</option>
+                  <option value="medium">Medium</option>
+                  <option value="hard" selected>Hard</option>
+                </select>
 
-                  <label for="hw-tags">Tags (comma separated)</label>
-                  <input id="hw-tags" type="text" placeholder="e.g. legal, accounts, exam" />
+                <label for="hw-tags">Tags</label>
+                <input id="hw-tags" type="text" class="test-input" placeholder="e.g. Legal, High Court, Executive" />
 
-                  <label for="hw-words">Words (comma or new line separated)</label>
-                  <textarea id="hw-words" placeholder="word1, word2 or one per line"></textarea>
+                <label for="hw-words">Add Words (Comma or line separated)</label>
+                <textarea id="hw-words" placeholder="jurisdiction, parliamentary, constitutional"></textarea>
 
-                  <div class="admin-form-actions">
-                    <button id="hw-add-btn" class="btn primary" type="button">Add Words</button>
-                    <button id="hw-clear-btn" class="btn small secondary" type="button">Clear</button>
-                  </div>
-
-                  <div id="hw-msg" class="auth-error" style="margin-top:6px;"></div>
+                <div class="admin-form-actions">
+                  <button id="hw-add-btn" class="btn primary" type="button">Add To Database</button>
+                  <button id="hw-clear-btn" class="btn small secondary" type="button">Reset</button>
                 </div>
+
+                <div id="hw-msg" class="auth-error"></div>
               </div>
 
               <div>
-                <h3 style="margin-bottom:6px;">Existing Hard Words</h3>
+                <h3>Active Word Bank</h3>
                 <div id="hw-list" class="books-list"></div>
-                <div class="admin-form-actions" style="margin-top:12px;">
-                  <button id="hw-load-more" class="btn small secondary" type="button">Load more</button>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Feedback -->
-          <section class="admin-section" id="feedback-section">
-            <h2>Feedback</h2>
-            <p class="admin-section-description">View feedback (actions can be added later).</p>
-            <div class="admin-table-wrap">
-              <table class="admin-table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Email</th>
-                    <th>Page</th>
-                    <th>Message</th>
-                    <th>Status</th>
-                    <th style="width:160px;">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="fb-tbody">
-                  <tr><td colspan="6" class="td-muted">Load modules to enable…</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <!-- Users (view-only) -->
-          <section class="admin-section" id="users-section">
-            <h2>Users</h2>
-            <p class="admin-section-description">
-              View-only. (For now, role/plan changes from Firestore directly.)
-            </p>
-
-            <!-- Simple role counts -->
-            <div class="admin-toolbar-row" style="margin:8px 0; flex-wrap:wrap; gap:8px;">
-              <span class="label">Total: <strong id="u-count-total">—</strong></span>
-              <span class="label">Admin: <strong id="u-count-admin">—</strong></span>
-              <span class="label">Manager: <strong id="u-count-manager">—</strong></span>
-              <span class="label">Editor: <strong id="u-count-editor">—</strong></span>
-              <span class="label">Support: <strong id="u-count-support">—</strong></span>
-              <span class="label">User: <strong id="u-count-user">—</strong></span>
-            </div>
-
-            <div class="admin-table-wrap">
-              <table class="admin-table">
-                <thead>
-                  <tr>
-                    <th>UID</th><th>Role</th><th>Plan</th><th>Created</th><th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="u-tbody">
-                  <tr><td colspan="5" class="td-muted">Load modules to enable…</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
-  <script src="js/firebase-config.js"></script>
-
-  <!-- Optional modules -->
-  <script src="js/admin-ui.js"></script>
-  <script src="js/admin-dashboard.js"></script>
-  <script src="js/admin-feedback.js"></script>
-  <script src="js/admin-users.js"></script>
-
-  <!-- Main admin -->
-  <script src="js/admin.js"></script>
-
-  <!-- Hard words -->
-  <script src="js/admin-hardwords.js"></script>
-</body>
-</html>
+           
