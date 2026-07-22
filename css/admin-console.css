@@ -1,396 +1,307 @@
-/* Admin Console add-on CSS (does not touch your existing admin styles) */
+/* ==========================================================================
+   Admin Console Stylesheet - Premium Dark Slate Theme
+   ========================================================================== */
 
-.admin-console-shell{
+.admin-console-shell {
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 20px;
+  margin-top: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   1. Sidebar Navigation
+   -------------------------------------------------------------------------- */
+.admin-console-sidebar {
+  position: sticky;
+  top: 82px;
+  height: calc(100vh - 110px);
+  border: 1px solid #1e293b;
+  border-radius: 16px;
+  background: #0f172a;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.acs-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #1e293b;
+}
+
+.acs-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+}
+
+.acs-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #f8fafc;
+}
+
+.acs-sub {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.acs-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.acs-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  color: #94a3b8;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.acs-link:hover {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+.acs-link.active {
+  background: #1e293b;
+  color: #38bdf8;
+  border-color: #38bdf8;
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.15);
+}
+
+.acs-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #1e293b;
+}
+
+/* --------------------------------------------------------------------------
+   2. Main Workspace & Topbar
+   -------------------------------------------------------------------------- */
+.admin-console-body {
+  min-width: 0;
+}
+
+.admin-console-topbar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-console-search {
+  flex: 1;
+}
+
+.admin-console-search input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #1e293b;
+  background: #0f172a;
+  color: #f8fafc;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.admin-console-search input:focus {
+  border-color: #38bdf8;
+}
+
+.admin-user-pill {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid #1e293b;
+  background: #0f172a;
+  color: #38bdf8;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   3. KPI Overview Cards
+   -------------------------------------------------------------------------- */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   margin-top: 14px;
 }
 
-/* Sidebar */
-.admin-console-sidebar{
-  position: sticky;
-  top: 82px; /* navbar height area */
-  height: calc(100vh - 110px);
-  border: 1px solid #1f2937;
-  border-radius: 16px;
-  background: rgba(2, 6, 23, 0.96);
-  box-shadow: 0 18px 50px rgba(0,0,0,0.85);
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.acs-brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding: 6px 6px 10px;
-  border-bottom: 1px solid #111827;
-}
-
-.acs-dot{
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  background: #fbbf24;
-  box-shadow: 0 0 0 4px rgba(251,191,36,0.12);
-}
-
-.acs-title{ font-weight: 900; }
-.acs-sub{ font-size: 12px; color: #9ca3af; }
-
-.acs-nav{
-  display:flex;
-  flex-direction: column;
-  gap: 6px;
-  padding-top: 6px;
-}
-
-.acs-link{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding: 10px 10px;
-  border-radius: 12px;
-  border: 1px solid transparent;
-  color: #e5e7eb;
-}
-
-.acs-link:hover{
-  background: #050816;
-  border-color: #1f2937;
-}
-
-.acs-link.active{
-  border-color: rgba(251,191,36,0.5);
-  box-shadow: 0 0 0 1px rgba(251,191,36,0.25);
-}
-
-.acs-footer{
-  margin-top: auto;
-  padding-top: 10px;
-  border-top: 1px solid #111827;
-}
-
-/* Body */
-.admin-console-body{
-  min-width: 0;
-}
-
-/* Topbar */
-.admin-console-topbar{
-  display:flex;
-  gap: 12px;
-  align-items:center;
-  margin-bottom: 12px;
-}
-
-.admin-console-search{
-  flex: 1;
-}
-
-.admin-console-search input{
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid #1f2937;
-  background: rgba(2,6,23,0.96);
-  color: #e5e7eb;
-  outline: none;
-}
-
-.admin-user-pill{
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: 1px solid #1f2937;
-  background: rgba(2,6,23,0.96);
-  color: #9ca3af;
-  font-size: 13px;
-}
-
-/* KPI cards */
-.kpi-grid{
-  display:grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 10px;
-}
-
-.kpi-card{
-  border-radius: 16px;
-  border: 1px solid #1f2937;
-  background: #020617;
-  padding: 12px 14px;
-  box-shadow: 0 14px 40px rgba(0,0,0,0.6);
-}
-
-.kpi-muted{ opacity: 0.75; }
-
-.kpi-label{
-  font-size: 12px;
-  color: #9ca3af;
-  font-weight: 700;
-}
-
-.kpi-value{
-  font-size: 24px;
-  font-weight: 900;
-  color: #fbbf24;
-  margin-top: 6px;
-}
-
-.kpi-note{
-  margin-top: 6px;
-  font-size: 12px;
-  color: #6b7280;
-}
-
-/* Toolbar row */
-.admin-toolbar-row{
-  display:flex;
-  gap: 10px;
-  align-items:center;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-
-.admin-toolbar-spacer{
-  flex: 1;
-}
-
-/* Table */
-.admin-table-wrap{
-  margin-top: 12px;
-  border: 1px solid #1f2937;
+.kpi-card {
   border-radius: 14px;
-  overflow: hidden;
-  background: #020617;
+  border: 1px solid #1e293b;
+  background: #0f172a;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-.admin-table{
+.kpi-card:hover {
+  transform: translateY(-2px);
+  border-color: #334155;
+}
+
+.kpi-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.kpi-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #38bdf8;
+  margin-top: 6px;
+}
+
+.kpi-note {
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* --------------------------------------------------------------------------
+   4. Tables & Toolbars
+   -------------------------------------------------------------------------- */
+.admin-toolbar-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.admin-toolbar-spacer { flex: 1; }
+
+.admin-table-wrap {
+  margin-top: 16px;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0f172a;
+}
+
+.admin-table {
   width: 100%;
   border-collapse: collapse;
 }
 
 .admin-table th,
-.admin-table td{
-  padding: 10px 10px;
-  border-bottom: 1px solid #111827;
-  font-size: 13px;
-  vertical-align: top;
+.admin-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #1e293b;
+  font-size: 0.88rem;
+  vertical-align: middle;
 }
 
-.admin-table th{
-  background: rgba(5,8,21,0.9);
+.admin-table th {
+  background: #020617;
   text-align: left;
-  color: #9ca3af;
+  color: #94a3b8;
+  font-weight: 600;
 }
 
-.td-muted{
-  color: #9ca3af;
+.admin-table td {
+  color: #cbd5e1;
+}
+
+.td-muted {
+  color: #64748b;
   text-align: center;
 }
 
-/* Responsive */
-@media (max-width: 1100px){
-  .kpi-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 960px){
-  .admin-console-shell{ grid-template-columns: minmax(0, 1fr); }
-  .admin-console-sidebar{ position: relative; top: 0; height: auto; }
-}
-/* ===== Chapter Tools row ===== */
-.chapter-tools{
-  margin: 10px 0 6px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-.chapter-tools #chapter-search{
-  flex: 1;
-  min-width: 220px;
-}
-
-/* ===== Admin modal ===== */
-.admin-modal{
+/* --------------------------------------------------------------------------
+   5. Modals & Popups
+   -------------------------------------------------------------------------- */
+.admin-modal {
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: rgba(0,0,0,0.55);
+  background: rgba(2, 6, 23, 0.8);
+  backdrop-filter: blur(4px);
   display: grid;
   place-items: center;
   padding: 16px;
 }
-.admin-modal.hidden{ display: none !important; }
 
-.admin-modal-card{
+.admin-modal.hidden { display: none !important; }
+
+.admin-modal-card {
   width: min(900px, 96vw);
   max-height: 92vh;
   overflow: auto;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(2,6,23,0.98);
-  box-shadow: 0 26px 80px rgba(0,0,0,0.85);
+  border-radius: 16px;
+  border: 1px solid #1e293b;
+  background: #0f172a;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
 }
 
-.admin-modal-head{
-  display:flex;
+.admin-modal-head {
+  display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 12px;
-  padding: 14px 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.admin-modal-title{ font-weight: 900; font-size: 16px; color: #e5e7eb; }
-.admin-modal-sub{ font-size: 12px; color: #9ca3af; margin-top: 2px; }
-
-.admin-modal-body{
-  padding: 14px 14px 16px;
-}
-.admin-modal-row{
-  display:flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-.admin-modal-help{
-  font-size: 12px;
-  color: #9ca3af;
-  border: 1px solid #1f2937;
-  background: #020617;
-  border-radius: 14px;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-.admin-modal-help pre{
-  white-space: pre-wrap;
-  font-size: 12px;
-  color: #e5e7eb;
-  margin-top: 6px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #1e293b;
 }
 
-.admin-modal-textarea{
-  width: 100%;
-  min-height: 260px;
-  padding: 12px 12px;
-  border-radius: 14px;
-  border: 1px solid #1f2937;
-  background: #050816;
-  color: #e5e7eb;
-  resize: vertical;
-}
-
-.admin-modal-actions{
-  margin-top: 10px;
-  display:flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-/* Order list */
-.order-list{
-  display:flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 10px;
-}
-.order-item{
-  display:flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 10px;
-  border-radius: 14px;
-  border: 1px solid #1f2937;
-  background: #020617;
-}
-.order-item .order-left{
-  display:flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.order-item .order-name{
-  font-weight: 800;
-  font-size: 13px;
-}
-.order-item .order-meta{
-  font-size: 12px;
-  color: #9ca3af;
-}
-.order-item .order-actions{
-  display:flex;
-  gap: 6px;
-}
-/* ===== Random Texts: compact list ===== */
-#rt-list.books-list{
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.rt-item{
-  border-radius: 12px;
-  border: 1px solid #1f2937;
-  background: #020617;
-  padding: 10px 12px;
-}
-
-.rt-item-head{
-  display:flex;
-  align-items:center;
-  justify-content: space-between;
-  gap: 10px;
-  cursor: pointer;
-}
-
-.rt-title{
-  font-size: 0.95rem;
+.admin-modal-title {
   font-weight: 700;
-  color: #e5e7eb;
-  line-height: 1.2;
+  font-size: 1.1rem;
+  color: #f8fafc;
 }
 
-.rt-meta{
-  font-size: 0.78rem;
-  color: #9ca3af;
-  white-space: nowrap;
+.admin-modal-sub {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 2px;
 }
 
-.rt-chevron{
-  color: #9ca3af;
-  font-size: 0.9rem;
-  user-select: none;
+.admin-modal-body {
+  padding: 20px;
 }
 
-.rt-item-body{
-  display:none;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #111827;
+.admin-modal-textarea {
+  width: 100%;
+  min-height: 240px;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #1e293b;
+  background: #020617;
+  color: #f8fafc;
+  resize: vertical;
+  outline: none;
 }
 
-.rt-item.open .rt-item-body{
-  display:block;
+.admin-modal-textarea:focus {
+  border-color: #38bdf8;
 }
 
-.rt-textbox{
-  white-space: pre-wrap;
-  background: #050816;
-  border: 1px solid #1f2937;
-  border-radius: 12px;
-  padding: 10px;
-  color: #e5e7eb;
-  font-size: 0.9rem;
-  max-height: 220px;
-  overflow: auto;
+/* Responsive Rules */
+@media (max-width: 1100px) {
+  .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-
-.rt-actions{
-  margin-top: 10px;
-  display:flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
+@media (max-width: 960px) {
+  .admin-console-shell { grid-template-columns: minmax(0, 1fr); }
+  .admin-console-sidebar { position: relative; top: 0; height: auto; }
+  }
