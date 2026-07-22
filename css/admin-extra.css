@@ -1,79 +1,127 @@
-/* Daily background layer */
-.daily-bg{
+/* ==========================================================================
+   1. Daily Background Layer - Sleek & Subtle
+   ========================================================================== */
+.daily-bg {
   position: fixed;
   inset: 0;
   z-index: -5;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  filter: saturate(1.05) contrast(1.05);
-  opacity: 0.18;
+  filter: saturate(1.1) contrast(1.1);
+  opacity: 0.12;
+  pointer-events: none;
 }
 
-/* Reuse compact “rt-item” for Random + HardWords */
+/* ==========================================================================
+   2. Compact Items (Random + Hard Words Lists) - Professional Dark Theme
+   ========================================================================== */
 #rt-list.books-list,
-#hw-list.books-list{
+#hw-list.books-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
-.rt-item{
+.rt-item {
   border-radius: 12px;
-  border: 1px solid #1f2937;
-  background: #020617;
-  padding: 10px 12px;
+  border: 1px solid #1e293b; /* Sleek Slate Border */
+  background: #0f172a;       /* Deep Slate Navy Background */
+  padding: 14px 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.rt-item-head{
-  display:flex;
-  align-items:center;
+.rt-item:hover {
+  border-color: #38bdf8;     /* Modern Accent Highlight */
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.15);
+  transform: translateY(-2px);
+}
+
+.rt-item-head {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
   cursor: pointer;
-}
-
-.rt-title{
-  font-size: 0.95rem;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.rt-meta{
-  font-size: 0.78rem;
-  color: #9ca3af;
-}
-
-.rt-chevron{
-  color: #9ca3af;
   user-select: none;
 }
 
-.rt-item-body{
-  display:none;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #111827;
+.rt-title {
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #f8fafc; /* Crisp High-Contrast Text */
+  letter-spacing: -0.01em;
 }
 
-.rt-item.open .rt-item-body{
-  display:block;
+.rt-meta {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  margin-top: 3px;
 }
 
-.rt-textbox{
-  white-space: pre-wrap;
-  background: #050816;
-  border: 1px solid #1f2937;
-  border-radius: 12px;
-  padding: 10px;
+.rt-chevron {
+  color: #64748b;
+  user-select: none;
   font-size: 0.9rem;
-  max-height: 220px;
-  overflow: auto;
+  transition: transform 0.25s ease, color 0.25s ease;
 }
 
-.rt-actions{
-  margin-top: 10px;
-  display:flex;
-  gap: 8px;
+.rt-item.open .rt-chevron {
+  transform: rotate(180deg);
+  color: #38bdf8;
+}
+
+.rt-item-body {
+  display: none;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #1e293b;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.rt-item.open .rt-item-body {
+  display: block;
+}
+
+.rt-textbox {
+  white-space: pre-wrap;
+  background: #020617; /* High-contrast Inner Card Background */
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 0.92rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+/* Custom Scrollbar */
+.rt-textbox::-webkit-scrollbar {
+  width: 6px;
+}
+.rt-textbox::-webkit-scrollbar-track {
+  background: #0f172a;
+  border-radius: 8px;
+}
+.rt-textbox::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 8px;
+}
+.rt-textbox::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+.rt-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
   flex-wrap: wrap;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
