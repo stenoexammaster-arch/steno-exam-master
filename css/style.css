@@ -1,4 +1,347 @@
-/* =========================================================
+/* =====================================================
+   STENO MASTER - LIGHT PROFESSIONAL UI
+   Version: 3.0
+   Dark theme completely removed
+   Layout structure unchanged
+===================================================== */
+
+/* ================= GLOBAL THEME ================= */
+
+:root {
+  --bg-main: #f4f6f8;
+  --bg-card: #ffffff;
+  --bg-soft: #f9fafb;
+
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+
+  --border-color: #e5e7eb;
+
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+
+  --success: #16a34a;
+  --danger: #dc2626;
+
+  --shadow-sm: 0 4px 12px rgba(0,0,0,0.04);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.06);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+}
+
+/* ================= BASE ================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg-main);
+  color: var(--text-primary);
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.nav-right a {
+  color: var(--text-secondary);
+}
+
+.nav-right a:hover {
+  color: var(--accent);
+}
+
+.nav-cta {
+  background: var(--accent);
+  color: #fff !important;
+  border-radius: var(--radius-sm);
+}
+
+.nav-cta:hover {
+  background: var(--accent-hover);
+}
+
+/* ================= SIDEBAR ================= */
+
+.app-sidebar {
+  background: var(--bg-card);
+  border-right: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.sidebar-link {
+  color: var(--text-secondary);
+}
+
+.sidebar-link:hover {
+  background: var(--bg-soft);
+  color: var(--accent);
+}
+
+.sidebar-primary-btn {
+  background: var(--accent);
+  color: #fff;
+}
+
+.sidebar-primary-btn:hover {
+  background: var(--accent-hover);
+}
+
+/* ================= CARDS ================= */
+
+.hero,
+.section,
+.feature-card,
+.step-card,
+.practice-card,
+.admin-section,
+.test-card,
+.auth-card,
+.book-card,
+.plan-card,
+.steno-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-md);
+}
+
+/* ================= HERO ================= */
+
+.hero {
+  padding: 60px 40px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 2.8rem;
+  margin-bottom: 16px;
+}
+
+.hero .accent {
+  color: var(--accent);
+}
+
+.hero-subtitle,
+.hero-note,
+.section-subtitle,
+.stat-label {
+  color: var(--text-secondary);
+}
+
+/* Remove all glow effects */
+.hero::before,
+.hero-bubbles,
+.hero-shapes {
+  display: none !important;
+}
+
+/* ================= BUTTONS ================= */
+
+.btn,
+.hero-btn,
+.test-primary-btn,
+.plan-btn,
+.practice-restart-btn {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: #fff;
+  border-radius: 999px;
+}
+
+.btn:hover,
+.hero-btn:hover,
+.test-primary-btn:hover,
+.plan-btn:hover {
+  background: var(--accent-hover);
+}
+
+.btn.secondary,
+.test-secondary-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.btn.secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ================= INPUTS ================= */
+
+input,
+textarea,
+select {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ================= KEYBOARD ================= */
+
+.hero-keyboard,
+.practice-keyboard {
+  background: var(--bg-soft);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.kbd-row span {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.kbd-active {
+  background: var(--accent) !important;
+  color: #fff !important;
+}
+
+/* ================= STATS ================= */
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-number {
+  color: var(--accent);
+}
+
+/* ================= FOOTER ================= */
+
+.footer {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+/* ================= ADMIN ================= */
+
+.admin-section-description,
+.admin-hero-stat .label {
+  color: var(--text-secondary);
+}
+
+/* ================= AUTH ================= */
+
+.auth-page {
+  background: var(--bg-main);
+}
+
+.auth-left-card,
+.auth-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+}
+
+.auth-subtitle,
+.auth-footer-text,
+.auth-footer-text-small {
+  color: var(--text-secondary);
+}
+
+/* Remove login gradients */
+.auth-left-card::before,
+.auth-bg-overlay {
+  display: none !important;
+}
+
+/* ================= PRACTICE PAGE ================= */
+
+.practice-page,
+body.practice-page {
+  background: var(--bg-main);
+  color: var(--text-primary);
+}
+
+.typing-panel,
+.practice-timer-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+}
+
+.typing-text,
+#typing-input {
+  background: var(--bg-soft);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+/* typing states */
+.tt-correct {
+  color: var(--success);
+}
+
+.tt-error {
+  color: var(--danger);
+}
+
+/* ================= STENO PAGE ================= */
+
+body.steno-page {
+  background: var(--bg-main);
+  color: var(--text-primary);
+}
+
+.steno-textarea {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+/* Remove all steno background effects */
+body.steno-page::before,
+body.steno-page::after {
+  display: none !important;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 960px) {
+  .app-sidebar {
+    display: none;
+  }
+
+  .app-main {
+    margin-left: 0;
+  }
+
+  .hero {
+    padding: 40px 20px;
+  }
+}/* =========================================================
    STENO MASTER - GLOBAL LIGHT THEME
    Version: 2.0 (Professional Light UI Upgrade)
    This version keeps all layout intact.
