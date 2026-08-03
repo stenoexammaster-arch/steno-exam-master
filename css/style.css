@@ -1,3 +1,517 @@
+/* =========================================================
+   STENO MASTER - GLOBAL LIGHT THEME
+   Version: 2.0 (Professional Light UI Upgrade)
+   This version keeps all layout intact.
+   Only theme + visual improvements applied.
+   Future AI theme ready.
+========================================================= */
+
+/* ===============================
+   THEME VARIABLES (AI CONTROLLABLE)
+   =============================== */
+
+:root {
+  --bg-main: #f5f7fa;
+  --bg-card: #ffffff;
+  --bg-soft: #f1f5f9;
+
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+
+  --border-color: #e5e7eb;
+
+  --accent-color: #2563eb;
+  --accent-hover: #1d4ed8;
+
+  --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.05);
+  --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.08);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+}
+
+/* =================================
+   FUTURE AI THEME SWITCH SUPPORT
+   Admin panel can change:
+   document.documentElement.style.setProperty("--bg-main", "#000");
+================================= */
+
+body[data-theme="dark"] {
+  --bg-main: #0f172a;
+  --bg-card: #1e293b;
+  --bg-soft: #111827;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #9ca3af;
+
+  --border-color: #374151;
+
+  --accent-color: #3b82f6;
+  --accent-hover: #60a5fa;
+
+  --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.6);
+  --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.7);
+}
+
+/* ===============================
+   GLOBAL RESET
+   =============================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body,
+body.home-shell,
+body.practice-page,
+body.admin-page,
+body.steno-page,
+body.auth-page {
+  background: var(--bg-main);
+  color: var(--text-primary);
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  line-height: 1.6;
+}
+
+/* ===============================
+   LINKS
+   =============================== */
+
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent-color);
+}
+
+/* ===============================
+   NAVBAR
+   =============================== */
+
+.navbar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: none;
+}
+/* =========================================================
+   STENO MASTER - GLOBAL LIGHT THEME
+   Version: 2.0 (Professional Light UI Upgrade)
+   This version keeps all layout intact.
+   Only theme + visual improvements applied.
+   Future AI theme ready.
+========================================================= */
+
+/* ===============================
+   THEME VARIABLES (AI CONTROLLABLE)
+   =============================== */
+
+:root {
+  --bg-main: #f5f7fa;
+  --bg-card: #ffffff;
+  --bg-soft: #f1f5f9;
+
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+
+  --border-color: #e5e7eb;
+
+  --accent-color: #2563eb;
+  --accent-hover: #1d4ed8;
+
+  --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.05);
+  --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.08);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+}
+
+/* =================================
+   FUTURE AI THEME SWITCH SUPPORT
+   Admin panel can change:
+   document.documentElement.style.setProperty("--bg-main", "#000");
+================================= */
+
+body[data-theme="dark"] {
+  --bg-main: #0f172a;
+  --bg-card: #1e293b;
+  --bg-soft: #111827;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #9ca3af;
+
+  --border-color: #374151;
+
+  --accent-color: #3b82f6;
+  --accent-hover: #60a5fa;
+
+  --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.6);
+  --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.7);
+}
+
+/* ===============================
+   GLOBAL RESET
+   =============================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body,
+body.home-shell,
+body.practice-page,
+body.admin-page,
+body.steno-page,
+body.auth-page {
+  background: var(--bg-main);
+  color: var(--text-primary);
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  line-height: 1.6;
+}
+
+/* ===============================
+   LINKS
+   =============================== */
+
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent-color);
+}
+
+/* ===============================
+   NAVBAR
+   =============================== */
+
+.navbar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: none;
+}
+
+.nav-right a {
+  color: var(--text-secondary);
+}
+
+.nav-right a:hover {
+  color: var(--accent-color);
+  border-bottom-color: var(--accent-color);
+}
+
+.nav-cta {
+  background: var(--accent-color);
+  color: #ffffff !important;
+  border-radius: var(--radius-sm);
+}
+
+.nav-cta:hover {
+  background: var(--accent-hover);
+}
+
+/* ===============================
+   CARDS & PANELS (GLOBAL)
+   =============================== */
+
+.hero,
+.section,
+.feature-card,
+.step-card,
+.practice-card,
+.admin-section,
+.test-card,
+.steno-card,
+.auth-card,
+.book-card,
+.plan-card,
+.practice-timer-panel,
+.practice-keyboard,
+.admin-books-sidebar,
+.admin-book-pane {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-soft);
+  border-radius: var(--radius-md);
+}
+
+/* ===============================
+   HERO
+   =============================== */
+
+.hero h1 {
+  color: var(--text-primary);
+}
+
+.hero .accent {
+  color: var(--accent-color);
+}
+
+.hero-subtitle,
+.hero-note {
+  color: var(--text-secondary);
+}
+
+/* ===============================
+   BUTTONS
+   =============================== */
+
+.btn,
+.sidebar-primary-btn,
+.test-primary-btn,
+.test-start-btn,
+.auth-main-btn,
+.plan-btn,
+.practice-restart-btn {
+  background: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  color: #ffffff;
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+}
+
+.btn:hover,
+.sidebar-primary-btn:hover,
+.test-primary-btn:hover,
+.plan-btn:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn.secondary,
+.hero-btn-secondary,
+.test-secondary-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.btn.secondary:hover,
+.test-secondary-btn:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+/* ===============================
+   INPUTS
+   =============================== */
+
+input,
+textarea,
+select {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+/* ===============================
+   SIDEBAR
+   =============================== */
+
+.app-sidebar {
+  background: var(--bg-card);
+  border-right: 1px solid var(--border-color);
+  box-shadow: var(--shadow-soft);
+}
+
+.sidebar-link {
+  color: var(--text-secondary);
+}
+
+.sidebar-link:hover {
+  background: var(--bg-soft);
+  color: var(--accent-color);
+}
+
+/* ===============================
+   FOOTER
+   =============================== */
+
+.footer {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+/* ===============================
+   FEATURE GRID
+   =============================== */
+
+.feature-card:hover {
+  border-color: var(--accent-color);
+  box-shadow: var(--shadow-medium);
+}
+
+/* ===============================
+   ADMIN / PANELS
+   =============================== */
+
+.admin-section-description,
+.auth-subtitle,
+.stat-label,
+.section-subtitle {
+  color: var(--text-secondary);
+}
+
+/* ===============================
+   KEYBOARD LIGHT CLEANUP
+   =============================== */
+
+.kbd-row span,
+.practice-page .kbd-row-sm span {
+  background: var(--bg-soft);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.kbd-active {
+  background: var(--accent-color) !important;
+  color: #ffffff !important;
+}
+
+/* ===============================
+   REMOVE OLD DARK GRADIENTS
+   =============================== */
+
+.hero::before,
+body.admin-page::before,
+body.admin-page::after,
+body.steno-page::before,
+body.steno-page::after {
+  display: none !important;
+}
+
+/* ===============================
+   SMOOTH TRANSITIONS
+   =============================== */
+
+* {
+  transition: background 0.25s ease,
+              border-color 0.25s ease,
+              color 0.25s ease,
+              box-shadow 0.25s ease;
+}
+.nav-right a {
+  color: var(--text-secondary);
+}
+
+.nav-right a:hover {
+  color: var(--accent-color);
+  border-bottom-color: var(--accent-color);
+}
+
+.nav-cta {
+  background: var(--accent-color);
+  color: #ffffff !important;
+  border-radius: var(--radius-sm);
+}
+
+.nav-cta:hover {
+  background: var(--accent-hover);
+}
+
+/* ===============================
+   CARDS & PANELS (GLOBAL)
+   =============================== */
+
+.hero,
+.section,
+.feature-card,
+.step-card,
+.practice-card,
+.admin-section,
+.test-card,
+.steno-card,
+.auth-card,
+.book-card,
+.plan-card,
+.practice-timer-panel,
+.practice-keyboard,
+.admin-books-sidebar,
+.admin-book-pane {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-soft);
+  border-radius: var(--radius-md);
+}
+
+/* ===============================
+   HERO
+   =============================== */
+
+.hero h1 {
+  color: var(--text-primary);
+}
+
+.hero .accent {
+  color: var(--accent-color);
+}
+
+.hero-subtitle,
+.hero-note {
+  color: var(--text-secondary);
+}
+
+/* ===============================
+   BUTTONS
+   =============================== */
+
+.btn,
+.sidebar-primary-btn,
+.test-primary-btn,
+.test-start-btn,
+.auth-main-btn,
+.plan-btn,
+.practice-restart-btn {
+  background: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  color: #ffffff;
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+}
+
+.btn:hover,
+.sidebar-primary-btn:hover,
+.test-primary-btn:hover,
+.plan-btn:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn.secondary,
+.hero-btn-secondary,
+.test-secondary-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.btn.secondary:hover,
+.test-secondary-btn:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+/* ===============================
+   INPUTS
 /* ---------- FONTS ---------- */
 
 @font-face {
