@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Steno Master - Practice</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/practice-ux.css" />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body class="practice-page">
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="nav-left">
+      <img src="assets/logo.png" alt="Logo" class="logo" />
+      <span class="brand-name">Steno Master</span>
+    </div>
+    <nav class="nav-right">
+      <a href="index.html">Home</a>
+      <a href="practice.html">Practice &amp; Books</a>
+      <a href="admin.html">Admin</a>
+      <a href="login.html" class="nav-cta">Log in</a>
+    </nav>
+  </header>
+
+  <!-- Back button -->
+  <div class="practice-back-floating">
+    <button type="button" class="test-back-btn" onclick="location.href='typing-test.html'">
+      ← Back
+    </button>
+  </div>
+
+  <!-- Background -->
+  <div class="px-bg">
+    <div class="px-bubble b1"></div>
+    <div class="px-bubble b2"></div>
+    <div class="px-bubble b3"></div>
+    <div class="px-grid"></div>
+  </div>
+
+  <main class="practice-container">
+    <div class="practice-card">
+      <div class="practice-header practice-header-top">
+        <div>
+          <p class="practice-sub">
+            Read the passage above, type in the box below, and check your speed &amp; accuracy.
+            Layout, lesson and time are taken from your test setup.
+          </p>
+        </div>
+      </div>
+
+      <div class="practice-main-layout">
+        <!-- LEFT -->
+        <div class="practice-left">
+          <div class="typing-panel">
+
+            <!-- Top stats bar: GWPM / NWPM / ACCU / TIME -->
+            <div class="px-metrics-bar">
+              <div class="px-metric-cell">
+                <span class="px-metric-label">GWPM</span>
+                <span class="px-metric-value" id="gwpm-top">0.00</span>
+              </div>
+              <div class="px-metric-cell">
+                <span class="px-metric-label">NWPM</span>
+                <span class="px-metric-value" id="nwpm-top">0.00</span>
+              </div>
+              <div class="px-metric-cell">
+                <span class="px-metric-label">ACCU</span>
+                <span class="px-metric-value" id="accu-top">100 %</span>
+              </div>
+              <div class="px-metric-cell">
+                <span class="px-metric-label">TIME</span>
+                <span class="px-metric-value" id="time-top">00:00</span>
+              </div>
+            </div>
+
+            <div class="typing-container">
+              <div class="typing-text" id="typing-text"></div>
+
+              <textarea
+                id="typing-input"
+                class="typing-input-large"
+                placeholder="Start typing here to begin the test..."
+                disabled
+              ></textarea>
+            </div>
+
+            <!-- Bottom: Reset (left) + Result (right) -->
+            <div class="practice-bottom-actions">
+              <button type="button" id="reset-btn" class="px-btn secondary">
+                Reset
+              </button>
+              <button type="button" id="finish-btn" class="px-btn">
+                Result
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="practice-right">
+          <div class="practice-timer-panel">
+            <div class="practice-timer-name">
+              Name: <span id="practice-user-name">Guest</span>
+            </div>
+
+            <div class="practice-timer-box">
+              <div class="practice-timer-label">Time left</div>
+              <div class="practice-timer-value" id="time">00:00</div>
+            </div>
+
+            <!-- Auto scroll + Pause + Backspace -->
+            <div class="px-mini">
+              <div class="px-mini-row">
+                <span class="px-mini-label">Auto scroll passage</span>
+                <label class="toggle-label">
+                  <input type="checkbox" id="auto-scroll-enabled" checked />
+                  Enabled
+                </label>
+              </div>
+              <div class="px-mini-row">
+                <span class="px-mini-label">Pause time</span>
+                <label class="toggle-label">
+                  <input type="checkbox" id="pause-time-toggle" />
+                  Pause
+                </label>
+              </div>
+              <div class="px-mini-row">
+                <span class="px-mini-label">Backspace</span>
+                <label class="toggle-label">
+                  <input type="checkbox" id="backspace-allowed" checked />
+                  Allowed
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="practice-controls-top">
+            <div class="control-group">
+              <span>Layout</span>
+              <select id="language-select" disabled>
+                <option value="english">English (QWERTY)</option>
+                <option value="hindi-mangal">Hindi (Mangal / Unicode)</option>
+                <option value="hindi-kruti">Hindi (Kruti Dev 010)</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <span>Lesson / Source</span>
+              <select id="lesson-select" disabled>
+                <option value="random-en">Random English passage</option>
+                <option value="random-hi">Random Hindi passage</option>
+                <option value="custom">Custom text</option>
+                <option value="book">Book chapter</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="time-mode-row session-row">
+            <div class="typing-stats-top typing-stats-side">
+              <span>
+                Current session:
+                <strong id="session-label">—</strong>
+              </span>
+              <div class="px-badges">
+                <span class="px-pill" id="px-mode-pill">—</span>
+                <span class="px-pill" id="px-layout-pill">—</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Time limit config (internal) -->
+          <select id="time-limit-select" class="hidden">
+            <option value="60">1 minute</option>
+            <option value="300" selected>5 minutes</option>
+            <option value="600">10 minutes</option>
+            <option value="1200">20 minutes</option>
+            <option value="1800">30 minutes</option>
+          </select>
+
+          <div class="practice-tips">
+            <strong>Tips for better results</strong>
+            <ul style="margin-left:18px;margin-top:6px;">
+              <li>Accuracy first, speed will follow.</li>
+              <li>Type with rhythm. Avoid looking at the keyboard.</li>
+              <li>Use timed practice for exam-like performance.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Firebase + scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="js/firebase-config.js"></script>
+
+  <script>
+    window.firebase = window.firebase || window.firebase || firebase;
+  </script>
+
+  <script src="js/random-texts.js"></script>
+  <script src="js/testEngine.js"></script>
+  <script src="js/typing.js"></script>
+  <script src="js/feedback.js"></script>
+</body>
+</html>

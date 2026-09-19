@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Steno Master - Smart OCR Converter</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/ocr.css" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500&display=swap" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.7.76/legacy/build/pdf.min.js"></script>
+</head>
+
+<body class="home-shell">
+  <header class="navbar">
+    <div class="nav-left">
+      <img src="assets/logo.png" alt="Logo" class="logo" />
+      <span class="brand-name">Steno Master</span>
+    </div>
+    <nav class="nav-right">
+      <a href="index.html">Home</a>
+      <a href="typing-test.html">Typing test</a>
+      <a href="book.html">Books</a>
+      <a href="admin.html">Admin</a>
+      <a href="login.html" class="nav-cta">Log in</a>
+    </nav>
+  </header>
+
+  <div class="app-shell">
+    <aside class="app-sidebar" id="app-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">SM</div>
+        <span class="sidebar-title">Steno Master</span>
+        <button id="sidebar-collapse" class="sidebar-collapse" aria-label="Collapse sidebar">‹</button>
+      </div>
+
+      <div class="sidebar-section">
+        <button class="sidebar-primary-btn" onclick="location.href='typing-test.html'">
+          <span class="s-icon">✚</span>
+          <span class="s-label">New practice</span>
+        </button>
+      </div>
+
+      <div class="sidebar-section">
+        <p class="sidebar-section-label">Tools</p>
+        <a href="tools.html" class="sidebar-link active">
+          <span class="s-icon">🖼</span><span class="s-label">Smart OCR Converter</span>
+        </a>
+      </div>
+    </aside>
+
+    <div class="app-main" id="app-main">
+      <main>
+        <section class="soc">
+          <div class="soc-head">
+            <div>
+              <h1 class="soc-title">Smart OCR Converter</h1>
+              <p class="soc-sub">PDF / Image / Scanned → Editable Word (Hindi + English)</p>
+              <p class="soc-sub" style="margin-top:8px;">
+                Backend: <b id="backendBadge" class="soc-pill soc-pill-wait">Checking…</b>
+              </p>
+            </div>
+            <div class="soc-badges">
+              <span class="soc-pill">Secure</span>
+              <span class="soc-pill">Auto-delete</span>
+              <span class="soc-pill">Chunk Upload</span>
+            </div>
+          </div>
+
+          <div class="soc-grid">
+            <div class="soc-card">
+              <div class="soc-card-head">
+                <h2>Upload</h2>
+                <span class="soc-pill soc-pill-wait" id="statusPill">Idle</span>
+              </div>
+
+              <div id="dropzone" class="soc-dropzone" role="button" tabindex="0">
+                <div class="soc-drop-title">Drag & Drop your PDF / Images</div>
+                <div class="soc-drop-sub">Supported: PDF, JPG, PNG, TIFF</div>
+                <div class="soc-drop-actions">
+                  <input id="fileInput" type="file" hidden
+                         accept=".pdf,.jpg,.jpeg,.png,.tif,.tiff,application/pdf,image/jpeg,image/png,image/tiff" />
+                  <button id="browseBtn" class="soc-btn soc-btn-primary" type="button">Browse file</button>
+                  <button id="clearBtn" class="soc-btn" type="button" disabled>Clear</button>
+                </div>
+              </div>
+
+              <div class="soc-meta">
+                <div class="soc-meta-row">
+                  <div>
+                    <div class="soc-meta-label">File</div>
+                    <div id="fileName" class="soc-meta-value soc-muted">No file selected</div>
+                  </div>
+                  <div>
+                    <div class="soc-meta-label">Size</div>
+                    <div id="fileSize" class="soc-meta-value soc-muted">—</div>
+                  </div>
+                  <div>
+                    <div class="soc-meta-label">Pages</div>
+                    <div id="filePages" class="soc-meta-value soc-muted">—</div>
+                  </div>
+                </div>
+              </div>
+
+              <hr class="soc-hr" />
+
+              <h2>Options</h2>
+              <div class="soc-form">
+                <label class="soc-label">Output</label>
+                <select id="outputFormat" class="soc-select">
+                  <option value="docx" selected>Word (.docx)</option>
+                  <option value="txt">Text (.txt)</option>
+                  <option value="pdf_searchable">Searchable PDF</option>
+                </select>
+
+                <label class="soc-label">OCR Language</label>
+                <select id="ocrLanguage" class="soc-select">
+                  <option value="eng" selected>English OCR</option>
+                  <option value="hin">Hindi OCR (Unicode)</option>
+                  <option value="mixed">Mixed OCR (Hindi + English)</option>
+                </select>
+
+                <label class="soc-label">Hindi Font Detection</label>
+                <select id="fontMode" class="soc-select">
+                  <option value="auto" selected>Auto-detect (Unicode / Legacy)</option>
+                  <option value="unicode">Force Unicode (Mangal etc.)</option>
+                  <option value="krutidev">KrutiDev</option>
+                  <option value="chanakya">Chanakya</option>
+                  <option value="devlys">DevLys</option>
+                </select>
+
+                <details class="soc-adv">
+                  <summary>Advanced Preprocessing</summary>
+                  <div class="soc-adv-grid">
+                    <label class="soc-check"><input id="optDenoise" type="checkbox" checked /> Noise removal</label>
+                    <label class="soc-check"><input id="optDeskew" type="checkbox" checked /> Skew correction</label>
+                    <label class="soc-check"><input id="optContrast" type="checkbox" checked /> Contrast optimization</label>
+                    <label class="soc-check"><input id="optNormalizeDpi" type="checkbox" checked /> DPI normalization</label>
+                    <label class="soc-check"><input id="optLayout" type="checkbox" checked /> Layout detection</label>
+                    <label class="soc-check"><input id="optTables" type="checkbox" /> Table recognition (beta)</label>
+                  </div>
+
+                  <label class="soc-label">Target DPI</label>
+                  <select id="targetDpi" class="soc-select">
+                    <option value="auto" selected>Auto</option>
+                    <option value="200">200 DPI (fast)</option>
+                    <option value="300">300 DPI (recommended)</option>
+                    <option value="400">400 DPI (high accuracy)</option>
+                  </select>
+                </details>
+              </div>
+
+              <div class="soc-actions">
+                <button id="startBtn" class="soc-btn soc-btn-primary" type="button" disabled>Start Conversion</button>
+                <button id="pauseBtn" class="soc-btn" type="button" disabled>Pause</button>
+                <button id="resumeBtn" class="soc-btn" type="button" disabled>Resume</button>
+                <button id="cancelBtn" class="soc-btn soc-btn-danger" type="button" disabled>Cancel</button>
+              </div>
+            </div>
+
+            <div class="soc-card">
+              <div class="soc-card-head"><h2>Status</h2></div>
+
+              <div class="soc-status-row">
+                <div>
+                  <div class="soc-meta-label">Stage</div>
+                  <div id="stageText" class="soc-meta-value">—</div>
+                </div>
+                <div>
+                  <div class="soc-meta-label">Progress</div>
+                  <div id="progressText" class="soc-meta-value">0%</div>
+                </div>
+                <div>
+                  <div class="soc-meta-label">ETA</div>
+                  <div id="etaText" class="soc-meta-value">—</div>
+                </div>
+              </div>
+
+              <div class="soc-progress">
+                <div id="progressFill" class="soc-progress-fill" style="width:0%"></div>
+              </div>
+
+              <div class="soc-loghead">
+                <h3 class="soc-logtitle">Live Log</h3>
+                <button id="copyLogBtn" class="soc-btn soc-btn-sm" type="button">Copy</button>
+              </div>
+
+              <pre id="logBox" class="soc-log">Ready.</pre>
+
+              <div class="soc-download">
+                <h3>Download</h3>
+                <div id="downloadArea" class="soc-download-area soc-muted">No output yet.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>Steno Master © 2024</span>
+      </footer>
+    </div>
+  </div>
+
+  <script src="js/home.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,309 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Steno Master - Typing Tutor for English & Hindi</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <meta
+    name="description"
+    content="Steno Master is a modern typing tutor for English and Hindi. Practice courses, project books, and advanced tools for typists and steno exam preparation."
+  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body class="home-shell">
+  <!-- Top Navbar -->
+  <header class="navbar">
+    <div class="nav-left">
+      <img src="assets/logo.png" alt="Logo" class="logo" />
+      <span class="brand-name">Steno Master</span>
+    </div>
+    <nav class="nav-right">
+      <a href="index.html">Home</a>
+      <!-- Practice ab seedha typing test pe -->
+      <a href="typing-test.html">Typing test</a>
+      <a href="book.html">Books</a>
+      <a href="admin.html">Admin</a>
+      <a href="login.html" class="nav-cta">Log in</a>
+    </nav>
+  </header>
+
+  <!-- LEFT SIDEBAR + MAIN -->
+  <div class="app-shell">
+    <aside class="app-sidebar" id="app-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">SM</div>
+        <span class="sidebar-title">Steno Master</span>
+        <button id="sidebar-collapse" class="sidebar-collapse" aria-label="Collapse sidebar">
+          ‹
+        </button>
+      </div>
+
+      <div class="sidebar-section">
+        <!-- New Practice ab typing-test.html pe -->
+        <button class="sidebar-primary-btn" onclick="location.href='typing-test.html'">
+          <span class="s-icon">✚</span>
+          <span class="s-label">New practice</span>
+        </button>
+      </div>
+
+      <div class="sidebar-section">
+        <p class="sidebar-section-label">Practice</p>
+        <a href="typing-test.html" class="sidebar-link">
+          <span class="s-icon">⌨</span>
+          <span class="s-label">Quick typing test</span>
+        </a>
+        <a href="practice.html#courses" class="sidebar-link">
+          <span class="s-icon">📖</span>
+          <span class="s-label">Courses &amp; lessons</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <p class="sidebar-section-label">Projects</p>
+        <a href="book.html" class="sidebar-link">
+          <span class="s-icon">📚</span>
+          <span class="s-label">Project books</span>
+        </a>
+        <!-- Steno exam master ko Projects ke andar rakha -->
+        <a href="steno-check.html" class="sidebar-link">
+          <span class="s-icon">✍</span>
+          <span class="s-label">Steno exam master</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <p class="sidebar-section-label">Tools</p>
+        <a href="tools.html" class="sidebar-link">
+          <span class="s-icon">🖼</span>
+          <span class="s-label">Image → Text</span>
+        </a>
+        <a href="tools.html#converter" class="sidebar-link">
+          <span class="s-icon">🔁</span>
+          <span class="s-label">File converter</span>
+        </a>
+        <a href="tools.html#date" class="sidebar-link">
+          <span class="s-icon">🗓</span>
+          <span class="s-label">Date &amp; day tools</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <p class="sidebar-section-label">Help</p>
+        <a href="tips.html" class="sidebar-link">
+          <span class="s-icon">💡</span>
+          <span class="s-label">Typing tips</span>
+        </a>
+        <a href="contact.html" class="sidebar-link">
+          <span class="s-icon">✉</span>
+          <span class="s-label">Contact</span>
+        </a>
+      </div>
+    </aside>
+
+    <div class="app-main" id="app-main">
+      <!-- HERO -->
+      <main>
+        <section class="hero">
+          <!-- animated background bubbles + shapes (pahle jaisa hi CSS use hoga) -->
+          <div class="hero-bubbles">
+            <div class="bubble b1"></div>
+            <div class="bubble b2"></div>
+            <div class="bubble b3"></div>
+            <div class="bubble b4"></div>
+          </div>
+          <div class="hero-shapes">
+            <div class="shape s1"></div>
+            <div class="shape s2"></div>
+          </div>
+
+          <div class="hero-content">
+            <div class="hero-text">
+              <div class="hero-badge">
+                ⚡ Learn typing for exams &amp; real work
+              </div>
+              <h1>
+                Master typing in <span class="accent">English</span> &amp;
+                <span class="accent">Hindi</span> with Steno Master.
+              </h1>
+              <p class="hero-subtitle hero-typing-line">
+                <span id="hero-typing-prefix">The platform to</span>
+                <span id="hero-typing-dynamic"></span>
+                <span class="hero-typing-cursor">|</span>
+              </p>
+
+              <!-- HERO ACTIONS -->
+              <div class="hero-actions">
+                <!-- Start Typing ab typing-test.html pe -->
+                <a href="typing-test.html" class="btn primary">
+                  Start typing
+                </a>
+                <!-- Pehle "Try Project Books" tha, ab Steno exam master -->
+                <a href="steno-check.html" class="btn secondary">
+                  Open steno exam master
+                </a>
+              </div>
+              <p class="hero-note">
+                Start with free practice, then move to professional book typing with exam-style
+                accuracy and timing.
+              </p>
+            </div>
+
+            <!-- Keyboard with light key (same as pehle) -->
+            <div class="hero-keyboard-wrapper">
+              <div class="hero-keyboard" id="hero-keyboard">
+                <button
+                  class="kbd-light-key"
+                  id="kbd-light-toggle"
+                  type="button"
+                  aria-label="Toggle keyboard lights"
+                >
+                  ☼
+                </button>
+                <div class="kbd-row">
+                  <span>Q</span><span>W</span><span>E</span><span>R</span><span>T</span>
+                  <span>Y</span><span>U</span><span>I</span><span>O</span><span>P</span>
+                </div>
+                <div class="kbd-row">
+                  <span>A</span><span>S</span><span>D</span><span>F</span><span>G</span>
+                  <span>H</span><span>J</span><span>K</span><span>L</span>
+                </div>
+                <div class="kbd-row">
+                  <span>Z</span><span>X</span><span>C</span><span>V</span><span>B</span>
+                  <span>N</span><span>M</span>
+                </div>
+                <div class="kbd-space-sm">
+                  <span>space</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat-card">
+              <span class="stat-number">10K+</span>
+              <span class="stat-label">Active learners</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">85%</span>
+              <span class="stat-label">Avg. accuracy gain</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">2x</span>
+              <span class="stat-label">Speed improvement</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">500+</span>
+              <span class="stat-label">Exercises</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section class="section section-muted">
+          <h2 class="section-title">How Steno Master works</h2>
+          <p class="section-subtitle">
+            A simple path from basic learning to professional book typing.
+          </p>
+
+          <div class="steps-row">
+            <div class="step-card">
+              <div class="step-circle">1</div>
+              <h3>Start free</h3>
+              <p>
+                Create your account, get trial access, and start with beginner lessons
+                in English or Hindi.
+              </p>
+            </div>
+            <div class="step-card">
+              <div class="step-circle">2</div>
+              <h3>Practice &amp; test</h3>
+              <p>
+                Use quick practice, timed tests and courses to build exam-style speed.
+              </p>
+            </div>
+            <div class="step-card">
+              <div class="step-circle">3</div>
+              <h3>Work on books</h3>
+              <p>
+                Move to project books, type real content with exam-style rules and
+                get ready for real jobs.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- EVERYTHING IN ONE PLACE -->
+        <section class="section">
+          <h2 class="section-title">Everything in one typing platform</h2>
+          <p class="section-subtitle">
+            From simple practice to professional book typing and exam checking – all in one place.
+          </p>
+
+          <div class="feature-grid">
+            <a href="practice.html" class="feature-card">
+              <div class="feature-icon">⌨</div>
+              <h3>Typing tests &amp; courses</h3>
+              <p>
+                Step-by-step lessons from home row to full keyboard, in English and Hindi.
+              </p>
+            </a>
+
+            <a href="book.html" class="feature-card">
+              <div class="feature-icon">📚</div>
+              <h3>Project books</h3>
+              <p>
+                Work on real books chapter by chapter. Free + paid books with trial access.
+              </p>
+            </a>
+
+            <a href="steno-check.html" class="feature-card">
+              <div class="feature-icon">✍</div>
+              <h3>Steno exam master</h3>
+              <p>
+                Notepad-style exam view with locked fonts &amp; spacing for English and Hindi.
+              </p>
+            </a>
+
+            <a href="tools.html#date" class="feature-card">
+              <div class="feature-icon">🗓</div>
+              <h3>Date &amp; day tools</h3>
+              <p>
+                Simple utilities like day/date calculators and planners for exam practice.
+              </p>
+            </a>
+          </div>
+        </section>
+      </main>
+
+      <!-- FOOTER -->
+      <footer class="footer">
+        <span>Steno Master © 2024</span>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="typing-test.html">Typing test</a>
+          <a href="book.html">Books</a>
+          <a href="admin.html">Admin</a>
+          <a href="login.html">Login</a>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Sidebar + hero keyboard JS (agar pehle home.js use kar rahe the) -->
+  <script src="js/home.js"></script>
+
+  <!-- Firebase (feedback ke liye) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="js/firebase-config.js"></script>
+
+  <!-- Feedback widget -->
+  <script src="js/feedback.js"></script>
+</body>
+</html>

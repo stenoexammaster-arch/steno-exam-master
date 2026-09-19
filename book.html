@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Steno Master - Books & Projects</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- ✅ Book page specific clean CSS -->
+  <link rel="stylesheet" href="css/book.css" />
+</head>
+<body data-page="book">
+  <header class="navbar">
+    <div class="nav-left">
+      <img src="assets/logo.png" alt="Logo" class="logo" />
+      <span class="brand-name">Steno Master</span>
+    </div>
+    <nav class="nav-right">
+      <a href="index.html">Home</a>
+      <a href="practice.html">Practice &amp; Books</a>
+      <a href="admin.html">Admin</a>
+
+      <!-- ✅ Navbar auth controls -->
+      <span id="nav-user-info" class="nav-user-info hidden"></span>
+      <a href="login.html" id="nav-login-link" class="nav-cta">Log in</a>
+      <button id="nav-logout-btn" class="nav-cta secondary hidden" type="button">
+        Logout
+      </button>
+    </nav>
+  </header>
+
+  <main class="page-container">
+    <h1>Project Books</h1>
+    <p>Step 1: Choose a book. Step 2: Choose a chapter. Step 3: Start typing.</p>
+
+    <div id="login-warning" class="warning hidden"></div>
+
+    <!-- Trial / subscription info -->
+    <div id="trial-banner" class="warning hidden"></div>
+    <div id="paywall" class="warning hidden">
+      <h3>Your free trial has ended</h3>
+      <p>
+        Your 6-day free trial is over. Paid books will now run only in
+        2-minute preview mode. Upgrade later to unlock full access.
+      </p>
+    </div>
+
+    <div id="books-area" class="hidden" style="margin-top:12px;">
+      <h2>Books</h2>
+      <div id="books-list" class="books-list"></div>
+
+      <!-- ✅ Subscription / Pricing section -->
+      <section id="subscription-section" class="subscription-section">
+        <h2>Plans & Subscription</h2>
+        <p id="user-plan-status" class="sub-status">
+          Checking your current plan and trial status…
+        </p>
+        <p id="pending-request-status" class="sub-status"></p>
+
+        <div class="plans-grid">
+          <!-- Monthly -->
+          <article class="plan-card highlight">
+            <div class="plan-title">Monthly Plan</div>
+            <div class="plan-price">₹69<span style="font-size:0.85rem;">/month</span></div>
+            <div class="plan-tagline">Good for short exam preparation bursts.</div>
+            <ul>
+              <li>Full access to all free + paid books</li>
+              <li>Unlimited chapter practice</li>
+              <li>Random texts (including premium)</li>
+            </ul>
+            <button class="plan-btn" data-plan="monthly">
+              Subscribe (Monthly)
+            </button>
+          </article>
+
+          <!-- 3 months -->
+          <article class="plan-card">
+            <div class="plan-title">3‑Month Plan</div>
+            <div class="plan-price">₹149<span style="font-size:0.85rem;">/3 months</span></div>
+            <div class="plan-tagline">Best balance for most students.</div>
+            <ul>
+              <li>Everything in Monthly plan</li>
+              <li>Better value for 90‑day practice</li>
+              <li>Priority support & feedback</li>
+            </ul>
+            <button class="plan-btn" data-plan="3m">
+              Subscribe (3 months)
+            </button>
+          </article>
+
+          <!-- Yearly -->
+          <article class="plan-card">
+            <div class="plan-title">Yearly Plan</div>
+            <div class="plan-price">₹399<span style="font-size:0.85rem;">/year</span></div>
+            <div class="plan-tagline">For long‑term growth and multiple exams.</div>
+            <ul>
+              <li>Everything in 3‑month plan</li>
+              <li>Access to future premium content</li>
+              <li>Best value per month</li>
+            </ul>
+            <button class="plan-btn" data-plan="yearly">
+              Subscribe (Yearly)
+            </button>
+          </article>
+        </div>
+
+        <p id="subscription-note" class="sub-note">
+          These subscription buttons create a <code>paymentRequests</code> entry with your UPI transaction ID.
+          Your payment will be verified within 24‑48 hours, after which your plan will be activated. 
+        </p>
+      </section>
+
+      <div id="chapters-area" class="hidden" style="margin-top:24px;">
+        <h2 id="chapters-title">Chapters</h2>
+        <p
+          id="chapters-subtitle"
+          style="font-size:0.9rem;color:#9ca3af;margin-bottom:8px;"
+        ></p>
+        <div id="chapters-list" class="books-list"></div>
+      </div>
+
+      <div id="chapter-typing-section" class="book-typing-panel hidden">
+        <h2 id="chapter-title"></h2>
+        <p
+          id="chapter-meta"
+          style="font-size:0.9rem;color:#9ca3af;margin-bottom:8px;"
+        ></p>
+
+        <div class="typing-text font-english" id="chapter-typing-text"></div>
+
+        <textarea
+          id="chapter-typing-input"
+          class="font-english"
+          placeholder="Start typing this chapter content here..."
+        ></textarea>
+
+        <div class="stats">
+          <span>Time: <strong id="chapter-time">0s</strong></span>
+          <span>Net WPM: <strong id="chapter-wpm">0</strong></span>
+          <span>Accuracy: <strong id="chapter-accuracy">100%</strong></span>
+          <span>Char Errors: <strong id="chapter-errors">0</strong></span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Result modal for chapter typing -->
+  <div id="chapter-result-modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Chapter Practice Complete</h3>
+      <p id="chapter-result-reason"></p>
+      <p>Time: <strong id="chapter-result-time"></strong></p>
+      <p>Gross WPM: <strong id="chapter-result-gross-wpm"></strong></p>
+      <p>Net WPM: <strong id="chapter-result-net-wpm"></strong></p>
+      <p>Accuracy: <strong id="chapter-result-accuracy"></strong></p>
+      <p>
+        Words typed:
+        <strong id="chapter-result-words-typed"></strong> /
+        <strong id="chapter-result-words-total"></strong>
+      </p>
+      <p>Word errors: <strong id="chapter-result-errors-words"></strong></p>
+      <p>Character errors: <strong id="chapter-result-errors-chars"></strong></p>
+      <button id="chapter-result-close" class="btn primary" style="margin-top:12px;">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- ✅ UPI payment request modal -->
+  <div id="plan-modal" class="modal hidden">
+    <div class="modal-content plan-modal-content">
+      <h3 id="plan-modal-title">Subscribe</h3>
+      <p id="plan-modal-amount" class="sub-status">Amount: —</p>
+
+      <div class="upi-box">
+        <p>
+          1. Open your UPI app (PhonePe / GPay / Paytm / BHIM etc.)<br />
+          2. Scan this QR or pay to the UPI ID below for the selected plan.<br />
+          3. After payment, enter your UPI Transaction ID / UTR and submit.
+        </p>
+        <!-- 🔁 Replace this image path + UPI ID with your real values -->
+        <img
+          src="assets/payments/upi-qr.png"
+          alt="UPI QR code"
+          class="upi-qr"
+        />
+        <p>
+          UPI ID:
+          <strong id="upi-id-text">s.57724@ptyes</strong>
+        </p>
+      </div>
+
+      <div class="pr-field">
+        <label for="pr-name">Full Name</label>
+        <input type="text" id="pr-name" placeholder="Your full name" />
+      </div>
+
+      <div class="pr-field">
+        <label for="pr-email">Email</label>
+        <input type="email" id="pr-email" placeholder="you@example.com" />
+      </div>
+
+      <div class="pr-field">
+        <label for="pr-phone">Mobile Number</label>
+        <input type="text" id="pr-phone" placeholder="+91XXXXXXXXXX" />
+      </div>
+
+      <div class="pr-field">
+        <label for="pr-note">Note / Reference (optional)</label>
+        <textarea
+          id="pr-note"
+          rows="2"
+          placeholder="Anything you want to mention for admin..."
+        ></textarea>
+      </div>
+
+      <div class="pr-field">
+        <label for="pr-txn-id">UPI Transaction ID / UTR (required)</label>
+        <input
+          type="text"
+          id="pr-txn-id"
+          placeholder="e.g. 1234567890@okaxis or UTR from bank"
+        />
+      </div>
+
+      <div class="plan-modal-actions">
+        <button id="plan-modal-cancel" class="btn small secondary" type="button">
+          Cancel
+        </button>
+        <button id="plan-modal-submit" class="btn small primary" type="button">
+          I have paid – Send for verification
+        </button>
+      </div>
+
+      <p id="plan-modal-status"></p>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script src="js/firebase-config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/testEngine.js"></script>
+  <script src="js/book.js"></script>
+
+  <!-- ✅ Feedback widget -->
+  <script src="js/feedback.js"></script>
+</body>
+</html>
