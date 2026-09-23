@@ -42,7 +42,7 @@
   </header>
 
   <!-- MAIN AUTH SHELL -->
-    <main class="auth-shell">
+  <main class="auth-shell">
     <!-- LEFT SIDE: hero + demo video -->
     <section class="auth-left">
       <div class="auth-left-card">
@@ -249,6 +249,14 @@
             </button>
           </div>
 
+          <!-- Optional reCAPTCHA: if you DON'T have a real site key yet, comment out this div. -->
+          <div
+            class="g-recaptcha"
+            id="signup-recaptcha"
+            data-sitekey="YOUR_RECAPTCHA_SITE_KEY"
+            style="margin:8px 0;"
+          ></div>
+
           <label class="auth-remember">
             <input type="checkbox" checked />
             I agree to the basic terms of using this typing app.
@@ -280,6 +288,9 @@
   <script src="js/firebase-config.js"></script>
   <script src="js/main.js"></script>
   <script src="js/auth.js"></script>
+
+  <!-- Google reCAPTCHA v2 script (for signup & phone) -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
   <script src="js/feedback.js"></script>
 
