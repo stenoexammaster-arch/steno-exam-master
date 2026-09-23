@@ -28,34 +28,13 @@
 
   // -------- Simple captcha helper (signup) --------
   function getCaptchaTokenOrNull() {
-    const signupRecaptcha = document.getElementById("signup-recaptcha");
-    const siteKey =
-      signupRecaptcha && signupRecaptcha.dataset
-        ? signupRecaptcha.dataset.sitekey
-        : "";
-
-    if (!siteKey || siteKey === "YOUR_RECAPTCHA_SITE_KEY") {
-      return null;
-    }
-
     if (window.grecaptcha && typeof grecaptcha.getResponse === "function") {
-      const token = grecaptcha.getResponse();
-      return token || null;
+      return grecaptcha.getResponse();
     }
     return null;
   }
 
   function resetCaptchaIfPresent() {
-    const signupRecaptcha = document.getElementById("signup-recaptcha");
-    const siteKey =
-      signupRecaptcha && signupRecaptcha.dataset
-        ? signupRecaptcha.dataset.sitekey
-        : "";
-
-    if (!siteKey || siteKey === "YOUR_RECAPTCHA_SITE_KEY") {
-      return;
-    }
-
     if (window.grecaptcha && typeof grecaptcha.reset === "function") {
       grecaptcha.reset();
     }
@@ -65,44 +44,19 @@
   let phoneRecaptchaVerifier = null;
   let phoneConfirmationResult = null;
 
-  function clearPhoneAuthState() {
-    phoneConfirmationResult = null;
-    if (phoneRecaptchaVerifier) {
-      try {
-        phoneRecaptchaVerifier.clear();
-      } catch (e) {}
-      phoneRecaptchaVerifier = null;
-    }
-  }
-
   function setupPhoneRecaptcha() {
-    if (!window.auth || !firebase || !firebase.auth || !firebase.auth.RecaptchaVerifier) {
-      throw new Error("Firebase phone auth is not ready. Please reload the page.");
-    }
+    if (phoneRecaptchaVerifier) return;
+    if (!window.firebase || !firebase.auth) return;
 
-    const container = document.getElementById("phone-recaptcha-container");
-    if (!container) {
-      throw new Error("Phone OTP container is missing from the page.");
-    }
-
-    if (!phoneRecaptchaVerifier) {
-      phoneRecaptchaVerifier = new firebase.auth.RecaptchaVerifier(container, {
+    phoneRecaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+      "phone-recaptcha-container",
+      {
         size: "invisible",
         callback: function () {
-          // handled by Firebase
-        },
-        "expired-callback": function () {
-          phoneConfirmationResult = null;
-          const msgPhone = document.getElementById("auth-message-phone");
-          if (msgPhone) {
-            msgPhone.style.color = "#fca5a5";
-            msgPhone.textContent = "reCAPTCHA expired. Please send the OTP again.";
-          }
+          // auto-resolve
         }
-      });
-    }
-
-    return phoneRecaptchaVerifier;
+      }
+    );
   }
 
   async function sendPhoneOtp() {
@@ -117,22 +71,20 @@
     if (!phone) {
       msgPhone.textContent =
         "Enter your mobile number with country code, e.g. +91XXXXXXXXXX";
-      return;
-    }
-
-    const phoneRegex = /^\+[1-9]\d{7,14}$/;
-    if (!phoneRegex.test(phone)) {
-      msgPhone.textContent =
-        "Use a valid mobile number in international format, for example +91XXXXXXXXXX.";
-      return;
+    return;
     }
 
     try {
-      const verifier = setupPhoneRecaptcha();
-      await verifier.render();
-      phoneConfirmationResult = await window.auth.signInWithPhoneNumber(
+      setupPhoneRecaptcha();
+      if (!phoneRecaptchaVerifier) {
+        msgPhone.textContent =
+          "reCAPTCHA is not ready. Please reload the page.";
+        return;
+      }
+
+      phoneConfirmationResult = await auth.signInWithPhoneNumber(
         phone,
-        verifier
+        phoneRecaptchaVerifier
       );
 
       msgPhone.style.color = "#bbf7d0";
@@ -141,7 +93,10 @@
       console.error("Phone OTP send error:", err);
       msgPhone.textContent =
         err.message || "Failed to send OTP. Check Firebase Phone Auth setup.";
-      clearPhoneAuthState();
+      try {
+        if (phoneRecaptchaVerifier) phoneRecaptchaVerifier.clear();
+        phoneRecaptchaVerifier = null;
+      } catch (e) {}
     }
   }
 
@@ -168,24 +123,21 @@
       const result = await phoneConfirmationResult.confirm(code);
       const user = result.user;
 
-      if (window.db) {
-        await window.db
-          .collection("users")
-          .doc(user.uid)
-          .set(
-            {
-              phone: user.phoneNumber || null,
-              email: user.email || null,
-              role: "user",
-              trialStart: firebase.firestore.FieldValue.serverTimestamp(),
-              subscribed: false,
-              lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
-            },
-            { merge: true }
-          );
-      }
+      await window.db
+        .collection("users")
+        .doc(user.uid)
+        .set(
+          {
+            phone: user.phoneNumber || null,
+            email: user.email || null,
+            role: "user",
+            trialStart: firebase.firestore.FieldValue.serverTimestamp(),
+            subscribed: false,
+            lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
+          },
+          { merge: true }
+        );
 
-      clearPhoneAuthState();
       msgPhone.style.color = "#bbf7d0";
       msgPhone.textContent = "Phone login successful. Redirecting...";
       window.location.href = "book.html";
